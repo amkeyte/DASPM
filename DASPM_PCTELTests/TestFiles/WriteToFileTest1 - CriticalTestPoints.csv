@@ -1,0 +1,7 @@
+Floor Plan,Point Id,Label,Protocol,Band,MeasurementType,Channel,Frequency,DL Power(dBm),DL S/N(dB),DL FBER(%),DL DAQ,DL BER(%),DL Signal Power(dBm),UL Power(dBm),UL S/N(dB),UL FBER(%),UL DAQ,UL BER(%),UL Signal Power(dBm),Comment,Latitude,Longitude
+Fine Arts - Admin 1,1,,Custom Channel Power,Skagit Co,29,460137,460.1375,-74.7,,,,,,,,,,,,Changed,40.000213,-79.999944
+New Floor,777,test label,Custom Channel Power,Skagit Co,29,460137,460.1375,-75.84,,,,,,,,,,,,Exit,40.00029,-79.999864
+Fine Arts - Admin 1,3,,Custom Channel Power,Skagit Co,29,460137,460.1375,-88.47,,,,,,,,,,,,Exit,40.0002,-79.999737
+Fine Arts - Admin 1,4,,Custom Channel Power,Skagit Co,29,460137,460.1375,-89.94,,,,,,,,,,,,FACP,40.000189,-79.999926
+Fine Arts - Admin 1,5,,Custom Channel Power,Skagit Co,29,460137,460.1375,-80.34,,,,,,,,,,,,Stair,40.000209,-79.999917
+Fine Arts - Admin 1,6,,Custom Channel Power,Skagit Co,29,460137,460.1375,777,,,,,,,,,,,,Elevator Lobby,40.000258,-79.999834
