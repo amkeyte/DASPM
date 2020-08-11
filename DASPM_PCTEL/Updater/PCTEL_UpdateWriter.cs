@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using CsvHelper.Configuration.Attributes;
 using DASPM_PCTEL.DataSet;
 
 namespace DASPM_PCTEL.Updater
@@ -57,35 +59,51 @@ namespace DASPM_PCTEL.Updater
                 {
                     if (Table.Locations.Keys.Contains(dataSetRow.Location))
                     {
-                        var typex = Type.GetType(nameof(PCTEL_DataSetRowModel), true);
-                        foreach (var propInfo in Type.GetType(nameof(PCTEL_DataSetRowModel)).GetProperties())
+                        var t1 = typeof(PCTEL_DataSetRowModel);
+                        var t2 = typeof(PCTEL_UpdaterTableRowModel);
+                        var pi1 = t1.GetProperties();
+
+                        foreach (var pi1Iter in pi1)
                         {
-                            var oldField = propInfo.GetValue(dataSetRow.Fields);
-                            var newField = propInfo.GetValue(Table[dataSetRow.Location]);
+                            //var pi1IterAttr = pi1Iter.GetCustomAttributes(true);
+                            if (ContainsIgnoreAttribute(pi1Iter)) continue;
+
+                            var oldField = pi1Iter.GetValue(dataSetRow.Fields);
+                            var p2 = t2.GetProperty(pi1Iter.Name);
+                            if (p2 is null) continue;
+                            var newField = p2.GetValue(Table[dataSetRow.Location]);
+
+                            switch (UpdaterRules.GetRule(pi1Iter.Name))
                             {
-                                switch (UpdaterRules.GetRule(propInfo.Name))
-                                {
-                                    case PCTEL_UpdaterActions.OVERWRITE:
-                                        propInfo.SetValue(oldField, newField);
-                                        break;
+                                case PCTEL_UpdaterActions.OVERWRITE:
+                                    pi1Iter.SetValue(oldField, newField);
+                                    break;
 
-                                    case PCTEL_UpdaterActions.UPDATE_IF_EMPTY:
-                                        if (oldField is null || (string)oldField == "" && (string)newField != "")
-                                        {
-                                            propInfo.SetValue(oldField, newField);
-                                        }
-                                        break;
+                                case PCTEL_UpdaterActions.UPDATE_IF_EMPTY:
+                                    if (oldField is null || (string)oldField == "" && (string)newField != "")
+                                    {
+                                        pi1Iter.SetValue(oldField, newField);
+                                    }
+                                    break;
 
-                                    case PCTEL_UpdaterActions.DO_NOTHING:
-                                        //do nothing
-                                        break;
-                                }
+                                case PCTEL_UpdaterActions.DO_NOTHING:
+                                    //do nothing
+                                    break;
                             }
                         }
                     }
                 }
                 dataSet.WriteToFile(writeToPath, dataSet.Filename);
             }
+        }
+
+        private bool ContainsIgnoreAttribute(PropertyInfo pInfo)
+        {
+            foreach (var attr in pInfo.GetCustomAttributes(true))
+            {
+                if (attr.ToString().Contains("IgnoreAttribute")) return true;
+            }
+            return false;
         }
 
         #endregion ClassMembers
