@@ -5,17 +5,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace DASPM_PCTEL.Table.Tests
 {
     [TestClass()]
     public class PCTEL_TableTests
     {
+        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
+        private string TestFiles { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
+
         [TestMethod()]
         public void LocationsTest()
         {
             string name = "TableTest1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPM_PCTELTests\TestFiles\PCTEL_Table\";
+            string path = Path.Combine(UserFolder, TestFiles, "PCTEL_Table");
             string filename = @"TableTest1.csv";
             var tObj = PCTEL_Table.Create(name, path, filename);
 
@@ -41,7 +45,7 @@ namespace DASPM_PCTEL.Table.Tests
         public void PCTEL_TableTest()
         {
             string name = "TableTest1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPM_PCTELTests\TestFiles\PCTEL_Table\";
+            string path = Path.Combine(UserFolder, TestFiles, "PCTEL_Table");
             string filename = @"TableTest1.csv";
             var tObj = PCTEL_Table.Create(name, path, filename);
 

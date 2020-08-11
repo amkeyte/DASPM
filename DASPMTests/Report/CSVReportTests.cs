@@ -13,17 +13,14 @@ namespace DASPM.Table.Tests
     [TestClass()]
     public class CSVReportTests
     {
-        [TestMethod()]
-        public void AddRowTest()
-        {
-            Assert.Fail();
-        }
+        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
+        private string TestFiles { get => @"source\repos\DASPM\DASPMTests\TestFiles"; }
 
         [TestMethod()]
         public void CSVReportTest()
         {
             string name = "Test1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPMTests\TestFiles\";
+            string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"Test1.csv";
             var tObj = new CSVTable<MockRowModel1>(name, path, filename);
         }
@@ -32,7 +29,7 @@ namespace DASPM.Table.Tests
         public void LoadFromFileTest()
         {
             string name = "Test1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPMTests\TestFiles\";
+            string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"Test1.csv";
             var tObj = new CSVTable<MockRowModel1>(name, path, filename);
 
@@ -44,23 +41,11 @@ namespace DASPM.Table.Tests
         }
 
         [TestMethod()]
-        public void RefreshTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void RowTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
         public void WriteToFileTest()
         {
             //***read file
             string name = "Test1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPMTests\TestFiles\";
+            string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"Test1.csv";
             var tObj = new CSVTable<MockRowModel1>(name, path, filename);
             tObj.LoadFromFile();

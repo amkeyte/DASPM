@@ -13,11 +13,14 @@ namespace DASPM_PCTEL.Updater.Tests
     [TestClass()]
     public class PCTEL_UpdaterTableTests
     {
+        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
+        private string TestFiles { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
+
         [TestMethod()]
         public void PCTEL_UpdaterTableTest()
         {
             string name = "TableTest1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPM_PCTELTests\TestFiles\PCTEL_Updater\";
+            string path = Path.Combine(UserFolder, TestFiles, "PCTEL_Updater");
             string filename = @"UpdaterTest1.csv";
             var tObj = PCTEL_UpdaterTable.Create(name, path, filename);
 
@@ -41,10 +44,11 @@ namespace DASPM_PCTEL.Updater.Tests
         public void PCTEL_UpdaterUpdateTest()
         {
             string name = @"TableTest1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPM_PCTELTests\TestFiles\PCTEL_Updater\";
+            string path = Path.Combine(UserFolder, TestFiles, "PCTEL_Updater");
             string filename = "UpdaterTest2Source.csv";
             var tObj = PCTEL_UpdaterTable.Create(name, path, filename);
             tObj.LoadFromFile();
+            tObj.DataSetUpdater.UpdaterRules = new PCTEL_UpdaterRules<PCTEL_UpdaterTableRowModel>();
 
             //*** setup
             //reset the test files
@@ -89,7 +93,7 @@ namespace DASPM_PCTEL.Updater.Tests
             Assert.AreEqual(tObj[0].Comment, DSList[0][0].Comment);
             Assert.AreEqual("MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv", DSList[1].Filename);
             Assert.AreEqual(tObj[20].Floor, DSList[1][0].Floor);
-            Assert.AreEqual(tObj[20].Comment, DSList[1][0].Comment);
+            Assert.AreEqual("Main Entry", DSList[1][0].Comment);
         }
     }
 }

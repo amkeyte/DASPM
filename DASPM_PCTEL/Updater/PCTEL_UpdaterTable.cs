@@ -64,7 +64,7 @@ namespace DASPM_PCTEL.Updater
                 if (_DataSetUpdater is null)
                 {
                     if (DataSetPath == "") DataSetPath = FilePath;
-                    _DataSetUpdater = new PCTEL_UpdateWriter<TModel>(this, DataSetPath);
+                    _DataSetUpdater = new PCTEL_UpdateWriter<TModel>(this);
                 }
                 return _DataSetUpdater;
             }

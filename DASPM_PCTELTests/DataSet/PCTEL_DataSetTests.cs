@@ -13,11 +13,14 @@ namespace DASPM_PCTEL.DataSet.Tests
     [TestClass()]
     public class PCTEL_DataSetTests
     {
+        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
+        private string TestFiles { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
+
         [TestMethod()]
         public void LoadFromFileTest_Area()
         {
             string name = "DataSetTest1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPM_PCTELTests\TestFiles\";
+            string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
             var tObj = PCTEL_DataSet.Create(name, path, filename);
 
@@ -45,7 +48,7 @@ namespace DASPM_PCTEL.DataSet.Tests
         public void LoadFromFileTest_CP()
         {
             string name = "DataSetTest1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPM_PCTELTests\TestFiles\";
+            string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
             var tObj = PCTEL_DataSet.Create(name, path, filename);
 
@@ -69,7 +72,7 @@ namespace DASPM_PCTEL.DataSet.Tests
         {
             //***read file
             string name = "DataSetTest1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPM_PCTELTests\TestFiles\";
+            string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
             var tObj = PCTEL_DataSet.Create(name, path, filename);
 
@@ -126,7 +129,7 @@ namespace DASPM_PCTEL.DataSet.Tests
         {
             //***read file
             string name = "DataSetTest1";
-            string path = @"C:\Users\Aaron\source\repos\DASPM\DASPM_PCTELTests\TestFiles\";
+            string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
             var tObj = PCTEL_DataSet.Create(name, path, filename);
 
