@@ -57,40 +57,19 @@ namespace DASPM_PCTEL.Updater
             {
                 foreach (PCTEL_DataSetRow<PCTEL_DataSetRowModel> dataSetRow in dataSet.Rows)
                 {
-                    if (Table.Locations.Keys.Contains(dataSetRow.Location))
+                    if (DataSetLocationExists(dataSetRow)) continue;
+
+                    foreach (var dataSetPropInfo in typeof(PCTEL_DataSetRowModel).GetProperties())
                     {
-                        var t1 = typeof(PCTEL_DataSetRowModel);
-                        var t2 = typeof(PCTEL_UpdaterTableRowModel);
-                        var pi1 = t1.GetProperties();
+                        if (ContainsIgnoreAttribute(dataSetPropInfo)) continue;
 
-                        foreach (var pi1Iter in pi1)
-                        {
-                            //var pi1IterAttr = pi1Iter.GetCustomAttributes(true);
-                            if (ContainsIgnoreAttribute(pi1Iter)) continue;
+                        var rowModelPropInfo = typeof(TModel).GetProperty(dataSetPropInfo.Name);
+                        if (rowModelPropInfo is null) continue;
 
-                            var oldField = pi1Iter.GetValue(dataSetRow.Fields);
-                            var p2 = t2.GetProperty(pi1Iter.Name);
-                            if (p2 is null) continue;
-                            var newField = p2.GetValue(Table[dataSetRow.Location]);
+                        var dataSetFieldVal = dataSetPropInfo.GetValue(dataSetRow.Fields);
+                        var rowModelFieldVal = rowModelPropInfo.GetValue(Table[dataSetRow.Location]);
 
-                            switch (UpdaterRules.GetRule(pi1Iter.Name))
-                            {
-                                case PCTEL_UpdaterActions.OVERWRITE:
-                                    pi1Iter.SetValue(oldField, newField);
-                                    break;
-
-                                case PCTEL_UpdaterActions.UPDATE_IF_EMPTY:
-                                    if (oldField is null || (string)oldField == "" && (string)newField != "")
-                                    {
-                                        pi1Iter.SetValue(oldField, newField);
-                                    }
-                                    break;
-
-                                case PCTEL_UpdaterActions.DO_NOTHING:
-                                    //do nothing
-                                    break;
-                            }
-                        }
+                        UpdatePerRules(dataSetRow, dataSetPropInfo, dataSetFieldVal, rowModelFieldVal);
                     }
                 }
                 dataSet.WriteToFile(writeToPath, dataSet.Filename);
@@ -104,6 +83,37 @@ namespace DASPM_PCTEL.Updater
                 if (attr.ToString().Contains("IgnoreAttribute")) return true;
             }
             return false;
+        }
+
+        private bool DataSetLocationExists(PCTEL_DataSetRow<PCTEL_DataSetRowModel> dataSetRow)
+        {
+            return !Table.Locations.Keys.Contains(dataSetRow.Location);
+        }
+
+        private void UpdatePerRules(PCTEL_DataSetRow<PCTEL_DataSetRowModel> dataSetRow,
+            PropertyInfo dataSetPropInfo,
+            object dataSetFieldVal,
+            object rowModelFieldVal)
+        {
+            switch (UpdaterRules.GetRule(dataSetPropInfo.Name))
+            {
+                case PCTEL_UpdaterActions.OVERWRITE:
+                    dataSetPropInfo.SetValue(dataSetRow.Fields, rowModelFieldVal);
+                    break;
+
+                case PCTEL_UpdaterActions.UPDATE_IF_EMPTY:
+                    if (dataSetFieldVal is null
+                        || (string)dataSetFieldVal == ""
+                        && (string)rowModelFieldVal != "")
+                    {
+                        dataSetPropInfo.SetValue(dataSetRow.Fields, rowModelFieldVal, null);
+                    }
+                    break;
+
+                case PCTEL_UpdaterActions.DO_NOTHING:
+                    //do nothing
+                    break;
+            }
         }
 
         #endregion ClassMembers

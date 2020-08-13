@@ -13,8 +13,8 @@ namespace DASPM_PCTEL.Updater.Tests
     [TestClass()]
     public class PCTEL_UpdaterTableTests
     {
-        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
         private string TestFiles { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
+        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
 
         [TestMethod()]
         public void PCTEL_UpdaterTableTest()

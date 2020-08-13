@@ -25,7 +25,8 @@ namespace DASPM_PCTEL.Updater
 
         public PCTEL_UpdaterActions GetRule(string target)
         {
-            return Actions[target];
+            if (Actions.ContainsKey(target)) return Actions[target];
+            return PCTEL_UpdaterActions.DO_NOTHING;
         }
     }
 }
