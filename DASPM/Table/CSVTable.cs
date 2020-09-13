@@ -9,7 +9,15 @@ using CsvHelper;
 
 namespace DASPM.Table
 {
-    public class CSVTable<T> : ITable<T> where T : IRowModel
+    public class CSVTable
+    {
+        public static CSVTable<IRowModel> Create (string name, string fullPath)
+        {
+            return new CSVTable<IRowModel>(name, fullPath);
+        } 
+    }
+    
+    public class CSVTable<TModel> : ITable<TModel> where TModel : IRowModel
     {
         #region ctor
 
@@ -18,7 +26,7 @@ namespace DASPM.Table
             this.Name = name;
             this.FilePath = path;
             this.Filename = filename;
-            this.Rows = new List<ITableRow<T>>();
+            this.Rows = new List<ITableRow<TModel>>();
         }
 
         #endregion ctor
@@ -39,7 +47,7 @@ namespace DASPM.Table
         public IList<string> Headers { get; protected set; }
 
         public string Name { get; protected set; }
-        public IList<ITableRow<T>> Rows { get; protected set; }
+        public IList<ITableRow<TModel>> Rows { get; protected set; }
 
         //public ITableRow<T> AddRow(ITableRow<T> row)
         //{
@@ -51,7 +59,7 @@ namespace DASPM.Table
             throw new NotImplementedException();
         }
 
-        public ITableRow<T> Row(int id)
+        public ITableRow<TModel> Row(int id)
         {
             return Rows.ElementAt(id);
         }
@@ -60,21 +68,21 @@ namespace DASPM.Table
 
         #region ClassMembers
 
-        public virtual void AddRow(T model)
+        public virtual void AddRow(TModel model)
         {
             //default. override for specific use case
             var row = CreateRow(model);
             this.Rows.Add(row);
         }
 
-        public virtual ITableRow<T> CreateRow(T model)
+        public virtual ITableRow<TModel> CreateRow(TModel model)
         {
             //defualt implementation. override for specific TableRow constructor
-            return new CSVTableRow<T>(this, model);
+            return new CSVTableRow<TModel>(this, model);
         }
 
         //short form access
-        public virtual T this[int index]
+        public virtual TModel this[int index]
         {
             get
             {
@@ -101,7 +109,7 @@ namespace DASPM.Table
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 ConfigureCsvReader(csv);
-                var records = csv.GetRecords<T>();
+                var records = csv.GetRecords<TModel>();
                 Rows.Clear();
                 foreach (var r in records)
                 {
@@ -118,7 +126,7 @@ namespace DASPM.Table
                 //register the map to ignore some properties in IRowModel, etc...
 
                 ConfigureCsvWriter(csv);
-                var rowModels = new List<T>();
+                var rowModels = new List<TModel>();
                 foreach (var r in Rows)
                 {
                     rowModels.Add(r.Fields);
