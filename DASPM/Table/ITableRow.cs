@@ -6,10 +6,25 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public interface ITableRow<T> where T : IRowModel
+    /// <summary>
+    /// The row in a table
+    /// </summary>
+    /// <typeparam name="TModel">The Model type for this table</typeparam>
+    public interface ITableRow<TModel> where TModel : IRowModel
     {
-        T Fields { get; }
+        /// <summary>
+        /// The fields in this row
+        /// </summary>
+        TModel Fields { get; }
+
+        /// <summary>
+        /// This rows number in the table
+        /// </summary>
         long ID { get; }
-        ITable<T> Table { get; }
+
+        /// <summary>
+        /// The table this row belongs to
+        /// </summary>
+        ITable<TModel> Table { get; }
     }
 }

@@ -36,7 +36,7 @@ namespace DASPM.Table
         public string Filename { get; protected set; }
 
         public string FilePath { get; protected set; }
-        public IList<string> Header { get; protected set; }
+        public IList<string> Headers { get; protected set; }
 
         public string Name { get; protected set; }
         public IList<ITableRow<T>> Rows { get; protected set; }

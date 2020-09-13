@@ -6,19 +6,53 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public interface ITable<T> where T : IRowModel
+    /// <summary>
+    /// The data table. Contains a set of rows with a pre-defined set of data fields.
+    /// </summary>
+    /// <typeparam name="TModel">The data model used for this table</typeparam>
+    public interface ITable<TModel> where TModel : IRowModel
     {
+        /// <summary>
+        /// Number of rows in table
+        /// </summary>
         long Count { get; }
+        
+        /// <summary>
+        /// The filename assigned to this table (should be moved to concrete because a table should not be required to be tied to a file)
+        /// </summary>
         string Filename { get; }
-        IList<string> Header { get; }
+
+        /// <summary>
+        /// A list of field headers
+        /// </summary>
+        IList<string> Headers { get; }
+
+        /// <summary>
+        /// The user friendly name of the table (is needed?)
+        /// </summary>
         string Name { get; }
+
+        /// <summary>
+        /// The file path assiciated with this table (shoule be moved to concrete, and merged into FullPath)
+        /// </summary>
         string FilePath { get; }
-        IList<ITableRow<T>> Rows { get; }
 
-        //ITableRow<T> AddRow(ITableRow<T> row);
+        /// <summary>
+        /// Return a List of rows for accessing data
+        /// </summary>
+        IList<ITableRow<TModel>> Rows { get; }
 
+        
+        /// <summary>
+        /// Depreciate... no longer applicable or used.
+        /// </summary>
         void Refresh();
 
-        ITableRow<T> Row(int id);
+        /// <summary>
+        /// Access an individual row by number.
+        /// </summary>
+        /// <param name="id">The Row number</param>
+        /// <returns>The requested row. Exception if out of range.</returns>
+        ITableRow<TModel> Row(int id);
     }
 }
