@@ -22,11 +22,12 @@ namespace DASPM.Table
     {
         #region ctor
 
-        public CSVTable(string name, string path, string filename)
+        public CSVTable(string name, string fullPath)
         {
             this.Name = name;
-            this.FilePath = path;
-            this.Filename = filename;
+            this.FullPath = fullPath;
+            this.Path = System.IO.Path.GetDirectoryName(fullPath);
+            this.Filename = System.IO.Path.GetFileName(fullPath);
             this.Rows = new List<ITableRow<TModel>>();
         }
 
@@ -42,9 +43,7 @@ namespace DASPM.Table
             }
         }
 
-        public string Filename { get; protected set; }
 
-        public string FilePath { get; protected set; }
         public IList<string> Headers { get; protected set; }
 
         public string Name { get; protected set; }
@@ -101,13 +100,16 @@ namespace DASPM.Table
             }
         }
 
+        public string FullPath { get; protected set; }
+        public string Path { get; protected set; }
+        public string Filename { get; protected set; }
         #endregion ClassMembers
 
         #region CSVHelper
 
         public void LoadFromFile()
         {
-            using (var reader = new StreamReader(Path.Combine(FilePath, Filename)))
+            using (var reader = new StreamReader(System.IO.Path.Combine(Path, Filename)))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 ConfigureCsvReader(csv);
@@ -123,7 +125,7 @@ namespace DASPM.Table
 
         public void WriteToFile(string path, string filename)
         {
-            using (var writer = new StreamWriter(Path.Combine(path, filename)))
+            using (var writer = new StreamWriter(System.IO.Path.Combine(path, filename)))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 //register the map to ignore some properties in IRowModel, etc...

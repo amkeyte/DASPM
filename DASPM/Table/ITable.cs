@@ -36,7 +36,7 @@ namespace DASPM.Table
         /// <summary>
         /// The file path assiciated with this table (shoule be moved to concrete, and merged into FullPath)
         /// </summary>
-        string FilePath { get; }
+        //string FilePath { get; }
 
         /// <summary>
         /// Return a List of rows for accessing data
