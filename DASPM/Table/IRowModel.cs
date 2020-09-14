@@ -24,10 +24,5 @@ namespace DASPM.Table
         /// </summary>
         /// <returns>the list of values</returns>
         List<object> ToList();
-
-        /// <summary>
-        /// A list of headers present in this field, indexed in order of left to right in the table
-        /// </summary>
-        List<string> Headers { get; }
     }
 }

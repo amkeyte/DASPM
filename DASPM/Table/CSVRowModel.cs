@@ -9,20 +9,7 @@ namespace DASPM.Table
 {
     public class CSVRowModel : IRowModel
     {
-        public List<string> Headers {
-            get
-            {
-                //use the classmap to get the names of headers(?)
-                var result = new List<String>();
 
-                foreach (var i in GetClassMap<CSVRowModel>().MemberMaps)
-                {
-                    result.Add(i.Data.Names[0]);
-                }
-                //just accessing properties will not give actual text values if they aren't usable as valid property names
-                throw new NotImplementedException();
-            }
-        }
 
         public Dictionary<string, object> ToDict()
         {

@@ -17,7 +17,7 @@ namespace DASPM.Table
             return new CSVTable<IRowModel>(name, fullPath);
         } 
     }
-    
+
     public class CSVTable<TModel> : ITable<TModel> where TModel : IRowModel
     {
         #region ctor
@@ -44,11 +44,26 @@ namespace DASPM.Table
         }
 
 
-        public IList<string> Headers { get; protected set; }
+        public List<string> Headers
+        {
+            get
+            {
+                //use the classmap to get the names of headers(?)
+                if (ClassMap is null) return null;
+                var result = new List<String>();
+
+                foreach (var i in ClassMap.MemberMaps)
+                {
+                    result.Add(i.Data.Names[0]); //assumes only one name has been added to classmap.
+                }
+                //just accessing properties will not give actual text values if they aren't usable as valid property names
+                return result;
+            }
+        }
 
         public string Name { get; protected set; }
         public IList<ITableRow<TModel>> Rows { get; protected set; }
-        public ClassMap ClassMap { get; protected set; } //not ready exception when null
+        public ClassMap ClassMap { get; protected set; }
 
         //public ITableRow<T> AddRow(ITableRow<T> row)
         //{
