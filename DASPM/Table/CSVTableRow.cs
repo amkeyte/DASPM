@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CsvHelper.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public class CSVTableRow<T> : ITableRow<T> where T : IRowModel
+    public class CSVTableRow<TModel> : ITableRow<TModel> where TModel : IRowModel
     {
         #region ctor
 
-        public CSVTableRow(CSVTable<T> table, T row)
+        public CSVTableRow(CSVTable<TModel> table, TModel row)
         {
             this.Table = table;
             this.Fields = row;
@@ -26,10 +27,9 @@ namespace DASPM.Table
 
         #region ImplimentITableRow
 
-        public T Fields { get; protected set; }
+        public TModel Fields { get; protected set; }
         public long ID { get; protected set; }
-        public ITable<T> Table { get; protected set; }
-
+        public ITable<TModel> Table { get; protected set; }
         #endregion ImplimentITableRow
     }
 }

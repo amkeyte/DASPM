@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 
 namespace DASPM.Table
@@ -19,13 +20,13 @@ namespace DASPM.Table
         Dictionary<string, object> ToDict();
 
         /// <summary>
-        /// Convert model to list containing values
+        /// Convert model to list containing values indexed from left to right order in the table.
         /// </summary>
         /// <returns>the list of values</returns>
         List<object> ToList();
 
         /// <summary>
-        /// A list of headers present in this field
+        /// A list of headers present in this field, indexed in order of left to right in the table
         /// </summary>
         List<string> Headers { get; }
     }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CsvHelper;
+using CsvHelper.Configuration;
 
 namespace DASPM.Table
 {
@@ -48,6 +49,7 @@ namespace DASPM.Table
 
         public string Name { get; protected set; }
         public IList<ITableRow<TModel>> Rows { get; protected set; }
+        public ClassMap ClassMap { get; protected set; } //not ready exception when null
 
         //public ITableRow<T> AddRow(ITableRow<T> row)
         //{
@@ -109,6 +111,7 @@ namespace DASPM.Table
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 ConfigureCsvReader(csv);
+                ClassMap = csv.Configuration.Maps[typeof(TModel)];
                 var records = csv.GetRecords<TModel>();
                 Rows.Clear();
                 foreach (var r in records)
@@ -126,6 +129,7 @@ namespace DASPM.Table
                 //register the map to ignore some properties in IRowModel, etc...
 
                 ConfigureCsvWriter(csv);
+                ClassMap = csv.Configuration.Maps[typeof(TModel)];
                 var rowModels = new List<TModel>();
                 foreach (var r in Rows)
                 {

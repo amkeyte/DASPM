@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CsvHelper.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,5 +55,10 @@ namespace DASPM.Table
         /// <param name="id">The Row number</param>
         /// <returns>The requested row. Exception if out of range.</returns>
         ITableRow<TModel> Row(int id);
+
+        /// <summary>
+        /// The ClassMap for TModel. Available only after file access. It is assumed that only one ClassMap is being used.
+        /// </summary>
+        ClassMap ClassMap { get; }
     }
 }
