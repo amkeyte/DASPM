@@ -29,7 +29,7 @@ namespace DASPM_PCTEL.Table
         }
     }
 
-    public class PCTEL_TableRowModel : IRowModel
+    public class PCTEL_TableRowModel : CSVRowModel
     {
         public string Floor { get; set; }
         public string GridID { get; set; }

@@ -12,10 +12,10 @@ namespace DASPM.Table
 {
     public class CSVTable
     {
-        public static CSVTable<IRowModel> Create (string name, string fullPath)
+        public static CSVTable<IRowModel> Create(string name, string fullPath)
         {
             return new CSVTable<IRowModel>(name, fullPath);
-        } 
+        }
     }
 
     public class CSVTable<TModel> : ITable<TModel> where TModel : IRowModel
@@ -35,6 +35,8 @@ namespace DASPM.Table
 
         #region ImplementITable
 
+        public ClassMap ClassMap { get; protected set; }
+
         public long Count
         {
             get
@@ -43,8 +45,7 @@ namespace DASPM.Table
             }
         }
 
-
-        public List<string> Headers
+        public IList<string> Headers
         {
             get
             {
@@ -63,8 +64,6 @@ namespace DASPM.Table
 
         public string Name { get; protected set; }
         public IList<ITableRow<TModel>> Rows { get; protected set; }
-        public ClassMap ClassMap { get; protected set; }
-
         //public ITableRow<T> AddRow(ITableRow<T> row)
         //{
         //    throw new NotImplementedException();
@@ -83,6 +82,12 @@ namespace DASPM.Table
         #endregion ImplementITable
 
         #region ClassMembers
+
+        public string Filename { get; protected set; }
+
+        public string FullPath { get; protected set; }
+
+        public string Path { get; protected set; }
 
         public virtual void AddRow(TModel model)
         {
@@ -115,16 +120,13 @@ namespace DASPM.Table
             }
         }
 
-        public string FullPath { get; protected set; }
-        public string Path { get; protected set; }
-        public string Filename { get; protected set; }
         #endregion ClassMembers
 
         #region CSVHelper
 
         public void LoadFromFile()
         {
-            using (var reader = new StreamReader(System.IO.Path.Combine(Path, Filename)))
+            using (var reader = new StreamReader(FullPath))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 ConfigureCsvReader(csv);
@@ -138,9 +140,9 @@ namespace DASPM.Table
             }
         }
 
-        public void WriteToFile(string path, string filename)
+        public void WriteToFile(string newFileFullPath)
         {
-            using (var writer = new StreamWriter(System.IO.Path.Combine(path, filename)))
+            using (var writer = new StreamWriter(newFileFullPath))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 //register the map to ignore some properties in IRowModel, etc...

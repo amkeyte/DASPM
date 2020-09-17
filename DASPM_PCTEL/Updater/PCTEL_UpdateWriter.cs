@@ -37,8 +37,8 @@ namespace DASPM_PCTEL.Updater
                     var files = Directory.GetFiles(DataSetPath);
                     foreach (string f in files)
                     {
-                        string fName = f.Substring(DataSetPath.Length + 1);
-                        _dataSets.Add(PCTEL_DataSet.Create(fName, DataSetPath, fName));
+                        string fName = Path.GetFileNameWithoutExtension(f);
+                        _dataSets.Add(PCTEL_DataSet.Create(fName, f));
                         _dataSets[_dataSets.Count - 1].LoadFromFile();
                     }
                 }
@@ -72,7 +72,7 @@ namespace DASPM_PCTEL.Updater
                         UpdatePerRules(dataSetRow, dataSetPropInfo, dataSetFieldVal, rowModelFieldVal);
                     }
                 }
-                dataSet.WriteToFile(writeToPath, dataSet.Filename);
+                dataSet.WriteToFile(Path.Combine(writeToPath, dataSet.Filename));
             }
         }
 

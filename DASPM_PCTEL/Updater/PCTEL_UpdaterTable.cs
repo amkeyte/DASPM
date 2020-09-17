@@ -11,16 +11,16 @@ namespace DASPM_PCTEL.Updater
 {
     public class PCTEL_UpdaterTable
     {
-        public static PCTEL_UpdaterTable<PCTEL_UpdaterTableRowModel> Create(string name, string path, string filename)
+        public static PCTEL_UpdaterTable<PCTEL_UpdaterTableRowModel> Create(string name, string fullPath)
         {
-            return new PCTEL_UpdaterTable<PCTEL_UpdaterTableRowModel>(name, path, filename);
+            return new PCTEL_UpdaterTable<PCTEL_UpdaterTableRowModel>(name, fullPath);
         }
     }
 
     public class PCTEL_UpdaterTable<TModel> : PCTEL_Table<TModel>
          where TModel : PCTEL_UpdaterTableRowModel
     {
-        public PCTEL_UpdaterTable(string name, string path, string filename) : base(name, path, filename)
+        public PCTEL_UpdaterTable(string name, string fullPath) : base(name, fullPath)
         {
         }
 

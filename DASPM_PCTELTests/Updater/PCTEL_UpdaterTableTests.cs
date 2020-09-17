@@ -20,9 +20,8 @@ namespace DASPM_PCTEL.Updater.Tests
         public void PCTEL_UpdaterTableTest()
         {
             string name = "TableTest1";
-            string path = Path.Combine(UserFolder, TestFiles, "PCTEL_Updater");
-            string filename = @"UpdaterTest1.csv";
-            var tObj = PCTEL_UpdaterTable.Create(name, path, filename);
+            string fullPath = Path.Combine(UserFolder, TestFiles, "PCTEL_Updater", @"UpdaterTest1.csv");
+            var tObj = PCTEL_UpdaterTable.Create(name, fullPath);
 
             tObj.LoadFromFile();
 
@@ -46,7 +45,7 @@ namespace DASPM_PCTEL.Updater.Tests
             string name = @"TableTest1";
             string path = Path.Combine(UserFolder, TestFiles, "PCTEL_Updater");
             string filename = "UpdaterTest2Source.csv";
-            var tObj = PCTEL_UpdaterTable.Create(name, path, filename);
+            var tObj = PCTEL_UpdaterTable.Create(name, Path.Combine(path, filename));
             tObj.LoadFromFile();
             tObj.DataSetUpdater.UpdaterRules = new PCTEL_UpdaterRules<PCTEL_UpdaterTableRowModel>();
 
@@ -83,8 +82,8 @@ namespace DASPM_PCTEL.Updater.Tests
             files = Directory.GetFiles(targetPath);
             foreach (string f in files)
             {
-                string fTarget = f.Substring(targetPath.Length + 1);
-                DSList.Add(PCTEL_DataSet.Create(fTarget, targetPath, fTarget));
+                string fTarget = Path.GetFileNameWithoutExtension(f);
+                DSList.Add(PCTEL_DataSet.Create(fTarget, f));
                 DSList[DSList.Count - 1].LoadFromFile();
             }
 

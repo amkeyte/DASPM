@@ -13,25 +13,23 @@ namespace DASPM.Table.Tests
     [TestClass()]
     public class CSVReportTests
     {
-        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
         private string TestFiles { get => @"source\repos\DASPM\DASPMTests\TestFiles"; }
+        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
 
         [TestMethod()]
         public void CSVReportTest()
         {
             string name = "Test1";
-            string path = Path.Combine(UserFolder, TestFiles);
-            string filename = @"Test1.csv";
-            var tObj = new CSVTable<MockRowModel1>(name, path, filename);
+            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
+            var tObj = new CSVTable<MockRowModel1>(name, fullPath);
         }
 
         [TestMethod()]
         public void LoadFromFileTest()
         {
             string name = "Test1";
-            string path = Path.Combine(UserFolder, TestFiles);
-            string filename = @"Test1.csv";
-            var tObj = new CSVTable<MockRowModel1>(name, path, filename);
+            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
+            var tObj = new CSVTable<MockRowModel1>(name, fullPath);
 
             tObj.LoadFromFile();
 
@@ -44,11 +42,13 @@ namespace DASPM.Table.Tests
         public void WriteToFileTest()
         {
             //***read file
-            string name = "Test1";
             string path = Path.Combine(UserFolder, TestFiles);
-            string filename = @"Test1.csv";
-            var tObj = new CSVTable<MockRowModel1>(name, path, filename);
+
+            string name = "Test1";
+            string test1FullPath = @"Test1.csv";
+            var tObj = new CSVTable<MockRowModel1>(name, test1FullPath);
             tObj.LoadFromFile();
+
             //integrity check
             Assert.AreEqual(2, tObj.Count);
             Assert.AreEqual(1, tObj.Row(0).Fields.Col1);
@@ -70,10 +70,10 @@ namespace DASPM.Table.Tests
             {
                 File.Delete(file);
             }
-            tObj.WriteToFile(path, wfilename);
+            tObj.WriteToFile(Path.Combine(path, wfilename));
 
             //*** Unit Test
-            var tObj2 = new CSVTable<MockRowModel1>(name, path, wfilename);
+            var tObj2 = new CSVTable<MockRowModel1>(name, Path.Combine(path, wfilename));
             tObj2.LoadFromFile();
             Assert.AreEqual(2, tObj2.Count);
             Assert.AreEqual("Changed", tObj2.Row(0).Fields.Col3);

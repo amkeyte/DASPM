@@ -13,8 +13,8 @@ namespace DASPM_PCTEL.DataSet.Tests
     [TestClass()]
     public class PCTEL_DataSetTests
     {
-        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
         private string TestFiles { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
+        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
 
         [TestMethod()]
         public void LoadFromFileTest_Area()
@@ -22,7 +22,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             string name = "DataSetTest1";
             string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
-            var tObj = PCTEL_DataSet.Create(name, path, filename);
+            var tObj = PCTEL_DataSet.Create(name, Path.Combine(path, filename));
 
             tObj.LoadFromFile();
 
@@ -50,7 +50,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             string name = "DataSetTest1";
             string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
-            var tObj = PCTEL_DataSet.Create(name, path, filename);
+            var tObj = PCTEL_DataSet.Create(name, Path.Combine(path, filename));
 
             tObj.LoadFromFile();
 
@@ -74,7 +74,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             string name = "DataSetTest1";
             string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
-            var tObj = PCTEL_DataSet.Create(name, path, filename);
+            var tObj = PCTEL_DataSet.Create(name, Path.Combine(path, filename));
 
             tObj.LoadFromFile();
 
@@ -106,7 +106,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             tObj.WriteToFile(path, wfilename);
 
             //*** Unit Test
-            var tObj2 = PCTEL_DataSet.Create(name, path, wfilename);
+            var tObj2 = PCTEL_DataSet.Create(name, Path.Combine(path, filename));
             tObj2.LoadFromFile();
             Assert.AreEqual(20, tObj2.Count);
             //location
@@ -131,7 +131,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             string name = "DataSetTest1";
             string path = Path.Combine(UserFolder, TestFiles);
             string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
-            var tObj = PCTEL_DataSet.Create(name, path, filename);
+            var tObj = PCTEL_DataSet.Create(name, Path.Combine(path, filename));
 
             tObj.LoadFromFile();
 
@@ -156,7 +156,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             tObj.WriteToFile(path, wfilename);
 
             //*** Unit Test
-            var tObj2 = PCTEL_DataSet.Create(name, path, wfilename);
+            var tObj2 = PCTEL_DataSet.Create(name, Path.Combine(path, filename));
             tObj2.LoadFromFile();
 
             Assert.AreEqual(6, tObj2.Count);

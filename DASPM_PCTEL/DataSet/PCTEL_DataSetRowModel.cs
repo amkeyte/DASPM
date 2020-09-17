@@ -88,7 +88,7 @@ namespace DASPM_PCTEL.DataSet
         #endregion ctor
     }
 
-    public class PCTEL_DataSetRowModel : IRowModel
+    public class PCTEL_DataSetRowModel : CSVRowModel
     {
         [Ignore]
         public PCTEL_DataSetTypes DataSetType { get; set; }

@@ -12,8 +12,8 @@ namespace DASPM_PCTEL.Table.Tests
     [TestClass()]
     public class PCTEL_TableTests
     {
-        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
         private string TestFiles { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
+        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
 
         [TestMethod()]
         public void LocationsTest()
@@ -21,7 +21,7 @@ namespace DASPM_PCTEL.Table.Tests
             string name = "TableTest1";
             string path = Path.Combine(UserFolder, TestFiles, "PCTEL_Table");
             string filename = @"TableTest1.csv";
-            var tObj = PCTEL_Table.Create(name, path, filename);
+            var tObj = PCTEL_Table.Create(name, Path.Combine(path, filename));
 
             tObj.LoadFromFile();
             var listRow = tObj.Row(0);
@@ -47,7 +47,7 @@ namespace DASPM_PCTEL.Table.Tests
             string name = "TableTest1";
             string path = Path.Combine(UserFolder, TestFiles, "PCTEL_Table");
             string filename = @"TableTest1.csv";
-            var tObj = PCTEL_Table.Create(name, path, filename);
+            var tObj = PCTEL_Table.Create(name, Path.Combine(path, filename));
 
             tObj.LoadFromFile();
 
