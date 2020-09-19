@@ -69,7 +69,7 @@ namespace DASPM_PCTEL.Updater.Tests
             tObj[0].Comment = "Area Comment Added";
             tObj[20].Comment = "CP Comment Added";
             //*** write edited table to file
-            tObj.WriteToFile(path, wFilename);
+            tObj.WriteToFile(Path.Combine(path, wFilename));
 
             //*** update target dataset
             tObj.DataSetPath = targetPath;

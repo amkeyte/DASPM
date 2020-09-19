@@ -45,7 +45,7 @@ namespace DASPM.Table.Tests
             string path = Path.Combine(UserFolder, TestFiles);
 
             string name = "Test1";
-            string test1FullPath = @"Test1.csv";
+            string test1FullPath = Path.Combine(path,@"Test1.csv");
             var tObj = new CSVTable<MockRowModel1>(name, test1FullPath);
             tObj.LoadFromFile();
 

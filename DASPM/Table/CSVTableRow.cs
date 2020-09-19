@@ -30,6 +30,9 @@ namespace DASPM.Table
         public TModel Fields { get; protected set; }
         public long ID { get; protected set; }
         public ITable<TModel> Table { get; protected set; }
+
+
+        }
         #endregion ImplimentITableRow
     }
 }

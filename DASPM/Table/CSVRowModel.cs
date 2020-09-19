@@ -7,20 +7,19 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public class CSVRowModel : IRowModel
+    public static class CSVRowModel
     {
-
-
-        public Dictionary<string, object> ToDict()
+        public static Dictionary<string, object> ToDict(IRowModel model, ClassMap   classMap)
         {
             //for each header, add the header text as key, and the field's contents as value
             throw new NotImplementedException();
         }
 
-        public List<object> ToList()
+        public static List<object> ToList(IRowModel model, ClassMap classMap)
         {
             //use the ClassMap to get the index and name of each property, then add it to the list
             throw new NotImplementedException();
+
+
         }
-    }
 }

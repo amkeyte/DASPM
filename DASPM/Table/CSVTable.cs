@@ -135,6 +135,7 @@ namespace DASPM.Table
                 Rows.Clear();
                 foreach (var r in records)
                 {
+                    
                     this.AddRow(r);
                 }
             }
