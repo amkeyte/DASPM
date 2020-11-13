@@ -72,6 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report\CSVReportTests.cs" />
     <Compile Include="Report\Mocks\MockRowModel1.cs" />
+    <Compile Include="Table\CSVRowModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

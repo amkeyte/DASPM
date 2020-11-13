@@ -2,10 +2,10 @@
 
 namespace DASPM_PCTEL.Table
 {
-    public class PCTEL_TableRow<T> : CSVTableRow<T>
-        where T : PCTEL_TableRowModel
+    public class PCTEL_TableRow<TModel> : CSVTableRow<TModel>
+        where TModel : PCTEL_TableRowModel
     {
-        public PCTEL_TableRow(CSVTable<T> table, T row) : base(table, row)
+        public PCTEL_TableRow(CSVTable<TModel> table, TModel row) : base(table, row)
         {
         }
 

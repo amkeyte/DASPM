@@ -32,7 +32,7 @@ namespace DASPM.Table
         public ITable<TModel> Table { get; protected set; }
 
 
-        }
+        
         #endregion ImplimentITableRow
     }
 }
