@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public static class CSVRowModel
+    public class CSVRowModel
     {
         /// <summary>
         /// Returns a dictionary containing the field name of each header as the key and it's field value.
