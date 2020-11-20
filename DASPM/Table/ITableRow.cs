@@ -7,16 +7,12 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    /// <summary>
-    /// The row in a table
-    /// </summary>
-    /// <typeparam name="TModel">The Model type for this table</typeparam>
-    public interface ITableRow<TModel> where TModel : IRowModel
+    public interface ITableRow
     {
         /// <summary>
         /// The fields in this row
         /// </summary>
-        TModel Fields { get; }
+        IRowModel Fields { get; }
 
         /// <summary>
         /// This rows number in the table
@@ -26,6 +22,28 @@ namespace DASPM.Table
         /// <summary>
         /// The table this row belongs to
         /// </summary>
-        ITable<TModel> Table { get; }
+        ITable Table { get; }
+
+        /// <summary>
+        /// The model type used for this table
+        /// </summary>
+        Type ModelType { get; }
+    }
+
+    /// <summary>
+    /// The row in a table
+    /// </summary>
+    /// <typeparam name="TModel">The Model type for this table</typeparam>
+    public interface ITableRow<TModel>:ITableRow where TModel : IRowModel
+    {
+        /// <summary>
+        /// The fields in this row
+        /// </summary>
+        new TModel Fields { get; }
+
+        /// <summary>
+        /// The table this row belongs to
+        /// </summary>
+        new ITable<TModel> Table { get; }
     }
 }

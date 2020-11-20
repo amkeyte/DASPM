@@ -2,22 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DASPM.Table
-{
+{ 
     /// <summary>
     /// The data table. Contains a set of rows with a pre-defined set of data fields.
     /// </summary>
-    /// <typeparam name="TModel">The data model used for this table</typeparam>
-    public interface ITable<TModel> where TModel : IRowModel
+    public interface ITable
     {
         /// <summary>
         /// Number of rows in table
         /// </summary>
         long Count { get; }
-        
+
         /// <summary>
         /// The filename assigned to this table (should be moved to concrete because a table should not be required to be tied to a file)
         /// </summary>
@@ -41,9 +41,9 @@ namespace DASPM.Table
         /// <summary>
         /// Return a List of rows for accessing data
         /// </summary>
-        IList<ITableRow<TModel>> Rows { get; }
+        IList<ITableRow> Rows { get; }
 
-        
+
         /// <summary>
         /// Depreciate... no longer applicable or used.
         /// </summary>
@@ -54,11 +54,35 @@ namespace DASPM.Table
         /// </summary>
         /// <param name="id">The Row number</param>
         /// <returns>The requested row. Exception if out of range.</returns>
-        ITableRow<TModel> Row(int id);
+        ITableRow Row(int id);
 
         /// <summary>
         /// The ClassMap for TModel. Available only after file access. It is assumed that only one ClassMap is being used.
         /// </summary>
         ClassMap ClassMap { get; }
+    }
+
+
+
+    /// <typeparam name="TModel">The data model used for this table</typeparam>
+    public interface ITable<TModel>:ITable where TModel : IRowModel
+    {
+        /// <summary>
+        /// The file path assiciated with this table (shoule be moved to concrete, and merged into FullPath)
+        /// </summary>
+        //string FilePath { get; }
+
+        /// <summary>
+        /// Return a List of rows for accessing data
+        /// </summary>
+        new IList<ITableRow<TModel>> Rows { get; }
+
+
+        /// <summary>
+        /// Access an individual row by number.
+        /// </summary>
+        /// <param name="id">The Row number</param>
+        /// <returns>The requested row. Exception if out of range.</returns>
+        new ITableRow<TModel> Row(int id);
     }
 }

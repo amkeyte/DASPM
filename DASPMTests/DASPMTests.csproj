@@ -70,9 +70,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Report\CSVReportTests.cs" />
+    <Compile Include="Report\CSVTableTests.cs" />
     <Compile Include="Report\Mocks\MockRowModel1.cs" />
+    <Compile Include="Report\Mocks\MockTable1.cs" />
+    <Compile Include="Report\Mocks\MockTableRow1.cs" />
     <Compile Include="Table\CSVRowModelTests.cs" />
+    <Compile Include="Table\CSVTableRowTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
