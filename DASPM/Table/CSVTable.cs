@@ -24,10 +24,23 @@ namespace DASPM.Table
         //factory pattern ensures initialize is called.
         public static CSVTable Create(string name, string fullPath, Type tableType, Type rowType, Type modelType)
         {
-            if (tableType.GenericTypeArguments.Length > 0)
+            if (!typeof(CSVTable).IsAssignableFrom(tableType))
             {
-                //probably need a better specific exception type.
-                throw new InvalidOperationException("Do not use this factory for tables using the TModel parameter");
+                throw new ArgumentException("Invalid tableType: " + tableType);
+            }
+            if (!typeof(CSVTableRow).IsAssignableFrom(rowType))
+            {
+                throw new ArgumentException("Invalid rowType: " + rowType);
+            }
+            if (tableType.IsGenericTypeDefinition)
+            {
+                throw new InvalidOperationException("Use 'CreateGeneric' variant to build table of generic type: " + tableType);
+            }
+
+            //maybe not desired... it could be possible to have concrete table with generic rows?
+            if (rowType.IsGenericTypeDefinition)
+            {
+                throw new InvalidOperationException("[this is in test] Use 'CreateGeneric' variant to build table with rows of generic type: " + rowType);
             }
 
             var table = (CSVTable)Activator.CreateInstance(tableType);
@@ -169,7 +182,11 @@ namespace DASPM.Table
         public virtual ITableRow CreateRow(IRowModel model)
         {
             if (!TryValidateModelType(model, out ArgumentException e)) throw e;
-            return CSVTableRow.Create(this, model, RowType, ModelType);
+            if (RowType.ContainsGenericParameters)
+            {
+                return CSVTableRow<IRowModel>.CreateGeneric(this, model, this.RowType);
+            }
+            return CSVTableRow.Create(this, model, RowType);
         }
 
         //short form access
@@ -281,8 +298,17 @@ namespace DASPM.Table
         //}
 
         //create with table type
-        public static CSVTable<TModel> Create(string name, string fullPath, Type tableType, Type rowType)
+        public static CSVTable<TModel> CreateGeneric(string name, string fullPath, Type tableType, Type rowType)
         {
+            if (!typeof(CSVTable<TModel>).IsAssignableFrom(tableType))
+            {
+                throw new InvalidOperationException("Invalid tableType (is it generic?): " + tableType);
+            }
+            if (!typeof(CSVTableRow<TModel>).IsAssignableFrom(rowType))
+            {
+                throw new InvalidOperationException("Invalid rowType (is it generic?): " + rowType);
+            }
+
             var table = (CSVTable<TModel>)Activator.CreateInstance(tableType);
             table.Initialize(name, fullPath, rowType, typeof(TModel));
             return table;
@@ -311,8 +337,7 @@ namespace DASPM.Table
 
         public virtual ITableRow<TModel> CreateRow(TModel model)
         {
-            if (!TryValidateModelType(model, out ArgumentException e)) throw e;
-            return CSVTableRow<TModel>.Create(this, model, RowType);
+            return (ITableRow<TModel>)base.CreateRow(model);
         }
 
         //short form access

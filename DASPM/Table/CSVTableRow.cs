@@ -21,35 +21,42 @@ namespace DASPM.Table
         //    return tableRow;
         //}
 
-        //factory pattern - specified row type
-        public static CSVTableRow Create(CSVTable table, IRowModel model, Type tableRowType, Type modelType)
+        /// <summary>
+        /// Non-Generic creation of the speificied CSVTableRow descendant. Model Type is inferred.
+        /// </summary>
+        /// <param name="table">The compatible table instance owning this row</param>
+        /// <param name="model">An instance of the IRowModel to contain the data for this row</param>
+        /// <param name="tableRowType">The CSVTableRow descendant that is compatible with modelType</param>
+        /// <param name="modelType">The type of model to be used.</param>
+        /// <returns></returns>
+        public static CSVTableRow Create(CSVTable table, IRowModel model, Type tableRowType)
         {
             //probably do some verification on types used
 
-            if (tableRowType.GenericTypeArguments.Length > 0)
+            if (tableRowType.ContainsGenericParameters)
             {
                 //probably need a better specific exception type.
                 throw new InvalidOperationException("Do not use this factory for tables using the TModel parameter");
             }
 
             var tableRow = (CSVTableRow)Activator.CreateInstance(tableRowType);
-            tableRow.Initialize(table, model, modelType);
+            tableRow.Initialize(table, model);
             return tableRow;
         }
 
-        protected void Initialize(CSVTable table, IRowModel model, Type modelType)
+        protected void Initialize(CSVTable table, IRowModel model)
         {
             //give an initial model if it's empty TODO make this default values or something
             if (model is null)
             {
-                model = (IRowModel)Activator.CreateInstance(modelType);
+                model = (IRowModel)Activator.CreateInstance(model.GetType());
             }
 
             if (!table.TryValidateModelType(model, out ArgumentException e)) throw e;
 
             Table = table;
             Fields = model;
-            ModelType = modelType;
+            ModelType = model.GetType();
         }
 
         protected CSVTableRow()
@@ -87,13 +94,39 @@ namespace DASPM.Table
         //    return tableRow;
         //}
 
-        //create with table row type
-        public static CSVTableRow<TModel> Create(CSVTable<TModel> table, TModel model, Type tableRowType)
+        /// <summary>
+        /// Fully qualified creation. Allows use of subtypes of TModel. Model type is inferred from model.
+        /// </summary>
+        /// <param name="table">Instance of table</param>
+        /// <param name="model">Instance of TModel or a subtype</param>
+        /// <param name="tableRowType">Type for the table row compatible with the model.</param>
+        /// <param name="modelType">TModel, or one of its subtypes.</param>
+        /// <returns>The created TableRow</returns>
+        public static CSVTableRow<TModel> CreateGeneric(CSVTable<TModel> table, TModel model, Type tableRowType)
         {
             var tableRow = (CSVTableRow<TModel>)Activator.CreateInstance(tableRowType);
-            tableRow.Initialize(table, model, typeof(TModel));
+            tableRow.Initialize(table, model);
             return tableRow;
         }
+
+        public static CSVTableRow<TModel> CreateGeneric(CSVTable table, TModel model, Type tableRowType)
+        {
+            var tableRow = (CSVTableRow<TModel>)Activator.CreateInstance(tableRowType);
+            tableRow.Initialize(table, model);
+            return tableRow;
+        }
+
+        /// <summary>
+        /// Shorthand creator for when the model type is TModel.
+        /// </summary>
+        /// <param name="table">Instance of compatible table</param>
+        /// <param name="model">instance of TModel</param>
+        /// <param name="tableRowType">Type of table row compatible with TModel</param>
+        /// <returns>The created TableRow</returns>
+        //public static CSVTableRow<TModel> Create(CSVTable<TModel> table, TModel model, Type tableRowType)
+        //{
+        //    return Create(table, model, tableRowType, typeof(TModel));
+        //}
 
         #endregion ctor
 

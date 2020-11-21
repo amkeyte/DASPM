@@ -21,11 +21,11 @@ namespace DASPMTests.Report.Mocks
     public class MockTable1<TModel> : CSVTable<TModel>
         where TModel : IRowModel
     {
-        public static MockTable1<TModel> Create(string name, string fullPath)
+        public static MockTable1<TModel> CreateGeneric(string name, string fullPath)
         {
-            return (MockTable1<TModel>)Create(name, fullPath,
+            return (MockTable1<TModel>)CreateGeneric(name, fullPath,
                 typeof(MockTable1<TModel>),
-                typeof(MockTableRow1));
+                typeof(MockTableRow1<TModel>));
         }
     }
 }

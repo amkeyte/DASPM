@@ -25,9 +25,9 @@ namespace DASPM.Table.Tests
                 typeof(MockTable1),
                 typeof(MockTableRow1),
                 typeof(MockRowModel1));
-
             var model = new MockRowModel1();
-            var row = CSVTableRow.Create(table, model, typeof(MockTableRow1), typeof(MockRowModel1));
+
+            var row = CSVTableRow.Create(table, model, typeof(MockTableRow1));
 
             Assert.AreEqual(typeof(MockTableRow1), row.GetType());
             Assert.AreEqual(typeof(MockRowModel1), row.ModelType);
@@ -41,6 +41,7 @@ namespace DASPM.Table.Tests
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
             var table = MockTable1.Create(name, fullPath);
             var model = new MockRowModel1();
+
             var row = MockTableRow1.Create(table, model);
 
             Assert.AreEqual(typeof(MockTableRow1), row.GetType());
@@ -53,28 +54,15 @@ namespace DASPM.Table.Tests
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var table = MockTable1<MockRowModel1>.Create(name, fullPath);
+
+            var table = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
             var model = new MockRowModel1();
-            var row = MockTableRow1<MockRowModel1>.Create(table, model);
+            var row = MockTableRow1<MockRowModel1>.CreateGeneric(table, model);
 
             Assert.AreEqual(typeof(MockTableRow1<MockRowModel1>), row.GetType());
             Assert.AreEqual(typeof(MockRowModel1), row.ModelType);
             Assert.AreEqual(typeof(MockRowModel1), row.Fields.GetType());
         }
-
-        //[TestMethod()]
-        //public void CreateSpecifiedTest()
-        //{
-        //    string name = "Test1";
-        //    string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-        //    var table = CSVTable.Create(name, fullPath, typeof(MockRowModel1));
-        //    var model = new MockRowModel1();
-        //    var row = CSVTableRow.Create(table, model, typeof(MockTableRow1), typeof(MockRowModel1));
-
-        //    Assert.AreEqual(typeof(MockTableRow1), row.GetType());
-        //    Assert.AreEqual(typeof(MockRowModel1), row.ModelType);
-        //    Assert.AreEqual(typeof(MockRowModel1), row.Fields.GetType());
-        //}
 
         [TestMethod()]
         public void CreateGenericTest()
@@ -82,13 +70,13 @@ namespace DASPM.Table.Tests
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
 
-            var table = CSVTable<MockRowModel1>.Create(name, fullPath,
+            var table = CSVTable<MockRowModel1>.CreateGeneric(name, fullPath,
                 typeof(MockTable1<MockRowModel1>),
-                typeof(MockTableRow1));
+                typeof(MockTableRow1<MockRowModel1>));
 
             var model = new MockRowModel1();
 
-            var row = CSVTableRow<MockRowModel1>.Create(table, model,
+            var row = CSVTableRow<MockRowModel1>.CreateGeneric(table, model,
                 typeof(MockTableRow1<MockRowModel1>));
 
             Assert.AreEqual(typeof(MockTableRow1<MockRowModel1>), row.GetType());

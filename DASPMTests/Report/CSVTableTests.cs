@@ -82,7 +82,7 @@ namespace DASPM.Table.Tests
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var tObj = MockTable1<MockRowModel1>.Create(name, fullPath);
+            var tObj = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
 
             var tableTypeTest = tObj.GetType();
             var rowTypeTest = tObj.ModelType;
@@ -99,7 +99,7 @@ namespace DASPM.Table.Tests
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var tObj = CSVTable<MockRowModel1>.Create(name, fullPath,
+            var tObj = CSVTable<MockRowModel1>.CreateGeneric(name, fullPath,
                 typeof(MockTable1<MockRowModel1>),
                 typeof(MockTableRow1<MockRowModel1>));
 
@@ -142,9 +142,9 @@ namespace DASPM.Table.Tests
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var table = MockTable1<MockRowModel1>.Create(name, fullPath);
+            var table = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
             var model = new MockRowModel1();
-            var row = MockTableRow1<MockRowModel1>.Create(table, model);
+            var row = MockTableRow1<MockRowModel1>.CreateGeneric(table, model);
 
             //requires _rows public hack
             table._rows.Add(row);
@@ -208,7 +208,7 @@ namespace DASPM.Table.Tests
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var table = MockTable1<MockRowModel1>.Create(name, fullPath);
+            var table = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
 
             table.LoadFromFile();
             var row0Test = table.Row(0).Fields;
