@@ -13,14 +13,6 @@ namespace DASPM.Table
 {
     public class CSVTable : ITable
     {
-        ////default table type
-        //public static CSVTable Create(string name, string fullPath, Type modelType)
-        //{
-        //    var table = new CSVTable();
-        //    table.Initialize(name, fullPath, modelType);
-        //    return table;
-        //}
-
         //factory pattern ensures initialize is called.
         public static CSVTable Create(string name, string fullPath, Type tableType, Type rowType, Type modelType)
         {
@@ -66,6 +58,7 @@ namespace DASPM.Table
 
             this.Name = name;
             this.FullPath = fullPath;
+
             //add an initialized state field to ensure correct creation.
         }
 
@@ -161,7 +154,7 @@ namespace DASPM.Table
         public bool TryValidateModelType(IRowModel model, out ArgumentException exception)
         {
             exception = null;
-            if (!model.GetType().IsAssignableFrom(ModelType))
+            if (!ModelType.IsAssignableFrom(model.GetType()))
             {
                 exception = new ArgumentException("The model must be of type " + ModelType.FullName);
                 return false;
@@ -238,7 +231,7 @@ namespace DASPM.Table
 
                 ConfigureCsvWriter(csv);
                 ClassMap = csv.Configuration.Maps[ModelType];
-                var rowModels = new List<IRowModel>();
+                var rowModels = new List<object>();
                 foreach (var r in Rows)
                 {
                     rowModels.Add(r.Fields);
@@ -289,14 +282,6 @@ namespace DASPM.Table
 
         #region ctor
 
-        ////create default type
-        //public static CSVTable<TModel> Create(string name, string fullPath)
-        //{
-        //    var table = new CSVTable<TModel>();
-        //    table.Initialize(name, fullPath, typeof(TModel));
-        //    return table;
-        //}
-
         //create with table type
         public static CSVTable<TModel> CreateGeneric(string name, string fullPath, Type tableType, Type rowType)
         {
@@ -313,10 +298,6 @@ namespace DASPM.Table
             table.Initialize(name, fullPath, rowType, typeof(TModel));
             return table;
         }
-
-        //protected  CSVTable(string name, string fullPath):base (name,fullPath,typeof(TModel))
-        //{
-        //}
 
         #endregion ctor
 
