@@ -54,11 +54,6 @@
     <Compile Include="Table\PCTEL_Table.cs" />
     <Compile Include="Table\PCTEL_TableRow.cs" />
     <Compile Include="Table\PCTEL_TableRowModel.cs" />
-    <Compile Include="Updater\PCTEL_UpdaterTableRow.cs" />
-    <Compile Include="Updater\PCTEL_UpdaterTable.cs" />
-    <Compile Include="Updater\PCTEL_UpdaterTableRowModel.cs" />
-    <Compile Include="Updater\PCTEL_UpdateWriter.cs" />
-    <Compile Include="Updater\PCTEL_UpdaterRules.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DASPM\DASPM.csproj">
