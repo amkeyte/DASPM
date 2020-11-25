@@ -12,9 +12,6 @@ namespace DASPM_PCTEL.Table.Tests
     [TestClass()]
     public class PCTEL_TableTests
     {
-        private string TestFiles { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
-        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
-
         //[TestMethod()]
         //public void LocationsTest()
         //{
@@ -41,13 +38,74 @@ namespace DASPM_PCTEL.Table.Tests
         //    Assert.AreEqual("1", tObj[loc].GridID);
         //}
 
+        private class TestSetup
+        {
+            public static string Filename1 => @"TableTest1.csv";
+            public static string FullPath1 => Path.Combine(Path1, Filename1);
+            public static string Name1 => "TableTest1";
+            public static string Path1 => Path.Combine(UserFolder, TestFiles, "PCTEL_Table");
+            public static string TestFiles { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
+            public static string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
+        }
+
+        [TestMethod()]
+        public void AddRowGenericTest()
+        {
+            var tObj = PCTEL_Table<PCTEL_TableRowModel>.CreateGeneric(TestSetup.Name1, TestSetup.FullPath1);
+
+            var tModel = new PCTEL_TableRowModel();
+            tModel.Label = "TestLabel";
+
+            var tRow = tObj.AddRow(tModel);
+
+            Assert.AreEqual("TestLabel", tRow.Fields.Label);
+        }
+
+        [TestMethod()]
+        public void AddRowTest()
+        {
+            var tObj = PCTEL_Table.Create(TestSetup.Name1, TestSetup.FullPath1);
+            var tModel = new PCTEL_TableRowModel();
+            tModel.Label = "TestLabel";
+
+            var tRow = tObj.AddRow(tModel);
+
+            Assert.AreEqual("TestLabel", tRow.Fields.Label);
+        }
+
+        [TestMethod()]
+        public void CreateGenericTest()
+        {
+            var tObj = PCTEL_Table<PCTEL_TableRowModel>.CreateGeneric(TestSetup.Name1, TestSetup.FullPath1);
+
+            Assert.AreEqual(TestSetup.Name1, tObj.Name);
+            Assert.AreEqual(TestSetup.FullPath1, tObj.FullPath);
+        }
+
+        [TestMethod()]
+        public void CreateTest()
+        {
+            var tObj = PCTEL_Table.Create(TestSetup.Name1, TestSetup.FullPath1);
+
+            Assert.AreEqual(TestSetup.Name1, tObj.Name);
+            Assert.AreEqual(TestSetup.FullPath1, tObj.FullPath);
+        }
+
+        [TestMethod()]
+        public void PCTEL_Table_CastFromGenericTest()
+        {
+            var tObjGeneric = PCTEL_Table<PCTEL_TableRowModel>.CreateGeneric(TestSetup.Name1, TestSetup.FullPath1);
+
+            PCTEL_Table tObj = tObjGeneric;
+
+            Assert.AreEqual(TestSetup.Name1, tObj.Name);
+            Assert.AreEqual(TestSetup.FullPath1, tObj.FullPath);
+        }
+
         [TestMethod()]
         public void PCTEL_TableTest()
         {
-            string name = "TableTest1";
-            string path = Path.Combine(UserFolder, TestFiles, "PCTEL_Table");
-            string filename = @"TableTest1.csv";
-            var tObj = PCTEL_Table.Create(name, Path.Combine(path, filename));
+            var tObj = PCTEL_Table.Create(TestSetup.Name1, TestSetup.FullPath1);
 
             tObj.LoadFromFile();
 
@@ -65,6 +123,31 @@ namespace DASPM_PCTEL.Table.Tests
 
             //info and last row
             //Assert.AreEqual("6", tObj[25]);
+        }
+
+        [TestMethod()]
+        public void RowGenericTest()
+        {
+            var tObj = PCTEL_Table<PCTEL_TableRowModel>.CreateGeneric(TestSetup.Name1, TestSetup.FullPath1);
+
+            var tModel = new PCTEL_TableRowModel();
+            tModel.Label = "TestLabel";
+
+            var tRow1 = tObj.AddRow(tModel);
+            var tRow2 = tObj.Row(tRow1.ID);
+            Assert.AreEqual("TestLabel", tRow2.Fields.Label);
+        }
+
+        [TestMethod()]
+        public void RowTest()
+        {
+            var tObj = PCTEL_Table.Create(TestSetup.Name1, TestSetup.FullPath1);
+            var tModel = new PCTEL_TableRowModel();
+            tModel.Label = "TestLabel";
+
+            var tRow1 = tObj.AddRow(tModel);
+            var tRow2 = tObj.Row(tRow1.ID);
+            Assert.AreEqual("TestLabel", tRow2.Fields.Label);
         }
     }
 }

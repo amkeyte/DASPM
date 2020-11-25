@@ -7,6 +7,7 @@ namespace DASPM_PCTEL.Table
 {
     internal class PCTEL_Table_Core
     {
+        protected CSVTable BaseTable => Table;
         protected PCTEL_Table Table { get; set; }
 
         public PCTEL_Table_Core(PCTEL_Table table)
@@ -21,12 +22,16 @@ namespace DASPM_PCTEL.Table
         /// Do the specific things needed to add a row to PCTEL_Table
         /// </summary>
         /// <param name="row"></param>
-        public void AddRow(PCTEL_TableRow row)
+        public PCTEL_TableRow AddRow(IRowModel model)
         {
+            PCTEL_TableRow row = (PCTEL_TableRow)BaseTable.AddRow(model);
+
             if (!Locations.ContainsKey(row.Location))
             {
                 Locations.Add(row.Location, row);
             }
+
+            return row;
         }
 
         public void ConfigureCsvReader(CsvReader csv)
@@ -40,6 +45,14 @@ namespace DASPM_PCTEL.Table
             var map = new PCTEL_TableRowMap();
             csv.Configuration.RegisterClassMap(map);
         }
+
+        public PCTEL_TableRowModel GetModelByID(int id) => GetRowByID(id).Fields;
+
+        public PCTEL_TableRowModel GetModelByLocation(PCTEL_Location loc) => GetRowByLoc(loc).Fields;
+
+        public PCTEL_TableRow GetRowByID(int id) => (PCTEL_TableRow)BaseTable.Row(id);
+
+        public PCTEL_TableRow GetRowByLoc(PCTEL_Location loc) => Locations[loc];
 
         #endregion CSVTable
 
@@ -65,11 +78,6 @@ namespace DASPM_PCTEL.Table
     {
         #region ctor
 
-        public static PCTEL_Table Create(string name, string fullPath)
-        {
-            return (PCTEL_Table)Create(name, fullPath, typeof(PCTEL_Table), typeof(PCTEL_TableRow), typeof(PCTEL_TableRowModel));
-        }
-
         private PCTEL_Table_Core Core { get; set; }
 
         public PCTEL_Table()
@@ -77,25 +85,18 @@ namespace DASPM_PCTEL.Table
             Core = new PCTEL_Table_Core(this);
         }
 
-        public static implicit operator PCTEL_Table(PCTEL_Table<PCTEL_TableRowModel> other)
+        public static PCTEL_Table Create(string name, string fullPath)
         {
-            //definately test this!!!
-            return (PCTEL_Table)(ITable)other;
+            return (PCTEL_Table)Create(name, fullPath, typeof(PCTEL_Table), typeof(PCTEL_TableRow), typeof(PCTEL_TableRowModel));
         }
+
+        //definately test this!!!
+        public static implicit operator PCTEL_Table(PCTEL_Table<PCTEL_TableRowModel> other)
+            => (PCTEL_Table)(ITable)other;
 
         #endregion ctor
 
-        public override void AddRow(IRowModel model)
-        {
-            base.AddRow(model);
-            Core.AddRow((PCTEL_TableRow)Rows[Rows.Count - 1]);
-        }
-
-        //hiding return Row class type
-        public new PCTEL_TableRow Row(int id)
-        {
-            return (PCTEL_TableRow)Rows[id];
-        }
+        #region CSVTable
 
         protected override void ConfigureCsvReader(CsvReader csv)
         {
@@ -107,46 +108,43 @@ namespace DASPM_PCTEL.Table
             Core.ConfigureCsvWriter(csv);
         }
 
-        //short form access for location - can still use int index?
-        public virtual PCTEL_TableRowModel this[PCTEL_Location loc]
-        {
-            get => (PCTEL_TableRowModel)Core.Locations[loc].Fields;
-        }
+        //short form access for location -
+        //can still use int index?
+        public new PCTEL_TableRowModel this[int id] => Core.GetModelByID(id);
+
+        public virtual PCTEL_TableRowModel this[PCTEL_Location loc] => Core.GetModelByLocation(loc);
+
+        public new PCTEL_TableRow AddRow(IRowModel model) => Core.AddRow(model);
+
+        //hiding return Row class type
+        public new PCTEL_TableRow Row(int id) => Core.GetRowByID(id);
+
+        #endregion CSVTable
     }
 
-    public class PCTEL_Table<TModel> : CSVTable<TModel>
+    public class PCTEL_Table<TModel> : PCTEL_Table, ITable<TModel>
         where TModel : PCTEL_TableRowModel
     {
         #region ctor
-
-        public static PCTEL_Table<TModel> CreateGeneric(string name, string fullPath)
-        {
-            return (PCTEL_Table<TModel>)CreateGeneric(name, fullPath,
-                typeof(PCTEL_Table<TModel>),
-                typeof(PCTEL_TableRow<TModel>));
-        }
 
         private PCTEL_Table_Core Core { get; set; }
 
         public PCTEL_Table()
         {
             //double cast to get past generic TModel can't be used by implicit cast
-            Core = new PCTEL_Table_Core((PCTEL_Table)(ITable)this);
+            Core = new PCTEL_Table_Core((PCTEL_Table)(CSVTable)this);
+        }
+
+        public static PCTEL_Table<TModel> CreateGeneric(string name, string fullPath)
+        {
+            return (PCTEL_Table<TModel>)Create(name, fullPath,
+                typeof(PCTEL_Table<TModel>),
+                typeof(PCTEL_TableRow<TModel>));
         }
 
         #endregion ctor
 
-        public override void AddRow(IRowModel model)
-        {
-            base.AddRow(model);
-            Core.AddRow((PCTEL_TableRow)Rows[Rows.Count - 1]);
-        }
-
-        //hiding return Row class type
-        public new PCTEL_TableRow Row(int id)
-        {
-            return (PCTEL_TableRow)Rows[id];
-        }
+        #region CSVTable
 
         protected override void ConfigureCsvReader(CsvReader csv)
         {
@@ -158,10 +156,17 @@ namespace DASPM_PCTEL.Table
             Core.ConfigureCsvWriter(csv);
         }
 
-        //short form access for location - can still use int index?
-        public virtual PCTEL_TableRowModel this[PCTEL_Location loc]
-        {
-            get => (PCTEL_TableRowModel)Core.Locations[loc].Fields;
-        }
+        //short form access for location -
+        //can still use int index?
+        public new PCTEL_TableRowModel this[int id] => Core.GetModelByID(id);
+
+        public virtual PCTEL_TableRowModel this[PCTEL_Location loc] => Core.GetModelByLocation(loc);
+
+        public new PCTEL_TableRow<TModel> AddRow(IRowModel model) => Core.AddRow(model);
+
+        //hiding return Row class type
+        public new PCTEL_TableRow<TModel> Row(int id) => Core.GetRowByID(id);
+
+        #endregion CSVTable
     }
 }
