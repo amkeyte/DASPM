@@ -128,11 +128,13 @@ namespace DASPM.Table
             protected set
             {
                 throw new NotImplementedException("this got called!!");
+#pragma warning disable CS0162 // Unreachable code detected
                 _rows = new List<object>();
                 foreach (var row in value)
                 {
                     _rows.Add(row);
                 }
+#pragma warning restore CS0162 // Unreachable code detected
             }
         }
 
@@ -162,7 +164,13 @@ namespace DASPM.Table
             return true;
         }
 
-        public virtual void AddRow(IRowModel model)
+        /// <summary>
+        /// Uses the model to create a new TableRow using CreateRow. Then adds it to the table
+        /// and returns it.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>The newly created row</returns>
+        public virtual ITableRow AddRow(IRowModel model)
         {
             if (!TryValidateModelType(model, out ArgumentException e)) throw e;
 
@@ -170,6 +178,7 @@ namespace DASPM.Table
             var row = CreateRow(model);
             //using internal because writing to the Rows copy is not desired.
             this._rows.Add(row);
+            return row;
         }
 
         public virtual ITableRow CreateRow(IRowModel model)
@@ -276,7 +285,9 @@ namespace DASPM.Table
             protected set
             {
                 throw new NotImplementedException("set got called!!");
+#pragma warning disable CS0162 // Unreachable code detected
                 _rows = (List<object>)value;
+#pragma warning restore CS0162 // Unreachable code detected
             }
         }
 

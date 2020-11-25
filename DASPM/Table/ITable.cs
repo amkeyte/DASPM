@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DASPM.Table
-{ 
+{
     /// <summary>
     /// The data table. Contains a set of rows with a pre-defined set of data fields.
     /// </summary>
@@ -34,15 +34,9 @@ namespace DASPM.Table
         string Name { get; }
 
         /// <summary>
-        /// The file path assiciated with this table (shoule be moved to concrete, and merged into FullPath)
-        /// </summary>
-        //string FilePath { get; }
-
-        /// <summary>
         /// Return a List of rows for accessing data
         /// </summary>
         IList<ITableRow> Rows { get; }
-
 
         /// <summary>
         /// Depreciate... no longer applicable or used.
@@ -58,14 +52,13 @@ namespace DASPM.Table
 
         /// <summary>
         /// The ClassMap for TModel. Available only after file access. It is assumed that only one ClassMap is being used.
+        /// TODO: should not be bart of the base table interface!!!!
         /// </summary>
         ClassMap ClassMap { get; }
     }
 
-
-
     /// <typeparam name="TModel">The data model used for this table</typeparam>
-    public interface ITable<TModel>:ITable where TModel : IRowModel
+    public interface ITable<TModel> : ITable where TModel : IRowModel
     {
         /// <summary>
         /// The file path assiciated with this table (shoule be moved to concrete, and merged into FullPath)
@@ -76,7 +69,6 @@ namespace DASPM.Table
         /// Return a List of rows for accessing data
         /// </summary>
         new IList<ITableRow<TModel>> Rows { get; }
-
 
         /// <summary>
         /// Access an individual row by number.
