@@ -1,10 +1,7 @@
 ﻿using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using DASPM.Table;
-
-#if BUILD_DATASET
 using DASPM_PCTEL.DataSet;
-#endif
 
 namespace DASPM_PCTEL.Table
 {

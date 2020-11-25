@@ -128,13 +128,11 @@ namespace DASPM.Table
             protected set
             {
                 throw new NotImplementedException("this got called!!");
-#pragma warning disable CS0162 // Unreachable code detected
                 _rows = new List<object>();
                 foreach (var row in value)
                 {
                     _rows.Add(row);
                 }
-#pragma warning restore CS0162 // Unreachable code detected
             }
         }
 
@@ -278,9 +276,7 @@ namespace DASPM.Table
             protected set
             {
                 throw new NotImplementedException("set got called!!");
-#pragma warning disable CS0162 // Unreachable code detected
                 _rows = (List<object>)value;
-#pragma warning restore CS0162 // Unreachable code detected
             }
         }
 

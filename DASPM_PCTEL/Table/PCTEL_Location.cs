@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-#if BUILD_DATASET
 using DASPM_PCTEL.DataSet;
-#endif
 
 namespace DASPM_PCTEL.Table
 {
@@ -45,7 +42,6 @@ namespace DASPM_PCTEL.Table
             LocID = model.LocID;
         }
 
-#if BUILD_DATASET
         public PCTEL_Location(PCTEL_DataSetRowModel model)
         {
             switch (model.DataSetType)
@@ -71,7 +67,6 @@ namespace DASPM_PCTEL.Table
             Label = model.Label;
             LocID = model.LocID;
         }
-#endif
 
         #endregion ctor
 
