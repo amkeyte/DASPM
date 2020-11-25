@@ -21,6 +21,26 @@ namespace DASPM.Table
         //    return tableRow;
         //}
 
+        protected CSVTableRow()
+        {
+            //do nothing; placeholder.
+        }
+
+        protected void Initialize(CSVTable table, IRowModel model)
+        {
+            //give an initial model if it's empty TODO make this default values or something
+            if (model is null)
+            {
+                model = (IRowModel)Activator.CreateInstance(model.GetType());
+            }
+
+            if (!table.TryValidateModelType(model, out ArgumentException e)) throw e;
+
+            Table = table;
+            Fields = model;
+            ModelType = model.GetType();
+        }
+
         /// <summary>
         /// Non-Generic creation of the speificied CSVTableRow descendant. Model Type is inferred.
         /// </summary>
@@ -44,26 +64,6 @@ namespace DASPM.Table
             return tableRow;
         }
 
-        protected void Initialize(CSVTable table, IRowModel model)
-        {
-            //give an initial model if it's empty TODO make this default values or something
-            if (model is null)
-            {
-                model = (IRowModel)Activator.CreateInstance(model.GetType());
-            }
-
-            if (!table.TryValidateModelType(model, out ArgumentException e)) throw e;
-
-            Table = table;
-            Fields = model;
-            ModelType = model.GetType();
-        }
-
-        protected CSVTableRow()
-        {
-            //do nothing; placeholder.
-        }
-
         #endregion ctor
 
         #region ClassMembers
@@ -75,7 +75,7 @@ namespace DASPM.Table
         #region ImplimentITableRow
 
         public IRowModel Fields { get; protected set; }
-        public long ID { get; protected set; }
+        public int ID { get; protected set; }
         public ITable Table { get; protected set; }
 
         #endregion ImplimentITableRow

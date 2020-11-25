@@ -72,7 +72,7 @@ namespace DASPM.Table
 
         public ClassMap ClassMap { get; protected set; }
 
-        public long Count
+        public int Count
         {
             get
             {
