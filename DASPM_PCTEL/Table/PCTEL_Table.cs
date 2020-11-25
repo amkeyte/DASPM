@@ -137,7 +137,7 @@ namespace DASPM_PCTEL.Table
 
         public static PCTEL_Table<TModel> CreateGeneric(string name, string fullPath)
         {
-            return (PCTEL_Table<TModel>)Create(name, fullPath,
+            return (PCTEL_Table<TModel>)CSVTable<TModel>Create(name, fullPath,
                 typeof(PCTEL_Table<TModel>),
                 typeof(PCTEL_TableRow<TModel>));
         }
