@@ -16,7 +16,7 @@ namespace DASPMTests.Report.Mocks
     }
 
     public class MockTableRow1<TModel> : CSVTableRow<TModel>
-        where TModel : IRowModel
+        where TModel : MockRowModel1
     {
         public static MockTableRow1<TModel> CreateGeneric(MockTable1<TModel> table, TModel model)
         {

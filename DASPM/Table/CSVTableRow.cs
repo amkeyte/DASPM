@@ -86,14 +86,6 @@ namespace DASPM.Table
     {
         #region ctor
 
-        ////create with default type
-        //public static CSVTableRow<TModel> Create(CSVTable<TModel> table, TModel model)
-        //{
-        //    var tableRow = new CSVTableRow<TModel>();
-        //    tableRow.Initialize(table, model, typeof(TModel));
-        //    return tableRow;
-        //}
-
         /// <summary>
         /// Fully qualified creation. Allows use of subtypes of TModel. Model type is inferred from model.
         /// </summary>
@@ -104,11 +96,14 @@ namespace DASPM.Table
         /// <returns>The created TableRow</returns>
         public static CSVTableRow<TModel> CreateGeneric(CSVTable<TModel> table, TModel model, Type tableRowType)
         {
+            //if these end up changing, cascade this down.
+
             var tableRow = (CSVTableRow<TModel>)Activator.CreateInstance(tableRowType);
             tableRow.Initialize(table, model);
             return tableRow;
         }
 
+        //accepts base CSVTable to support CSVTable.CreateRow(Addrow?)
         public static CSVTableRow<TModel> CreateGeneric(CSVTable table, TModel model, Type tableRowType)
         {
             var tableRow = (CSVTableRow<TModel>)Activator.CreateInstance(tableRowType);

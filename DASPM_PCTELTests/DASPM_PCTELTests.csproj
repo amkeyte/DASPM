@@ -71,7 +71,7 @@
   <ItemGroup>
     <Compile Include="DataSet\PCTEL_DataSetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Report\PCTEL_TableTests.cs" />
+    <Compile Include="Table\PCTEL_TableTests.cs" />
     <Compile Include="Updater\PCTEL_UpdaterTableTests.cs" />
   </ItemGroup>
   <ItemGroup>

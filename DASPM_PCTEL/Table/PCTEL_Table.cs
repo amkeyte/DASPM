@@ -5,75 +5,50 @@ using DASPM_PCTEL.ControlPanel;
 
 namespace DASPM_PCTEL.Table
 {
-    public class PCTEL_Table
+    internal class PCTEL_Table_Core
     {
-        public static PCTEL_Table<PCTEL_TableRowModel> Create(string name, string fullPath)
+        protected PCTEL_Table Table { get; set; }
+
+        public PCTEL_Table_Core(PCTEL_Table table)
         {
-            return new PCTEL_Table<PCTEL_TableRowModel>(name, fullPath);
+            Table = table;
+            Locations = new SortedList<PCTEL_Location, PCTEL_TableRow>();
         }
-    }
-
-    public class PCTEL_Table<TModel> : CSVTable<TModel>
-        where TModel : PCTEL_TableRowModel
-    {
-        #region ctor
-
-        public PCTEL_Table(string name, string fullPath) : base(name, fullPath)
-        {
-            Locations = new SortedList<PCTEL_Location, PCTEL_TableRow<TModel>>();
-        }
-
-        #endregion ctor
 
         #region CSVTable
 
-        public override void AddRow(TModel model)
+        /// <summary>
+        /// Do the specific things needed to add a row to PCTEL_Table
+        /// </summary>
+        /// <param name="row"></param>
+        public void AddRow(PCTEL_TableRow row)
         {
-            var row = (PCTEL_TableRow<TModel>)CreateRow(model);
-            Rows.Add(row);
-
             if (!Locations.ContainsKey(row.Location))
             {
                 Locations.Add(row.Location, row);
             }
         }
 
-        //Callback to define Row class
-        public override ITableRow<TModel> CreateRow(TModel model)
-        {
-            return new PCTEL_TableRow<TModel>(this, model);
-        }
-
-        //hiding return Row class type
-        public new PCTEL_TableRow<TModel> Row(int id)
-        {
-            return (PCTEL_TableRow<TModel>)Rows[id];
-        }
-
-        protected override void ConfigureCsvReader(CsvReader csv)
+        public void ConfigureCsvReader(CsvReader csv)
         {
             var map = new PCTEL_TableRowMap();
             csv.Configuration.RegisterClassMap(map);
         }
 
-        protected override void ConfigureCsvWriter(CsvWriter csv)
+        public void ConfigureCsvWriter(CsvWriter csv)
         {
             var map = new PCTEL_TableRowMap();
             csv.Configuration.RegisterClassMap(map);
-        }
-
-        //short form access
-        public virtual TModel this[PCTEL_Location loc]
-        {
-            get => Locations[loc].Fields;
         }
 
         #endregion CSVTable
 
         #region ClassMembers
 
+        //this might just be legacy now...
         public PCTEL_ControlPanel ControlPanel { get; }
-        public SortedList<PCTEL_Location, PCTEL_TableRow<TModel>> Locations { get; protected set; }
+
+        public SortedList<PCTEL_Location, PCTEL_TableRow> Locations { get; protected set; }
 
         public void Calculate()
         {
@@ -84,5 +59,109 @@ namespace DASPM_PCTEL.Table
         }
 
         #endregion ClassMembers
+    }
+
+    public class PCTEL_Table : CSVTable
+    {
+        #region ctor
+
+        public static PCTEL_Table Create(string name, string fullPath)
+        {
+            return (PCTEL_Table)Create(name, fullPath, typeof(PCTEL_Table), typeof(PCTEL_TableRow), typeof(PCTEL_TableRowModel));
+        }
+
+        private PCTEL_Table_Core Core { get; set; }
+
+        public PCTEL_Table()
+        {
+            Core = new PCTEL_Table_Core(this);
+        }
+
+        public static implicit operator PCTEL_Table(PCTEL_Table<PCTEL_TableRowModel> other)
+        {
+            //definately test this!!!
+            return (PCTEL_Table)(ITable)other;
+        }
+
+        #endregion ctor
+
+        public override void AddRow(IRowModel model)
+        {
+            base.AddRow(model);
+            Core.AddRow((PCTEL_TableRow)Rows[Rows.Count - 1]);
+        }
+
+        //hiding return Row class type
+        public new PCTEL_TableRow Row(int id)
+        {
+            return (PCTEL_TableRow)Rows[id];
+        }
+
+        protected override void ConfigureCsvReader(CsvReader csv)
+        {
+            Core.ConfigureCsvReader(csv);
+        }
+
+        protected override void ConfigureCsvWriter(CsvWriter csv)
+        {
+            Core.ConfigureCsvWriter(csv);
+        }
+
+        //short form access for location - can still use int index?
+        public virtual PCTEL_TableRowModel this[PCTEL_Location loc]
+        {
+            get => (PCTEL_TableRowModel)Core.Locations[loc].Fields;
+        }
+    }
+
+    public class PCTEL_Table<TModel> : CSVTable<TModel>
+        where TModel : PCTEL_TableRowModel
+    {
+        #region ctor
+
+        public static PCTEL_Table<TModel> CreateGeneric(string name, string fullPath)
+        {
+            return (PCTEL_Table<TModel>)CreateGeneric(name, fullPath,
+                typeof(PCTEL_Table<TModel>),
+                typeof(PCTEL_TableRow<TModel>));
+        }
+
+        private PCTEL_Table_Core Core { get; set; }
+
+        public PCTEL_Table()
+        {
+            //double cast to get past generic TModel can't be used by implicit cast
+            Core = new PCTEL_Table_Core((PCTEL_Table)(ITable)this);
+        }
+
+        #endregion ctor
+
+        public override void AddRow(IRowModel model)
+        {
+            base.AddRow(model);
+            Core.AddRow((PCTEL_TableRow)Rows[Rows.Count - 1]);
+        }
+
+        //hiding return Row class type
+        public new PCTEL_TableRow Row(int id)
+        {
+            return (PCTEL_TableRow)Rows[id];
+        }
+
+        protected override void ConfigureCsvReader(CsvReader csv)
+        {
+            Core.ConfigureCsvReader(csv);
+        }
+
+        protected override void ConfigureCsvWriter(CsvWriter csv)
+        {
+            Core.ConfigureCsvWriter(csv);
+        }
+
+        //short form access for location - can still use int index?
+        public virtual PCTEL_TableRowModel this[PCTEL_Location loc]
+        {
+            get => (PCTEL_TableRowModel)Core.Locations[loc].Fields;
+        }
     }
 }

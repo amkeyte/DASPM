@@ -2,6 +2,7 @@
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using DASPM.Table;
+using DASPM_PCTEL.Table;
 
 namespace DASPM_PCTEL.DataSet
 {
@@ -88,7 +89,7 @@ namespace DASPM_PCTEL.DataSet
         #endregion ctor
     }
 
-    public class PCTEL_DataSetRowModel : IRowModel
+    public class PCTEL_DataSetRowModel : PCTEL_TableRowModel
     {
         [Ignore]
         public PCTEL_DataSetTypes DataSetType { get; set; }
@@ -104,13 +105,17 @@ namespace DASPM_PCTEL.DataSet
         public float? DLPower { get; set; }
         public float? DLSignalPower { get; set; }
         public float? DLSN { get; set; }
-        public string Floor { get; set; }
+
+        //public string Floor { get; set; }
         public float? Frequency { get; set; }
-        public string GridID { get; set; }
-        public string Label { get; set; }
+
+        //public string GridID { get; set; }
+        //public string Label { get; set; }
         public string Latitude { get; set; }
-        public string LocID { get; set; }
+
+        //public string LocID { get; set; }
         public string Longitude { get; set; }
+
         public string MeasurementType { get; set; }
         public string Protocol { get; set; }
         public string SelReference { get; set; }
