@@ -13,11 +13,11 @@ namespace DASPM.Table
     /// </summary>
     public interface ITable
     {
-        /// <summary>
-        /// The ClassMap for TModel. Available only after file access. It is assumed that only one ClassMap is being used.
-        /// TODO: should not be bart of the base table interface!!!!
-        /// </summary>
-        ClassMap ClassMap { get; }
+        ///// <summary>
+        ///// The ClassMap for TModel. Available only after file access. It is assumed that only one ClassMap is being used.
+        ///// TODO: should not be bart of the base table interface!!!!
+        ///// </summary>
+        //ClassMap ClassMap { get; }
 
         /// <summary>
         /// Number of rows in table
