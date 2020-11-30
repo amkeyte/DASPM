@@ -41,12 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ControlPanel\PCTEL_ControlPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Table\PCTEL_Location.cs" />
-    <Compile Include="Table\PCTEL_Table.cs" />
-    <Compile Include="Table\PCTEL_TableRow.cs" />
-    <Compile Include="Table\PCTEL_TableRowModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DASPM\DASPM.csproj">

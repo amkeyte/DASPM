@@ -57,24 +57,24 @@ namespace DASPM.Table
         ITableRow Row(int id);
     }
 
-    /// <typeparam name="TModel">The data model used for this table</typeparam>
-    public interface ITable<TModel> : ITable where TModel : IRowModel
-    {
-        /// <summary>
-        /// The file path assiciated with this table (shoule be moved to concrete, and merged into FullPath)
-        /// </summary>
-        //string FilePath { get; }
+    ///// <typeparam name="TModel">The data model used for this table</typeparam>
+    //public interface ITable<TModel> : ITable where TModel : IRowModel
+    //{
+    //    /// <summary>
+    //    /// The file path assiciated with this table (shoule be moved to concrete, and merged into FullPath)
+    //    /// </summary>
+    //    //string FilePath { get; }
 
-        /// <summary>
-        /// Return a List of rows for accessing data
-        /// </summary>
-        new IList<ITableRow<TModel>> Rows { get; }
+    //    /// <summary>
+    //    /// Return a List of rows for accessing data
+    //    /// </summary>
+    //    new IList<ITableRow<TModel>> Rows { get; }
 
-        /// <summary>
-        /// Access an individual row by number.
-        /// </summary>
-        /// <param name="id">The Row number</param>
-        /// <returns>The requested row. Exception if out of range.</returns>
-        new ITableRow<TModel> Row(int id);
-    }
+    //    /// <summary>
+    //    /// Access an individual row by number.
+    //    /// </summary>
+    //    /// <param name="id">The Row number</param>
+    //    /// <returns>The requested row. Exception if out of range.</returns>
+    //    new ITableRow<TModel> Row(int id);
+    //}
 }

@@ -30,20 +30,20 @@ namespace DASPM.Table
         ITable Table { get; }
     }
 
-    /// <summary>
-    /// The row in a table
-    /// </summary>
-    /// <typeparam name="TModel">The Model type for this table</typeparam>
-    public interface ITableRow<TModel> : ITableRow where TModel : IRowModel
-    {
-        /// <summary>
-        /// The fields in this row
-        /// </summary>
-        new TModel Fields { get; }
+    ///// <summary>
+    ///// The row in a table
+    ///// </summary>
+    ///// <typeparam name="TModel">The Model type for this table</typeparam>
+    //public interface ITableRow<TModel> : ITableRow where TModel : IRowModel
+    //{
+    //    /// <summary>
+    //    /// The fields in this row
+    //    /// </summary>
+    //    new TModel Fields { get; }
 
-        /// <summary>
-        /// The table this row belongs to
-        /// </summary>
-        new ITable<TModel> Table { get; }
-    }
+    //    /// <summary>
+    //    /// The table this row belongs to
+    //    /// </summary>
+    //    new ITable<TModel> Table { get; }
+    //}
 }

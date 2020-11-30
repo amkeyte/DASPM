@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Table\CSVRowModel.cs" />
+    <Compile Include="Table\CSVTableBuilder.cs" />
+    <Compile Include="Table\CSVTableRowBuilder.cs" />
     <Compile Include="Table\IRowModel.cs" />
     <Compile Include="Table\ITable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
