@@ -5,54 +5,127 @@ using DASPM_PCTEL.ControlPanel;
 
 namespace DASPM_PCTEL.Table
 {
-    internal class PCTEL_Table_Core
-    {
-        protected CSVTable BaseTable => Table;
-        protected PCTEL_Table Table { get; set; }
+    //internal class PCTEL_Table_Core
+    //{
+    //    protected CSVTable BaseTable => Table;
+    //    protected PCTEL_Table Table { get; set; }
 
-        public PCTEL_Table_Core(PCTEL_Table table)
+    //    public PCTEL_Table_Core(PCTEL_Table table)
+    //    {
+    //        Table = table;
+    //        Locations = new SortedList<PCTEL_Location, PCTEL_TableRow>();
+    //    }
+
+    //    #region CSVTable
+
+    //    /// <summary>
+    //    /// Do the specific things needed to add a row to PCTEL_Table
+    //    /// </summary>
+    //    /// <param name="row"></param>
+    //    public PCTEL_TableRow AddRow(IRowModel model)
+    //    {
+    //        PCTEL_TableRow row = (PCTEL_TableRow)BaseTable.AddRow(model);
+
+    //        if (!Locations.ContainsKey(row.Location))
+    //        {
+    //            Locations.Add(row.Location, row);
+    //        }
+
+    //        return row;
+    //    }
+
+    //    public void ConfigureCsvReader(CsvReader csv)
+    //    {
+    //        var map = new PCTEL_TableRowMap();
+    //        csv.Configuration.RegisterClassMap(map);
+    //    }
+
+    //    public void ConfigureCsvWriter(CsvWriter csv)
+    //    {
+    //        var map = new PCTEL_TableRowMap();
+    //        csv.Configuration.RegisterClassMap(map);
+    //    }
+
+    //    public PCTEL_TableRowModel GetModelByID(int id) => GetRowByID(id).Fields;
+
+    //    public PCTEL_TableRowModel GetModelByLocation(PCTEL_Location loc) => GetRowByLoc(loc).Fields;
+
+    //    public PCTEL_TableRow GetRowByID(int id) => (PCTEL_TableRow)BaseTable.Row(id);
+
+    //    public PCTEL_TableRow GetRowByLoc(PCTEL_Location loc) => Locations[loc];
+
+    //    #endregion CSVTable
+
+    //}
+
+    public class PCTEL_Table : CSVTable
+    {
+        #region ctor
+
+        //private PCTEL_Table_Core Core { get; set; }
+
+        public PCTEL_Table()
         {
-            Table = table;
-            Locations = new SortedList<PCTEL_Location, PCTEL_TableRow>();
+            //Core = new PCTEL_Table_Core(this);
         }
+
+        public static PCTEL_Table Create(string name, string fullPath)
+        {
+            return (PCTEL_Table)CSVTableBuilder.Create(
+                name,
+                fullPath,
+                typeof(PCTEL_Table),
+                typeof(PCTEL_TableRow),
+                typeof(PCTEL_TableRowModel));
+        }
+
+        ////definately test this!!!
+        //public static implicit operator PCTEL_Table(PCTEL_Table<PCTEL_TableRowModel> other)
+        //    => (PCTEL_Table)(ITable)other;
+
+        #endregion ctor
 
         #region CSVTable
 
-        /// <summary>
-        /// Do the specific things needed to add a row to PCTEL_Table
-        /// </summary>
-        /// <param name="row"></param>
-        public PCTEL_TableRow AddRow(IRowModel model)
-        {
-            PCTEL_TableRow row = (PCTEL_TableRow)BaseTable.AddRow(model);
-
-            if (!Locations.ContainsKey(row.Location))
-            {
-                Locations.Add(row.Location, row);
-            }
-
-            return row;
-        }
-
-        public void ConfigureCsvReader(CsvReader csv)
+        protected override void ConfigureCsvReader(CsvReader csv)
         {
             var map = new PCTEL_TableRowMap();
             csv.Configuration.RegisterClassMap(map);
         }
 
-        public void ConfigureCsvWriter(CsvWriter csv)
+        protected override void ConfigureCsvWriter(CsvWriter csv)
         {
             var map = new PCTEL_TableRowMap();
             csv.Configuration.RegisterClassMap(map);
         }
+
+        public new PCTEL_TableRow AddRow(IRowModel model) => AddRow(model);
+
+        #region LongFormAccess
 
         public PCTEL_TableRowModel GetModelByID(int id) => GetRowByID(id).Fields;
 
-        public PCTEL_TableRowModel GetModelByLocation(PCTEL_Location loc) => GetRowByLoc(loc).Fields;
+        public PCTEL_TableRowModel GetModelByLocation(PCTEL_Location loc) => GetRowByLocation(loc).Fields;
 
-        public PCTEL_TableRow GetRowByID(int id) => (PCTEL_TableRow)BaseTable.Row(id);
+        public PCTEL_TableRow GetRowByID(int id) => (PCTEL_TableRow)base.Row(id);
 
-        public PCTEL_TableRow GetRowByLoc(PCTEL_Location loc) => Locations[loc];
+        public PCTEL_TableRow GetRowByLocation(PCTEL_Location loc) => Locations[loc];
+
+        #endregion LongFormAccess
+
+        #region ShortFormAccess
+
+        //hiding return Row class type
+        public new PCTEL_TableRowModel this[int id] => GetModelByID(id);
+
+        public virtual PCTEL_TableRowModel this[PCTEL_Location loc] => GetModelByLocation(loc);
+
+        //hiding return Row class type
+        public new PCTEL_TableRow Row(int id) => GetRowByID(id);
+
+        public PCTEL_TableRow Row(PCTEL_Location loc) => GetRowByLocation(loc);
+
+        #endregion ShortFormAccess
 
         #endregion CSVTable
 
@@ -61,7 +134,7 @@ namespace DASPM_PCTEL.Table
         //this might just be legacy now...
         public PCTEL_ControlPanel ControlPanel { get; }
 
-        public SortedList<PCTEL_Location, PCTEL_TableRow> Locations { get; protected set; }
+        public SortedList<PCTEL_Location, PCTEL_Location> Locations { get; protected set; }
 
         public void Calculate()
         {
@@ -74,99 +147,51 @@ namespace DASPM_PCTEL.Table
         #endregion ClassMembers
     }
 
-    public class PCTEL_Table : CSVTable
-    {
-        #region ctor
+    //public class PCTEL_Table<TModel> : PCTEL_Table, ITable<TModel>
+    //    where TModel : PCTEL_TableRowModel
+    //{
+    //    #region ctor
 
-        private PCTEL_Table_Core Core { get; set; }
+    //    private PCTEL_Table_Core Core { get; set; }
 
-        public PCTEL_Table()
-        {
-            Core = new PCTEL_Table_Core(this);
-        }
+    //    public PCTEL_Table()
+    //    {
+    //        //double cast to get past generic TModel can't be used by implicit cast
+    //        Core = new PCTEL_Table_Core((PCTEL_Table)(CSVTable)this);
+    //    }
 
-        public static PCTEL_Table Create(string name, string fullPath)
-        {
-            return (PCTEL_Table)Create(name, fullPath, typeof(PCTEL_Table), typeof(PCTEL_TableRow), typeof(PCTEL_TableRowModel));
-        }
+    //    public static PCTEL_Table<TModel> CreateGeneric(string name, string fullPath)
+    //    {
+    //        return (PCTEL_Table<TModel>)CSVTable<TModel>Create(name, fullPath,
+    //            typeof(PCTEL_Table<TModel>),
+    //            typeof(PCTEL_TableRow<TModel>));
+    //    }
 
-        //definately test this!!!
-        public static implicit operator PCTEL_Table(PCTEL_Table<PCTEL_TableRowModel> other)
-            => (PCTEL_Table)(ITable)other;
+    //    #endregion ctor
 
-        #endregion ctor
+    //    #region CSVTable
 
-        #region CSVTable
+    //    protected override void ConfigureCsvReader(CsvReader csv)
+    //    {
+    //        Core.ConfigureCsvReader(csv);
+    //    }
 
-        protected override void ConfigureCsvReader(CsvReader csv)
-        {
-            Core.ConfigureCsvReader(csv);
-        }
+    //    protected override void ConfigureCsvWriter(CsvWriter csv)
+    //    {
+    //        Core.ConfigureCsvWriter(csv);
+    //    }
 
-        protected override void ConfigureCsvWriter(CsvWriter csv)
-        {
-            Core.ConfigureCsvWriter(csv);
-        }
+    //    //short form access for location -
+    //    //can still use int index?
+    //    public new PCTEL_TableRowModel this[int id] => Core.GetModelByID(id);
 
-        //short form access for location -
-        //can still use int index?
-        public new PCTEL_TableRowModel this[int id] => Core.GetModelByID(id);
+    //    public virtual PCTEL_TableRowModel this[PCTEL_Location loc] => Core.GetModelByLocation(loc);
 
-        public virtual PCTEL_TableRowModel this[PCTEL_Location loc] => Core.GetModelByLocation(loc);
+    //    public new PCTEL_TableRow<TModel> AddRow(IRowModel model) => Core.AddRow(model);
 
-        public new PCTEL_TableRow AddRow(IRowModel model) => Core.AddRow(model);
+    //    //hiding return Row class type
+    //    public new PCTEL_TableRow<TModel> Row(int id) => Core.GetRowByID(id);
 
-        //hiding return Row class type
-        public new PCTEL_TableRow Row(int id) => Core.GetRowByID(id);
-
-        #endregion CSVTable
-    }
-
-    public class PCTEL_Table<TModel> : PCTEL_Table, ITable<TModel>
-        where TModel : PCTEL_TableRowModel
-    {
-        #region ctor
-
-        private PCTEL_Table_Core Core { get; set; }
-
-        public PCTEL_Table()
-        {
-            //double cast to get past generic TModel can't be used by implicit cast
-            Core = new PCTEL_Table_Core((PCTEL_Table)(CSVTable)this);
-        }
-
-        public static PCTEL_Table<TModel> CreateGeneric(string name, string fullPath)
-        {
-            return (PCTEL_Table<TModel>)CSVTable<TModel>Create(name, fullPath,
-                typeof(PCTEL_Table<TModel>),
-                typeof(PCTEL_TableRow<TModel>));
-        }
-
-        #endregion ctor
-
-        #region CSVTable
-
-        protected override void ConfigureCsvReader(CsvReader csv)
-        {
-            Core.ConfigureCsvReader(csv);
-        }
-
-        protected override void ConfigureCsvWriter(CsvWriter csv)
-        {
-            Core.ConfigureCsvWriter(csv);
-        }
-
-        //short form access for location -
-        //can still use int index?
-        public new PCTEL_TableRowModel this[int id] => Core.GetModelByID(id);
-
-        public virtual PCTEL_TableRowModel this[PCTEL_Location loc] => Core.GetModelByLocation(loc);
-
-        public new PCTEL_TableRow<TModel> AddRow(IRowModel model) => Core.AddRow(model);
-
-        //hiding return Row class type
-        public new PCTEL_TableRow<TModel> Row(int id) => Core.GetRowByID(id);
-
-        #endregion CSVTable
-    }
+    //    #endregion CSVTable
+    //}
 }

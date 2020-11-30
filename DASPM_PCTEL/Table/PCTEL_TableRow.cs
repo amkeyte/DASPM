@@ -39,22 +39,21 @@ namespace DASPM_PCTEL.Table
     {
         #region ctor
 
-        public static PCTEL_TableRow Create(PCTEL_Table table, PCTEL_TableRowModel model)
-        {
-            return (PCTEL_TableRow)Create(table, model, typeof(PCTEL_TableRow));
-        }
-
-        public static implicit operator PCTEL_TableRow(PCTEL_TableRow<PCTEL_TableRowModel> other)
-        {
-            //double cast allows cross-generic conversion??
-            return (PCTEL_TableRow)(ITableRow)other;
-        }
-
         private PCTEL_TableRowCore Core { get; set; }
 
+        //public static implicit operator PCTEL_TableRow(PCTEL_TableRow<PCTEL_TableRowModel> other)
+        //{
+        //    //double cast allows cross-generic conversion??
+        //    return (PCTEL_TableRow)(ITableRow)other;
+        //}
         public PCTEL_TableRow()
         {
             Core = new PCTEL_TableRowCore(this);
+        }
+
+        public static PCTEL_TableRow Create(PCTEL_Table table, PCTEL_TableRowModel model)
+        {
+            return (PCTEL_TableRow)Create(table, model, typeof(PCTEL_TableRow));
         }
 
         #endregion ctor
@@ -90,60 +89,60 @@ namespace DASPM_PCTEL.Table
         #endregion ClassMembers
     }
 
-    public class PCTEL_TableRow<TModel> : CSVTableRow<TModel>
-        where TModel : PCTEL_TableRowModel
-    {
-        #region ctor
+    //public class PCTEL_TableRow<TModel> : CSVTableRow<TModel>
+    //    where TModel : PCTEL_TableRowModel
+    //{
+    //    #region ctor
 
-        public static PCTEL_TableRow<TModel> CreateGeneric(PCTEL_Table<TModel> table, TModel model)
-        {
-            return (PCTEL_TableRow<TModel>)CreateGeneric(table, model, typeof(PCTEL_TableRow<TModel>));
-        }
+    //    public static PCTEL_TableRow<TModel> CreateGeneric(PCTEL_Table<TModel> table, TModel model)
+    //    {
+    //        return (PCTEL_TableRow<TModel>)CreateGeneric(table, model, typeof(PCTEL_TableRow<TModel>));
+    //    }
 
-        private PCTEL_TableRowCore Core { get; set; }
+    //    private PCTEL_TableRowCore Core { get; set; }
 
-        public PCTEL_TableRow()
-        {
-            //double cast because TModel cant cast to PCTEL_TableRowModel
-            Core = new PCTEL_TableRowCore((PCTEL_TableRow)(ITableRow)this);
-        }
+    //    public PCTEL_TableRow()
+    //    {
+    //        //double cast because TModel cant cast to PCTEL_TableRowModel
+    //        Core = new PCTEL_TableRowCore((PCTEL_TableRow)(ITableRow)this);
+    //    }
 
-        public static implicit operator PCTEL_TableRow<TModel>(PCTEL_TableRow other)
-        {
-            //double cast allows cross-generic conversion??
-            return (PCTEL_TableRow<TModel>)(ITableRow)other;
-        }
+    //    public static implicit operator PCTEL_TableRow<TModel>(PCTEL_TableRow other)
+    //    {
+    //        //double cast allows cross-generic conversion??
+    //        return (PCTEL_TableRow<TModel>)(ITableRow)other;
+    //    }
 
-        #endregion ctor
+    //    #endregion ctor
 
-        #region CSVTableRow
+    //    #region CSVTableRow
 
-        //Convenience casting
-        public new PCTEL_TableRowModel Fields
-        {
-            get
-            {
-                return base.Fields;
-            }
-        }
+    //    //Convenience casting
+    //    public new PCTEL_TableRowModel Fields
+    //    {
+    //        get
+    //        {
+    //            return base.Fields;
+    //        }
+    //    }
 
-        #endregion CSVTableRow
+    //    #endregion CSVTableRow
 
-        #region ClassMembers
+    //    #region ClassMembers
 
-        public PCTEL_Location Location
-        {
-            get
-            {
-                return Core.Location;
-            }
-        }
+    //    public PCTEL_Location Location
+    //    {
+    //        get
+    //        {
+    //            return Core.Location;
+    //        }
+    //    }
 
-        public virtual void Calculate()
-        {
-            //no default calculation
-        }
+    //    public virtual void Calculate()
+    //    {
+    //        //no default calculation
+    //    }
 
-        #endregion ClassMembers
-    }
+    //    #endregion ClassMembers
+    //}
 }
