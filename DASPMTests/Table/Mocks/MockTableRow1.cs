@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 
 namespace DASPMTests.Table.Mocks
 {
-    internal class MockTableRowCore
-    {
-        private CSVTableRow BaseTableRow { get; set; }
+    //internal class MockTableRowCore
+    //{
+    //    private CSVTableRow BaseTableRow { get; set; }
 
-        private MockTableRow1 TableRow { get; set; }
+    //    private MockTableRow1 TableRow { get; set; }
 
-        public MockTableRowCore(MockTableRow1 tableRow)
-        {
-            TableRow = tableRow;
-            BaseTableRow = tableRow;
-            Table = (MockTable1)tableRow.Table;
-        }
+    //    public MockTableRowCore(MockTableRow1 tableRow)
+    //    {
+    //        TableRow = tableRow;
+    //        BaseTableRow = tableRow;
+    //        Table = (MockTable1)tableRow.Table;
+    //    }
 
-        public MockRowModel1 Fields => (MockRowModel1)BaseTableRow.Fields;
-        public MockTable1 Table { get; protected set; }
-    }
+    //    public MockRowModel1 Fields => (MockRowModel1)BaseTableRow.Fields;
+    //    public MockTable1 Table { get; protected set; }
+    //}
 
     public class MockTableRow1 : CSVTableRow
     {

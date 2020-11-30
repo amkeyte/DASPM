@@ -7,36 +7,36 @@ using System.Threading.Tasks;
 
 namespace DASPMTests.Table.Mocks
 {
-    internal class MockTableCore
-    {
-        private CSVTable BaseTable { get; set; }
+    //internal class MockTableCore
+    //{
+    //    private CSVTable BaseTable { get; set; }
 
-        private MockTable1 Table { get; set; }
+    //    private MockTable1 Table { get; set; }
 
-        internal ITableRow Row(int id)
-        {
-            return Table.Row(id);
-        }
+    //    internal ITableRow Row(int id)
+    //    {
+    //        return Table.Row(id);
+    //    }
 
-        public MockTableCore(MockTable1 table)
-        {
-            Table = table;
-            BaseTable = table;
-        }
+    //    public MockTableCore(MockTable1 table)
+    //    {
+    //        Table = table;
+    //        BaseTable = table;
+    //    }
 
-        public IList<ITableRow> Rows => BaseTable.Rows;
+    //    public IList<ITableRow> Rows => BaseTable.Rows;
 
-        //public IList<ITableRow<TModel>> GetRowsGeneric<TModel>() where TModel : MockRowModel1
-        //{
-        //    var result = new List<MockTableRow1<TModel>>();
-        //    foreach (var row in BaseTable.Rows)
-        //    {
-        //        result.Add((MockTableRow1<TModel>)row);
-        //    }
+    //    //public IList<ITableRow<TModel>> GetRowsGeneric<TModel>() where TModel : MockRowModel1
+    //    //{
+    //    //    var result = new List<MockTableRow1<TModel>>();
+    //    //    foreach (var row in BaseTable.Rows)
+    //    //    {
+    //    //        result.Add((MockTableRow1<TModel>)row);
+    //    //    }
 
-        //    return (IList<ITableRow<TModel>>)result;
-        //}
-    }
+    //    //    return (IList<ITableRow<TModel>>)result;
+    //    //}
+    //}
 
     public class MockTable1 : CSVTable
     {
