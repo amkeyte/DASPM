@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public class CSVRowModel
+    public abstract class CSVRowModel
     {
         public static object GetFieldByIndex(int index, IRowModel model, ClassMap classMap)
         {

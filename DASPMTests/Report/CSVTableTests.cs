@@ -123,7 +123,7 @@ namespace DASPM.Table.Tests
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var tObj = CSVTableBuilder.Create(name, fullPath, typeof(CSVTable), typeof(CSVTableRow), typeof(MockRowModel1));
+            var tObj = CSVTableBuilder.Create(name, fullPath, typeof(MockTable1), typeof(MockTableRow1), typeof(MockRowModel1));
 
             var nameTest = tObj.Name;
 

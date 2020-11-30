@@ -11,7 +11,7 @@ using CsvHelper.Configuration;
 
 namespace DASPM.Table
 {
-    public class CSVTable : ITable
+    public abstract class CSVTable : ITable
     {
         //provide default constructor so creation of the correct descendant type is posible
         public CSVTable()

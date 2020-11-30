@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public class CSVTableRow : ITableRow
+    public abstract class CSVTableRow : ITableRow
     {
         #region ctor
 

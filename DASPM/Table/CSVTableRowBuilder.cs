@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public class CSVTableRowBuilder
+    public static class CSVTableRowBuilder
     {
         /// <summary>
         /// Non-Generic creation of the speificied CSVTableRow descendant. Model Type is inferred.

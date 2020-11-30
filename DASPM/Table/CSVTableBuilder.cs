@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public class CSVTableBuilder
+    public static class CSVTableBuilder
     {
         private static bool TryValidateAssignable(Type tableType, Type rowType, Type modelType, out InvalidOperationException e)
         {
