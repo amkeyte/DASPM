@@ -47,6 +47,11 @@ namespace DASPMTests.Table.Mocks
                 typeof(MockTableRow1),
                 typeof(MockRowModel1));
         }
+
+        public new MockTableRow1 Row(int id)
+        {
+            return (MockTableRow1)base.Row(id);
+        }
     }
 
     //public class MockTable1<TModel> : MockTable1, ITable<TModel>

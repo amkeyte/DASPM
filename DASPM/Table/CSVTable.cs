@@ -1,11 +1,8 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
 
@@ -47,10 +44,24 @@ namespace DASPM.Table
 
         #region ImplementITable
 
+        protected ClassMap _classMap = null;
+
         //public while testing!! TODO should be protected... fix this hack
         public List<object> _rows;
 
-        public ClassMap ClassMap { get; protected set; }
+        public ClassMap ClassMap
+        {
+            get
+            {
+                if (_classMap is null)
+                {
+                    throw new InvalidOperationException("Classmap is not initialized because no file has been loaded.");
+                }
+                return _classMap;
+            }
+
+            protected set { _classMap = value; }
+        }
 
         public int Count
         {
@@ -65,7 +76,10 @@ namespace DASPM.Table
             get
             {
                 //use the classmap to get the names of headers(?)
-                if (ClassMap is null) return null;
+                if (ClassMap is null)
+                {
+                    throw new InvalidOperationException("Headers is not initialized because no file has been loaded.");
+                }
                 var result = new List<String>();
 
                 foreach (var i in ClassMap.MemberMaps)

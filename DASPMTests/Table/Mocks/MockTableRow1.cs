@@ -26,6 +26,8 @@ namespace DASPMTests.Table.Mocks
 
     public class MockTableRow1 : CSVTableRow
     {
+        public new MockRowModel1 Fields { get => (MockRowModel1)base.Fields; }
+
         public static MockTableRow1 Create(MockTable1 table, MockRowModel1 model)
         {
             return (MockTableRow1)CSVTableRowBuilder.Create(table, model, typeof(MockTableRow1));

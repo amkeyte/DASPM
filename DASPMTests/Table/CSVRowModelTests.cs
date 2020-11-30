@@ -9,7 +9,7 @@ namespace DASPM.Table.Tests
         [TestMethod()]
         public void GetFieldByIndexTest()
         {
-            var classMap = new MockRowMedel1Map();
+            var classMap = new MockRowModel1Map();
             var model = new MockRowModel1();
             model.Col1 = 100;
             model.Col2 = "200";
@@ -25,7 +25,7 @@ namespace DASPM.Table.Tests
         [TestMethod()]
         public void GetFieldByModelPropertyNameTest()
         {
-            var classMap = new MockRowMedel1Map();
+            var classMap = new MockRowModel1Map();
             var model = new MockRowModel1();
             model.Col1 = 100;
             model.Col2 = "200";
@@ -41,7 +41,7 @@ namespace DASPM.Table.Tests
         [TestMethod()]
         public void GetFieldByNameTest()
         {
-            var classMap = new MockRowMedel1Map();
+            var classMap = new MockRowModel1Map();
             var model = new MockRowModel1();
             model.Col1 = 100;
             model.Col2 = "200";
@@ -57,7 +57,7 @@ namespace DASPM.Table.Tests
         [TestMethod()]
         public void ToDictTest()
         {
-            var classMap = new MockRowMedel1Map();
+            var classMap = new MockRowModel1Map();
             var model = new MockRowModel1();
             model.Col1 = 100;
             model.Col2 = "200";
@@ -73,7 +73,7 @@ namespace DASPM.Table.Tests
         public void ToListTest()
         {
             {
-                var classMap = new MockRowMedel1Map();
+                var classMap = new MockRowModel1Map();
                 var model = new MockRowModel1();
                 model.Col1 = 100;
                 model.Col2 = "200";
