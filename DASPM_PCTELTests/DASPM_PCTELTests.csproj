@@ -69,30 +69,11 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="DataSet\PCTEL_DataSetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Table\PCTEL_TableTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="TestFiles\MBS CW_L1_ReferenceTestPoints.csv" />
-    <None Include="TestFiles\MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv" />
-    <None Include="TestFiles\MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv" />
-    <None Include="TestFiles\PCTEL_Table\DataSets\MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv" />
-    <None Include="TestFiles\PCTEL_Table\DataSets\MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv" />
-    <None Include="TestFiles\PCTEL_Table\TableTest1.csv" />
-    <None Include="TestFiles\PCTEL_Updater\DataSetsResult\MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv" />
-    <None Include="TestFiles\PCTEL_Updater\DataSetsResult\MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv" />
-    <None Include="TestFiles\PCTEL_Updater\DataSetsSource\MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv" />
-    <None Include="TestFiles\PCTEL_Updater\DataSetsSource\MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv" />
-    <None Include="TestFiles\PCTEL_Updater\DataSets\MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv" />
-    <None Include="TestFiles\PCTEL_Updater\DataSets\MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv" />
-    <None Include="TestFiles\PCTEL_Updater\UpdaterTest1.csv" />
-    <None Include="TestFiles\PCTEL_Updater\UpdaterTest2.csv" />
-    <None Include="TestFiles\PCTEL_Updater\UpdaterTest2Source.csv" />
-    <None Include="TestFiles\WriteToFileTest1 - AreaTestPoints.csv" />
-    <None Include="TestFiles\WriteToFileTest1 - CriticalTestPoints.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DASPM\DASPM.csproj">

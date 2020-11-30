@@ -13,39 +13,22 @@ namespace DASPM.Table
 {
     public class CSVTable : ITable
     {
-        //factory pattern ensures initialize is called.
-        public static CSVTable Create(string name, string fullPath, Type tableType, Type rowType, Type modelType)
-        {
-            if (!typeof(CSVTable).IsAssignableFrom(tableType))
-            {
-                throw new ArgumentException("Invalid tableType: " + tableType);
-            }
-            if (!typeof(CSVTableRow).IsAssignableFrom(rowType))
-            {
-                throw new ArgumentException("Invalid rowType: " + rowType);
-            }
-            if (tableType.IsGenericTypeDefinition)
-            {
-                throw new InvalidOperationException("Use 'CreateGeneric' variant to build table of generic type: " + tableType);
-            }
-
-            //maybe not desired... it could be possible to have concrete table with generic rows?
-            if (rowType.IsGenericTypeDefinition)
-            {
-                throw new InvalidOperationException("[this is in test] Use 'CreateGeneric' variant to build table with rows of generic type: " + rowType);
-            }
-
-            var table = (CSVTable)Activator.CreateInstance(tableType);
-            table.Initialize(name, fullPath, rowType, modelType);
-            return table;
-        }
-
         //provide default constructor so creation of the correct descendant type is posible
         public CSVTable()
         {
         }
 
-        protected void Initialize(string name, string fullPath, Type rowType, Type modelType)
+        public string Filename { get; protected set; }
+
+        public string FullPath { get; protected set; }
+
+        public Type ModelType { get; protected set; }
+
+        public string Path { get; protected set; }
+
+        public Type RowType { get; protected set; }
+
+        public void Initialize(string name, string fullPath, Type rowType, Type modelType)
         {
             this.Path = System.IO.Path.GetDirectoryName(fullPath);
             this.Filename = System.IO.Path.GetFileName(fullPath);
@@ -62,13 +45,10 @@ namespace DASPM.Table
             //add an initialized state field to ensure correct creation.
         }
 
-        public Type ModelType { get; protected set; }
-        public Type RowType { get; protected set; }
-        public string FullPath { get; protected set; }
-        public string Path { get; protected set; }
-        public string Filename { get; protected set; }
-
         #region ImplementITable
+
+        //public while testing!! TODO should be protected... fix this hack
+        public List<object> _rows;
 
         public ClassMap ClassMap { get; protected set; }
 
@@ -108,10 +88,6 @@ namespace DASPM.Table
 
         //because of casting difficulties and also to promote the integrity of the list,
         //copies are used. If this is a performance bottleneck look into caching.
-
-        //public while testing!! TODO should be protected... fix this hack
-        public List<object> _rows;
-
         public IList<ITableRow> Rows
         {
             get
@@ -152,16 +128,22 @@ namespace DASPM.Table
 
         #region ClassMembers
 
-        //verify that model is of ModelType, since different branches of IRowModel could still be assigned.
-        public bool TryValidateModelType(IRowModel model, out ArgumentException exception)
+        //short form access
+        public virtual IRowModel this[int index]
         {
-            exception = null;
-            if (!ModelType.IsAssignableFrom(model.GetType()))
+            get
             {
-                exception = new ArgumentException("The model must be of type " + ModelType.FullName);
-                return false;
+                try
+                {
+                    return Rows[index].Fields;
+                }
+                catch (ArgumentOutOfRangeException e)
+                {
+                    e.Data.Add("index", index);
+                    e.Data.Add("Rows.Count", Rows.Count);
+                    throw e;
+                }
             }
-            return true;
         }
 
         /// <summary>
@@ -184,34 +166,38 @@ namespace DASPM.Table
         public virtual ITableRow CreateRow(IRowModel model)
         {
             if (!TryValidateModelType(model, out ArgumentException e)) throw e;
-            if (RowType.ContainsGenericParameters)
-            {
-                return CSVTableRow<IRowModel>.CreateGeneric(this, model, this.RowType);
-            }
-            return CSVTableRow.Create(this, model, RowType);
+            //if (RowType.ContainsGenericParameters)
+            //{
+            //    return CSVTableRowBuilder.CreateGeneric<IRowModel>(this, model, this.RowType);
+            //}
+            return CSVTableRowBuilder.Create(this, model, RowType);
         }
 
-        //short form access
-        public virtual IRowModel this[int index]
+        //verify that model is of ModelType, since different branches of IRowModel could still be assigned.
+        public bool TryValidateModelType(IRowModel model, out ArgumentException exception)
         {
-            get
+            exception = null;
+            if (!ModelType.IsAssignableFrom(model.GetType()))
             {
-                try
-                {
-                    return Rows[index].Fields;
-                }
-                catch (ArgumentOutOfRangeException e)
-                {
-                    e.Data.Add("index", index);
-                    e.Data.Add("Rows.Count", Rows.Count);
-                    throw e;
-                }
+                exception = new ArgumentException("The model must be of type " + ModelType.FullName);
+                return false;
             }
+            return true;
         }
 
         #endregion ClassMembers
 
         #region CSVHelper
+
+        protected virtual void ConfigureCsvReader(CsvReader csv)
+        {
+            //stub. Override to add a classmap, etc...
+        }
+
+        protected virtual void ConfigureCsvWriter(CsvWriter csv)
+        {
+            //stub. Override to add a classmap, etc...
+        }
 
         public void LoadFromFile()
         {
@@ -250,97 +236,66 @@ namespace DASPM.Table
             }
         }
 
-        protected virtual void ConfigureCsvReader(CsvReader csv)
-        {
-            //stub. Override to add a classmap, etc...
-        }
-
-        protected virtual void ConfigureCsvWriter(CsvWriter csv)
-        {
-            //stub. Override to add a classmap, etc...
-        }
-
         #endregion CSVHelper
     }
 
-    public class CSVTable<TModel> : CSVTable, ITable<TModel> where TModel : IRowModel
-    {
-        /// <summary>
-        /// Returns a correctly typed copy of the internal rows list
-        /// </summary>
-        public new IList<ITableRow<TModel>> Rows
-        {
-            get
-            {
-                var result = new List<ITableRow<TModel>>();
-                foreach (var row in _rows)
-                {
-                    result.Add((ITableRow<TModel>)row);
-                }
+    //    public class CSVTable<TModel> : CSVTable, ITable<TModel> where TModel : IRowModel
+    //    {
+    //        /// <summary>
+    //        /// Returns a correctly typed copy of the internal rows list
+    //        /// </summary>
+    //        public new IList<ITableRow<TModel>> Rows
+    //        {
+    //            get
+    //            {
+    //                var result = new List<ITableRow<TModel>>();
+    //                foreach (var row in _rows)
+    //                {
+    //                    result.Add((ITableRow<TModel>)row);
+    //                }
 
-                return result;
-            }
+    //                return result;
+    //            }
 
-            //probably dont need this
-            protected set
-            {
-                throw new NotImplementedException("set got called!!");
-#pragma warning disable CS0162 // Unreachable code detected
-                _rows = (List<object>)value;
-#pragma warning restore CS0162 // Unreachable code detected
-            }
-        }
+    //            //probably dont need this
+    //            protected set
+    //            {
+    //                throw new NotImplementedException("set got called!!");
+    //#pragma warning disable CS0162 // Unreachable code detected
+    //                _rows = (List<object>)value;
+    //#pragma warning restore CS0162 // Unreachable code detected
+    //            }
+    //        }
 
-        #region ctor
+    //        public virtual void AddRow(TModel model)
+    //        {
+    //            if (!TryValidateModelType(model, out ArgumentException e)) throw e;
+    //            var row = CreateRow(model);
+    //            //use internal list because writing to the Rows copy is not desired.
+    //            _rows.Add(row);
+    //        }
 
-        //create with table type
-        public static CSVTable<TModel> CreateGeneric(string name, string fullPath, Type tableType, Type rowType)
-        {
-            if (!typeof(CSVTable<TModel>).IsAssignableFrom(tableType))
-            {
-                throw new InvalidOperationException("Invalid tableType (is it generic?): " + tableType);
-            }
-            if (!typeof(CSVTableRow<TModel>).IsAssignableFrom(rowType))
-            {
-                throw new InvalidOperationException("Invalid rowType (is it generic?): " + rowType);
-            }
+    //        public new ITableRow<TModel> Row(int id)
+    //        {
+    //            return Rows[id];
+    //        }
 
-            var table = (CSVTable<TModel>)Activator.CreateInstance(tableType);
-            table.Initialize(name, fullPath, rowType, typeof(TModel));
-            return table;
-        }
+    //        #region ClassMembers
 
-        #endregion ctor
+    //        //short form access
+    //        public virtual new TModel this[int index]
+    //        {
+    //            get
+    //            {
+    //                return (TModel)base[index];
+    //            }
+    //        }
 
-        public new ITableRow<TModel> Row(int id)
-        {
-            return Rows[id];
-        }
+    //        public virtual ITableRow<TModel> CreateRow(TModel model)
+    //        {
+    //            return (ITableRow<TModel>)base.CreateRow(model);
+    //        }
 
-        public virtual void AddRow(TModel model)
-        {
-            if (!TryValidateModelType(model, out ArgumentException e)) throw e;
-            var row = CreateRow(model);
-            //use internal list because writing to the Rows copy is not desired.
-            _rows.Add(row);
-        }
-
-        #region ClassMembers
-
-        public virtual ITableRow<TModel> CreateRow(TModel model)
-        {
-            return (ITableRow<TModel>)base.CreateRow(model);
-        }
-
-        //short form access
-        public virtual new TModel this[int index]
-        {
-            get
-            {
-                return (TModel)base[index];
-            }
-        }
-
-        #endregion ClassMembers
-    }
+    //        #endregion ClassMembers
+    //    }
 }

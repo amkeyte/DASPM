@@ -17,36 +17,73 @@ namespace DASPM.Table.Tests
         private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
 
         [TestMethod()]
-        public void CreateTest()
+        public void AddRowTest()
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var tObj = CSVTable.Create(name, fullPath, typeof(CSVTable), typeof(CSVTableRow), typeof(MockRowModel1));
+            var table = MockTable1.Create(name, fullPath);
+            var model = new MockRowModel1();
 
-            var nameTest = tObj.Name;
+            model.Col1 = 1;
+            table.AddRow(model);
+            var rowsTest = table.Rows;
 
-            Assert.AreEqual("Test1", nameTest);
+            Assert.AreEqual(typeof(MockTableRow1), rowsTest[0].GetType());
+            Assert.AreEqual(typeof(MockRowModel1), rowsTest[0].Fields.GetType());
+            Assert.AreEqual(1, model.Col1);
         }
 
-        [TestMethod()]
-        public void CreateWithExendedTableTest()
-        {
-            string name = "Test1";
-            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var tObj = CSVTable.Create(name, fullPath,
-                typeof(MockTable1),
-                typeof(MockTableRow1),
-                typeof(MockRowModel1));
+        //[TestMethod()]
+        //public void ConvertFromGenericTest()
+        //{
+        //    string name = "Test1";
+        //    string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
+        //    var genericTable = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
 
-            var tableTypeTest = tObj.GetType();
-            var rowTypeTest = tObj.ModelType;
+        //    ITable interfaceTable = genericTable;
+        //    CSVTable csvTable = genericTable;
 
-            var nameTest = tObj.Name;
+        //    csvTable.LoadFromFile();
 
-            Assert.AreEqual("Test1", nameTest);
-            Assert.AreEqual(typeof(MockTable1), tableTypeTest);
-            Assert.AreEqual(typeof(MockRowModel1), rowTypeTest);
-        }
+        //    var row0Test = (MockRowModel1)interfaceTable.Row(0).Fields;
+        //    var row1Test = (MockRowModel1)interfaceTable.Row(1).Fields;
+
+        //    Assert.AreEqual(2, interfaceTable.Count);
+        //    Assert.AreEqual(1, row0Test.Col1);
+        //    Assert.AreEqual("E", row1Test.Col3);
+        //}
+
+        //[TestMethod()]
+        //public void CreateGenericTest()
+        //{
+        //    string name = "Test1";
+        //    string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
+        //    var tObj = CSVTableBuilder.CreateGeneric<MockRowModel1>(name, fullPath,
+        //        typeof(MockTable1<MockRowModel1>),
+        //        typeof(MockTableRow1<MockRowModel1>),
+        //        typeof(MockRowModel1));
+
+        //    var nameTest = tObj.Name;
+
+        //    Assert.AreEqual("Test1", nameTest);
+        //}
+
+        //[TestMethod()]
+        //public void CreateMockTableGenericTest()
+        //{
+        //    string name = "Test1";
+        //    string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
+        //    var tObj = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
+
+        //    var tableTypeTest = tObj.GetType();
+        //    var rowTypeTest = tObj.ModelType;
+
+        //    var nameTest = tObj.Name;
+
+        //    Assert.AreEqual("Test1", nameTest);
+        //    Assert.AreEqual(typeof(MockTable1<MockRowModel1>), tableTypeTest);
+        //    Assert.AreEqual(typeof(MockRowModel1), rowTypeTest);
+        //}
 
         [TestMethod()]
         public void CreateMockTableTest()
@@ -66,11 +103,42 @@ namespace DASPM.Table.Tests
         }
 
         [TestMethod()]
-        public void CreateMockTableGenericTest()
+        public void CreateRowTest()
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var tObj = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
+            var table = MockTable1.Create(name, fullPath);
+
+            var model = new MockRowModel1();
+            model.Col1 = 1;
+            var row = table.CreateRow(model);
+
+            Assert.AreEqual(typeof(MockTableRow1), row.GetType());
+            Assert.AreEqual(typeof(MockRowModel1), row.Fields.GetType());
+            Assert.AreEqual(1, model.Col1);
+        }
+
+        [TestMethod()]
+        public void CreateTest()
+        {
+            string name = "Test1";
+            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
+            var tObj = CSVTableBuilder.Create(name, fullPath, typeof(CSVTable), typeof(CSVTableRow), typeof(MockRowModel1));
+
+            var nameTest = tObj.Name;
+
+            Assert.AreEqual("Test1", nameTest);
+        }
+
+        [TestMethod()]
+        public void CreateWithExendedTableTest()
+        {
+            string name = "Test1";
+            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
+            var tObj = (MockTable1)CSVTableBuilder.Create(name, fullPath,
+                typeof(MockTable1),
+                typeof(MockTableRow1),
+                typeof(MockRowModel1));
 
             var tableTypeTest = tObj.GetType();
             var rowTypeTest = tObj.ModelType;
@@ -78,23 +146,58 @@ namespace DASPM.Table.Tests
             var nameTest = tObj.Name;
 
             Assert.AreEqual("Test1", nameTest);
-            Assert.AreEqual(typeof(MockTable1<MockRowModel1>), tableTypeTest);
+            Assert.AreEqual(typeof(MockTable1), tableTypeTest);
             Assert.AreEqual(typeof(MockRowModel1), rowTypeTest);
         }
 
+        //[TestMethod()]
+        //public void LoadFromFileGenericTest()
+        //{
+        //    string name = "Test1";
+        //    string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
+        //    var table = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
+
+        //    table.LoadFromFile();
+        //    var row0Test = table.Row(0).Fields;
+        //    var row1Test = table.Row(1).Fields;
+
+        //    Assert.AreEqual(2, table.Count);
+        //    Assert.AreEqual(1, row0Test.Col1);
+        //    Assert.AreEqual("E", row1Test.Col3);
+        //}
+
         [TestMethod()]
-        public void CreateGenericTest()
+        public void LoadFromFileTest()
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var tObj = CSVTable<MockRowModel1>.CreateGeneric(name, fullPath,
-                typeof(MockTable1<MockRowModel1>),
-                typeof(MockTableRow1<MockRowModel1>));
+            var table = MockTable1.Create(name, fullPath);
 
-            var nameTest = tObj.Name;
+            table.LoadFromFile();
+            var row0Test = (MockRowModel1)table.Row(0).Fields;
+            var row1Test = (MockRowModel1)table.Row(1).Fields;
 
-            Assert.AreEqual("Test1", nameTest);
+            Assert.AreEqual(2, table.Count);
+            Assert.AreEqual(1, row0Test.Col1);
+            Assert.AreEqual("E", row1Test.Col3);
         }
+
+        //[TestMethod()]
+        //public void RowsGetGenericTest()
+        //{
+        //    string name = "Test1";
+        //    string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
+        //    var table = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
+        //    var model = new MockRowModel1();
+        //    var row = MockTableRow1<MockRowModel1>.CreateGeneric(table, model);
+
+        //    //requires _rows public hack
+        //    table._rows.Add(row);
+
+        //    Assert.AreEqual(typeof(List<MockTableRow1<MockRowModel1>>), table.Rows.GetType());
+        //    Assert.AreEqual(typeof(MockTableRow1<MockRowModel1>), table.Rows[0].GetType());
+        //    Assert.AreEqual(typeof(MockRowModel1), table.Rows[0].Fields.GetType());
+        //}
 
         [TestMethod()]
         public void RowsGetTest()
@@ -113,107 +216,48 @@ namespace DASPM.Table.Tests
             Assert.AreEqual(typeof(MockRowModel1), table.Rows[0].Fields.GetType());
         }
 
-        [TestMethod()]
-        public void RowsGetGenericTest()
-        {
-            string name = "Test1";
-            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var table = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
-            var model = new MockRowModel1();
-            var row = MockTableRow1<MockRowModel1>.CreateGeneric(table, model);
+        //[TestMethod()]
+        //public void WriteToFileGenericTest()
+        //{
+        //    //***read file
+        //    string path = Path.Combine(UserFolder, TestFiles);
 
-            //requires _rows public hack
-            table._rows.Add(row);
+        //    string name = "Test1";
+        //    string test1FullPath = Path.Combine(path, @"Test1.csv");
+        //    var tObj = MockTable1<MockRowModel1>.CreateGeneric(name, test1FullPath);
+        //    tObj.LoadFromFile();
 
-            Assert.AreEqual(typeof(List<ITableRow<MockRowModel1>>), table.Rows.GetType());
-            Assert.AreEqual(typeof(MockTableRow1<MockRowModel1>), table.Rows[0].GetType());
-            Assert.AreEqual(typeof(MockRowModel1), table.Rows[0].Fields.GetType());
-        }
+        //    //integrity check
+        //    Assert.AreEqual(2, tObj.Count);
+        //    Assert.AreEqual(1, tObj.Row(0).Fields.Col1);
+        //    Assert.AreEqual("E", tObj.Row(1).Fields.Col3);
 
-        [TestMethod()]
-        public void CreateRowTest()
-        {
-            string name = "Test1";
-            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var table = MockTable1.Create(name, fullPath);
+        //    //***edit file
+        //    tObj.Row(0).Fields.Col3 = "Changed";
+        //    tObj.Row(1).Fields.Col1 = 9000;
 
-            var model = new MockRowModel1();
-            model.Col1 = 1;
-            var row = table.CreateRow(model);
+        //    //integrity check
+        //    Assert.AreEqual(2, tObj.Count);
+        //    Assert.AreEqual("Changed", tObj.Row(0).Fields.Col3);
+        //    Assert.AreEqual(9000, tObj.Row(1).Fields.Col1);
 
-            Assert.AreEqual(typeof(MockTableRow1), row.GetType());
-            Assert.AreEqual(typeof(MockRowModel1), row.Fields.GetType());
-            Assert.AreEqual(1, model.Col1);
-        }
+        //    //***write file
+        //    string wfilename = @"WriteToFileTest1.csv";
+        //    string wfile = Path.Combine(path, wfilename);
+        //    var files = Directory.GetFiles(path, wfilename);
+        //    foreach (string file in files)
+        //    {
+        //        File.Delete(file);
+        //    }
+        //    tObj.WriteToFile(Path.Combine(path, wfile));
 
-        [TestMethod()]
-        public void AddRowTest()
-        {
-            string name = "Test1";
-            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var table = MockTable1.Create(name, fullPath);
-            var model = new MockRowModel1();
-
-            model.Col1 = 1;
-            table.AddRow(model);
-            var rowsTest = table.Rows;
-
-            Assert.AreEqual(typeof(MockTableRow1), rowsTest[0].GetType());
-            Assert.AreEqual(typeof(MockRowModel1), rowsTest[0].Fields.GetType());
-            Assert.AreEqual(1, model.Col1);
-        }
-
-        [TestMethod()]
-        public void LoadFromFileTest()
-        {
-            string name = "Test1";
-            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var table = MockTable1.Create(name, fullPath);
-
-            table.LoadFromFile();
-            var row0Test = (MockRowModel1)table.Row(0).Fields;
-            var row1Test = (MockRowModel1)table.Row(1).Fields;
-
-            Assert.AreEqual(2, table.Count);
-            Assert.AreEqual(1, row0Test.Col1);
-            Assert.AreEqual("E", row1Test.Col3);
-        }
-
-        [TestMethod()]
-        public void LoadFromFileGenericTest()
-        {
-            string name = "Test1";
-            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var table = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
-
-            table.LoadFromFile();
-            var row0Test = table.Row(0).Fields;
-            var row1Test = table.Row(1).Fields;
-
-            Assert.AreEqual(2, table.Count);
-            Assert.AreEqual(1, row0Test.Col1);
-            Assert.AreEqual("E", row1Test.Col3);
-        }
-
-        [TestMethod()]
-        public void ConvertFromGenericTest()
-        {
-            string name = "Test1";
-            string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var genericTable = MockTable1<MockRowModel1>.CreateGeneric(name, fullPath);
-
-            ITable interfaceTable = genericTable;
-            CSVTable csvTable = genericTable;
-
-            csvTable.LoadFromFile();
-
-            var row0Test = (MockRowModel1)interfaceTable.Row(0).Fields;
-            var row1Test = (MockRowModel1)interfaceTable.Row(1).Fields;
-
-            Assert.AreEqual(2, interfaceTable.Count);
-            Assert.AreEqual(1, row0Test.Col1);
-            Assert.AreEqual("E", row1Test.Col3);
-        }
+        //    //*** Unit Test
+        //    var tObj2 = MockTable1<MockRowModel1>.CreateGeneric(name, wfile);
+        //    tObj2.LoadFromFile();
+        //    Assert.AreEqual(2, tObj2.Count);
+        //    Assert.AreEqual("Changed", tObj2.Row(0).Fields.Col3);
+        //    Assert.AreEqual(9000, tObj2.Row(1).Fields.Col1);
+        //}
 
         [TestMethod()]
         public void WriteToFileTest()
@@ -265,49 +309,6 @@ namespace DASPM.Table.Tests
             Assert.AreEqual(2, tObj2.Count);
             Assert.AreEqual("Changed", row0Fields2.Col3);
             Assert.AreEqual(9000, row1Fields2.Col1);
-        }
-
-        [TestMethod()]
-        public void WriteToFileGenericTest()
-        {
-            //***read file
-            string path = Path.Combine(UserFolder, TestFiles);
-
-            string name = "Test1";
-            string test1FullPath = Path.Combine(path, @"Test1.csv");
-            var tObj = MockTable1<MockRowModel1>.CreateGeneric(name, test1FullPath);
-            tObj.LoadFromFile();
-
-            //integrity check
-            Assert.AreEqual(2, tObj.Count);
-            Assert.AreEqual(1, tObj.Row(0).Fields.Col1);
-            Assert.AreEqual("E", tObj.Row(1).Fields.Col3);
-
-            //***edit file
-            tObj.Row(0).Fields.Col3 = "Changed";
-            tObj.Row(1).Fields.Col1 = 9000;
-
-            //integrity check
-            Assert.AreEqual(2, tObj.Count);
-            Assert.AreEqual("Changed", tObj.Row(0).Fields.Col3);
-            Assert.AreEqual(9000, tObj.Row(1).Fields.Col1);
-
-            //***write file
-            string wfilename = @"WriteToFileTest1.csv";
-            string wfile = Path.Combine(path, wfilename);
-            var files = Directory.GetFiles(path, wfilename);
-            foreach (string file in files)
-            {
-                File.Delete(file);
-            }
-            tObj.WriteToFile(Path.Combine(path, wfile));
-
-            //*** Unit Test
-            var tObj2 = MockTable1<MockRowModel1>.CreateGeneric(name, wfile);
-            tObj2.LoadFromFile();
-            Assert.AreEqual(2, tObj2.Count);
-            Assert.AreEqual("Changed", tObj2.Row(0).Fields.Col3);
-            Assert.AreEqual(9000, tObj2.Row(1).Fields.Col1);
         }
     }
 }
