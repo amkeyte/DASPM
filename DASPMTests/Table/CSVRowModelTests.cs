@@ -1,34 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DASPM.Table;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DASPMTests.Report.Mocks;
-using System.Configuration;
+﻿using DASPMTests.Table.Mocks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DASPM.Table.Tests
 {
     [TestClass()]
     public class CSVRowModelTests
     {
-        [TestMethod()]
-        public void GetFieldByNameTest()
-        {
-            var classMap = new MockRowMedel1Map();
-            var model = new MockRowModel1();
-            model.Col1 = 100;
-            model.Col2 = "200";
-            model.Col3 = "300";
-
-            var test1Result = CSVRowModel.GetFieldByName("Col1", model, classMap);
-            var test2Result = CSVRowModel.GetFieldByName("Col2", model, classMap);
-
-            Assert.AreEqual(100, test1Result);
-            Assert.AreEqual("200", test2Result);
-        }
-
         [TestMethod()]
         public void GetFieldByIndexTest()
         {
@@ -62,6 +39,22 @@ namespace DASPM.Table.Tests
         }
 
         [TestMethod()]
+        public void GetFieldByNameTest()
+        {
+            var classMap = new MockRowMedel1Map();
+            var model = new MockRowModel1();
+            model.Col1 = 100;
+            model.Col2 = "200";
+            model.Col3 = "300";
+
+            var test1Result = CSVRowModel.GetFieldByName("Col1", model, classMap);
+            var test2Result = CSVRowModel.GetFieldByName("Col2", model, classMap);
+
+            Assert.AreEqual(100, test1Result);
+            Assert.AreEqual("200", test2Result);
+        }
+
+        [TestMethod()]
         public void ToDictTest()
         {
             var classMap = new MockRowMedel1Map();
@@ -70,7 +63,7 @@ namespace DASPM.Table.Tests
             model.Col2 = "200";
             model.Col3 = "300";
 
-            var test1Result = CSVRowModel.ToDict( model, classMap);
+            var test1Result = CSVRowModel.ToDict(model, classMap);
 
             Assert.AreEqual(100, test1Result["Col1"]);
             Assert.AreEqual("200", test1Result["Col2"]);

@@ -71,9 +71,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report\CSVTableTests.cs" />
-    <Compile Include="Report\Mocks\MockRowModel1.cs" />
-    <Compile Include="Report\Mocks\MockTable1.cs" />
-    <Compile Include="Report\Mocks\MockTableRow1.cs" />
+    <Compile Include="Table\Mocks\MockRowModel1.cs" />
+    <Compile Include="Table\Mocks\MockTable1.cs" />
+    <Compile Include="Table\Mocks\MockTableRow1.cs" />
     <Compile Include="Table\CSVRowModelTests.cs" />
     <Compile Include="Table\CSVTableRowTests.cs" />
   </ItemGroup>
@@ -88,7 +88,9 @@
       <Name>DASPM</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Report\Mocks\" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

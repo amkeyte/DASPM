@@ -1,12 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DASPM.Table;
+﻿using DASPMTests.Table.Mocks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using DASPMTests.Report.Mocks;
 
 namespace DASPM.Table.Tests
 {

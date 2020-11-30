@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DASPMTests.Report.Mocks
+namespace DASPMTests.Table.Mocks
 {
     internal class MockTableCore
     {

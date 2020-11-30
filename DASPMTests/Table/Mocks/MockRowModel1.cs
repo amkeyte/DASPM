@@ -7,7 +7,7 @@ using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using DASPM.Table;
 
-namespace DASPMTests.Report.Mocks
+namespace DASPMTests.Table.Mocks
 {
     public sealed class MockRowMedel1Map : ClassMap<MockRowModel1>
     {
