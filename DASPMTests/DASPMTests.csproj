@@ -71,7 +71,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report\CSVTableTests.cs" />
+    <Compile Include="Table\CSVTableBuilderTests.cs" />
     <Compile Include="Table\Mocks\MockRowModel1.cs" />
+    <Compile Include="Table\Mocks\MockRowModel2.cs" />
     <Compile Include="Table\Mocks\MockTable1.cs" />
     <Compile Include="Table\Mocks\MockTableRow1.cs" />
     <Compile Include="Table\CSVRowModelTests.cs" />

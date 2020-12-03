@@ -9,7 +9,7 @@ using DASPM.Table;
 
 namespace DASPMTests.Table.Mocks
 {
-    public class MockRowModel1 : IRowModel
+    public class MockRowModel1 : CSVRowModel
     {
         public int Col1 { get; set; }
         public string Col2 { get; set; }

@@ -1,4 +1,5 @@
-﻿using DASPMTests.Table.Mocks;
+﻿using DASPM.Table;
+using DASPMTests.Table.Mocks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
@@ -70,10 +71,11 @@ namespace DASPM.Table.Tests
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var table = (CSVTable)CSVTableBuilder.Create(name, fullPath,
+            var table = (MockTable1)CSVTableBuilder.CreateCSVTable(name, fullPath,
                 typeof(MockTable1),
                 typeof(MockTableRow1),
-                typeof(MockRowModel1));
+                typeof(MockRowModel1),
+                typeof(MockRowModel1Map));
             var model = new MockRowModel1();
 
             var row = (CSVTableRow)CSVTableRowBuilder.Create(table, model, typeof(MockTableRow1));
@@ -81,6 +83,12 @@ namespace DASPM.Table.Tests
             Assert.AreEqual(typeof(MockTableRow1), row.GetType());
             Assert.AreEqual(typeof(MockRowModel1), row.ModelType);
             Assert.AreEqual(typeof(MockRowModel1), row.Fields.GetType());
+        }
+
+        [TestMethod()]
+        public void InitCreatableRowTest()
+        {
+            //Assert.Fail();
         }
     }
 }

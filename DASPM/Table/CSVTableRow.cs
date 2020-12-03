@@ -1,15 +1,9 @@
 ﻿using CsvHelper.Configuration;
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public abstract class CSVTableRow : ITableRow
+    public abstract class CSVTableRow : ICSVHelperTableRow, ICreatableTableRow
     {
         #region ctor
 
@@ -18,7 +12,9 @@ namespace DASPM.Table
             //do nothing; placeholder.
         }
 
-        public void Initialize(CSVTable table, IRowModel model)
+        #endregion ctor
+
+        public void InitCreatableRow(ITable table, IRowModel model)
         {
             //give an initial model if it's empty TODO make this default values or something
             if (model is null)
@@ -26,28 +22,34 @@ namespace DASPM.Table
                 model = (IRowModel)Activator.CreateInstance(model.GetType());
             }
 
-            if (!table.TryValidateModelType(model, out ArgumentException e)) throw e;
+            //probably would be better to create a local TryValidateModelType variant and remove
+            //the dependency on CSVTable if possible?
+            if (!(table is CSVTable csvTable)) throw new ArgumentException("table must be of type CSVTable");
+
+            if (!csvTable.TryValidateModelType(model, out ArgumentException e)) throw e;
 
             Table = table;
             Fields = model;
-            ModelType = model.GetType();
         }
 
-        #endregion ctor
+        #region ICSVHelperTableRow
 
-        #region ClassMembers
+        #region IHasClassMap
 
-        public Type ModelType { get; protected set; }
+        public ClassMap ClassMap => ((IHasClassMap)Table).ClassMap;
 
-        #endregion ClassMembers
+        #endregion IHasClassMap
 
-        #region ImplimentITableRow
+        #region ITableRow
 
         public IRowModel Fields { get; protected set; }
         public int ID { get; protected set; }
+        public Type ModelType { get => Fields.GetType(); }
         public ITable Table { get; protected set; }
 
-        #endregion ImplimentITableRow
+        #endregion ITableRow
+
+        #endregion ICSVHelperTableRow
     }
 
     //public class CSVTableRow<TModel> : CSVTableRow, ITableRow<TModel>
