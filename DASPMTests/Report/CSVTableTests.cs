@@ -242,16 +242,22 @@ namespace DASPM.Table.Tests
         [TestMethod()]
         public void CreateTest()
         {
-            var table = CSVTableBuilder.Create(TestSetup.Name1, TestSetup.FullPath1, typeof(MockTable1), typeof(MockTableRow1), typeof(MockRowModel1));
+            var table = CSVTableBuilder.CreateCSVTable(
+                TestSetup.Name1,
+                TestSetup.FullPath1,
+                typeof(MockTable1),
+                typeof(MockTableRow1),
+                typeof(MockRowModel1),
+                typeof(MockRowModel1Map));
 
             var nameTest = table.Name;
 
             Assert.AreEqual("Test1", nameTest);
-            Assert.ThrowsException<InvalidOperationException>(() => table.ClassMap);
+            //Assert.ThrowsException<InvalidOperationException>(() => table.ClassMap);
             //properties
             Assert.AreEqual(TestSetup.Count1, table.Count);
             Assert.AreEqual(TestSetup.Filename1, table.Filename);
-            Assert.ThrowsException<InvalidOperationException>(() => table.Headers);
+            //Assert.ThrowsException<InvalidOperationException>(() => table.Headers);
             Assert.AreEqual(TestSetup.RowsCount1, table.Rows.Count);
             //methods
             Assert.AreEqual(typeof(MockTable1), table.GetType());
@@ -385,7 +391,7 @@ namespace DASPM.Table.Tests
 
             //***write file
 
-            table1.WriteToFile(TestSetup.FullPath3B);
+            table1.WriteNewFile(TestSetup.FullPath3B);
             //*** Unit Test
 
             var table2 = TestSetup.Table3B;

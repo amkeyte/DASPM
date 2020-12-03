@@ -13,21 +13,10 @@ namespace DASPM.Table
     /// </summary>
     public interface ITable
     {
-        ///// <summary>
-        ///// The ClassMap for TModel. Available only after file access. It is assumed that only one ClassMap is being used.
-        ///// TODO: should not be bart of the base table interface!!!!
-        ///// </summary>
-        //ClassMap ClassMap { get; }
-
         /// <summary>
         /// Number of rows in table
         /// </summary>
         int Count { get; }
-
-        /// <summary>
-        /// The filename assigned to this table (should be moved to concrete because a table should not be required to be tied to a file)
-        /// </summary>
-        string Filename { get; }
 
         /// <summary>
         /// A list of field headers
@@ -40,17 +29,22 @@ namespace DASPM.Table
         string Name { get; }
 
         /// <summary>
-        /// Return a List of rows for accessing data
+        /// Return a List of TableRows for accessing data
         /// </summary>
         IList<ITableRow> Rows { get; }
 
         /// <summary>
-        /// Depreciate... no longer applicable or used.
+        /// Indexer to return the TableRow's model by row index of the Rows table for short form access
+        /// Equivalent to [Table.Row(index).Fields].
+        /// Assumes client code will hide the return type with the applicable model.
+        /// Example usage: Table[10].Col1 = 5
         /// </summary>
-        void Refresh();
+        /// <param name="index">The row number</param>
+        /// <returns></returns>
+        IRowModel this[int index] { get; }
 
         /// <summary>
-        /// Access an individual row by number.
+        /// Access an individual TableRow by number.
         /// </summary>
         /// <param name="id">The Row number</param>
         /// <returns>The requested row. Exception if out of range.</returns>

@@ -1,4 +1,5 @@
 ﻿using CsvHelper.Configuration;
+using CsvHelper.Configuration.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +8,10 @@ using System.Threading.Tasks;
 
 namespace DASPM.Table
 {
-    public abstract class CSVRowModel
+    public abstract class CSVRowModel : IRowModel
     {
         public static object GetFieldByIndex(int index, IRowModel model, ClassMap classMap)
         {
-            //validate that model is matched to ClassMap
-            if (model.GetType() != classMap.ClassType)
-            {
-                throw new ArgumentException("model type must be the same as type classMap.ClassType");
-            }
-
             if (index < 0 || index > classMap.GetMaxIndex())
             {
                 throw new ArgumentOutOfRangeException("Invalid index given");

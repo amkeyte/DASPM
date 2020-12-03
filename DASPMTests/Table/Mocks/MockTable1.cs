@@ -42,10 +42,11 @@ namespace DASPMTests.Table.Mocks
     {
         public static MockTable1 Create(string name, string fullPath)
         {
-            return (MockTable1)CSVTableBuilder.Create(name, fullPath,
+            return (MockTable1)CSVTableBuilder.CreateCSVTable(name, fullPath,
                 typeof(MockTable1),
                 typeof(MockTableRow1),
-                typeof(MockRowModel1));
+                typeof(MockRowModel1),
+                typeof(MockRowModel1Map));
         }
 
         public new MockTableRow1 Row(int id)

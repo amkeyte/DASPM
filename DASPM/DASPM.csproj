@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Table\CSVInterfaces.cs" />
     <Compile Include="Table\CSVRowModel.cs" />
     <Compile Include="Table\CSVTableBuilder.cs" />
     <Compile Include="Table\CSVTableRowBuilder.cs" />

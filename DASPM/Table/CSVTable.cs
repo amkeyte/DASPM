@@ -8,66 +8,198 @@ using CsvHelper.Configuration;
 
 namespace DASPM.Table
 {
-    public abstract class CSVTable : ITable
+    /// <summary>
+    /// Abstract class that should hold most of the generic code for creation of table
+    /// and interacting with the CSVHelper Library.
+    /// Factory methods create instances using the correct types of ITableRow, IRowModel, and ClassMap for the
+    /// client code.
+    /// Descendant tables may hide accessor methods as required to provide the correct
+    /// return types.
+    /// </summary>
+    public abstract class CSVTable : ICSVHelperTable, ICreatableTable
     {
+        #region ctor
+
         //provide default constructor so creation of the correct descendant type is posible
         public CSVTable()
         {
-        }
-
-        public string Filename { get; protected set; }
-
-        public string FullPath { get; protected set; }
-
-        public Type ModelType { get; protected set; }
-
-        public string Path { get; protected set; }
-
-        public Type RowType { get; protected set; }
-
-        public void Initialize(string name, string fullPath, Type rowType, Type modelType)
-        {
-            this.Path = System.IO.Path.GetDirectoryName(fullPath);
-            this.Filename = System.IO.Path.GetFileName(fullPath);
-
-            //initialized to prevent possible null access errors down the line
             this._rows = new List<object>();
-
-            this.ModelType = modelType;
-            this.RowType = rowType;
-
-            this.Name = name;
-            this.FullPath = fullPath;
-
-            //add an initialized state field to ensure correct creation.
         }
 
-        #region ImplementITable
+        #endregion ctor
 
-        protected ClassMap _classMap = null;
+        #region ICSVHelperTable
 
-        //public while testing!! TODO should be protected... fix this hack
-        public List<object> _rows;
+        #region ICreatableTable
 
-        public ClassMap ClassMap
+        public virtual Type ModelType { get; protected set; }
+        public virtual Type TableRowType { get; protected set; }
+
+        public virtual void InitCreatableTable(Type tableRowType, Type modelType)
+        {
+            TableRowType = tableRowType;
+            ModelType = modelType;
+        }
+
+        #endregion ICreatableTable
+
+        #region IHasClassMap
+
+        /// <summary>
+        /// ClassMap is used because it provides most of the reflection logic used to learn about the model
+        /// </summary>
+        public virtual ClassMap ClassMap { get; protected set; }
+
+        public virtual void InitClassMap(ClassMap classMap)
+        {
+            ClassMap = classMap;
+        }
+
+        #endregion IHasClassMap
+
+        #region IHasCSVConfig
+
+        #region CsvReader
+
+        private CsvReader _CsvReader;
+
+        public CsvReader CsvReader
         {
             get
             {
-                if (_classMap is null)
-                {
-                    throw new InvalidOperationException("Classmap is not initialized because no file has been loaded.");
-                }
-                return _classMap;
+                if (!CsvReaderReady) throw new InvalidOperationException("CsvReader is not ready.");
+                return _CsvReader;
             }
-
-            protected set { _classMap = value; }
+            protected set
+            {
+                _CsvReader = value;
+            }
         }
+
+        public bool CsvReaderReady { get; protected set; }
+
+        public virtual void ConfigureCsvReader(CsvReader csvReader)
+        {
+        }
+
+        #endregion CsvReader
+
+        #region CsvWriter
+
+        private CsvWriter _CsvWriter;
+
+        public CsvWriter CsvWriter
+        {
+            get
+            {
+                if (!CsvWriterReady) throw new InvalidOperationException("CsvWriter is not ready.");
+                return _CsvWriter;
+            }
+            protected set
+            {
+                _CsvWriter = value;
+            }
+        }
+
+        public bool CsvWriterReady { get; protected set; }
+
+        public virtual void ConfigureCsvWriter(CsvWriter csvWriter)
+        {
+        }
+
+        #endregion CsvWriter
+
+        #endregion IHasCSVConfig
+
+        #region IFileReadWritable
+
+        public string DirPath { get => Path.GetDirectoryName(FullPath); }
+
+        public string Filename { get => Path.GetFileName(FullPath); }
+
+        public string FullPath { get; protected set; }
+
+        public bool ReadWriteReady { get; protected set; }
+
+        public void InitFileReadWrite(string fullPath)
+        {
+            FullPath = fullPath;
+            ReadWriteReady = true;
+        }
+
+        public void LoadFromFile()
+        {
+            if (!ReadWriteReady) throw new InvalidOperationException("Read / Write is not ready.");
+
+            using (var reader = new StreamReader(FullPath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                ConfigureCsvReader(csv);
+                ClassMap = csv.Configuration.Maps[ModelType];
+                var records = csv.GetRecords(ModelType);
+                //use internal list or else it will only clear the copy.
+                _rows.Clear();
+                foreach (var r in records)
+                {
+                    //for generics, this is calling the non-generic AddRow... need to fix.
+                    this.AddRow((IRowModel)r);
+                }
+            }
+        }
+
+        #region Write
+
+        private void WriteFile()
+        {
+            if (!ReadWriteReady) throw new InvalidOperationException("Read / Write is not ready.");
+
+            using (var writer = new StreamWriter(FullPath))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                CsvWriter = csv;
+                ConfigureCsvWriter(csv);//calls to descendant class
+                CsvWriterReady = true; //might find some way to automate this?
+
+                ClassMap = csv.Configuration.Maps[ModelType];//needed?
+
+                var rowModels = new List<object>();
+                foreach (var r in Rows)
+                {
+                    rowModels.Add(r.Fields);
+                }
+
+                csv.WriteRecords(rowModels);
+                CsvWriterReady = false;
+                CsvWriter = null;
+            }
+        }
+
+        public void OverwriteFile()
+
+        {
+            WriteFile();
+        }
+
+        public void WriteNewFile(string fullPath)
+        {
+            FullPath = fullPath;
+            WriteFile();
+        }
+
+        #endregion Write
+
+        #endregion IFileReadWritable
+
+        #region ITable
+
+        //public while testing!! TODO should be protected... fix this hack
+        public List<object> _rows;
 
         public int Count
         {
             get
             {
-                return Rows.Count;
+                return _rows.Count;
             }
         }
 
@@ -76,23 +208,22 @@ namespace DASPM.Table
             get
             {
                 //use the classmap to get the names of headers(?)
-                if (ClassMap is null)
-                {
-                    throw new InvalidOperationException("Headers is not initialized because no file has been loaded.");
-                }
-                var result = new List<String>();
+                //if (ClassMap is null)
+                //{
+                //    throw new InvalidOperationException("Headers is not initialized because no file has been loaded.");
+                //}
+                var result = new List<string>();
 
                 foreach (var i in ClassMap.MemberMaps)
                 {
+                    //just accessing properties will not give actual text values if they aren't usable as valid property names
                     result.Add(i.Data.Names[0]); //assumes only one name has been added to classmap.
                 }
-                //just accessing properties will not give actual text values if they aren't usable as valid property names
                 return result;
             }
         }
 
-        public string Name { get; protected set; }
-
+        public string Name { get; set; }
         //the table is backed by a List<object> so that casting can be achieved
         //all accesses to the various Rows properties will need to cast in and out
         //of type object to present the correct interface to the client code.
@@ -102,7 +233,10 @@ namespace DASPM.Table
 
         //because of casting difficulties and also to promote the integrity of the list,
         //copies are used. If this is a performance bottleneck look into caching.
-        public IList<ITableRow> Rows
+
+        //note: since the TableRows are passed by reference, it is still possible to update
+        //the table even though the list is a copy.
+        public virtual IList<ITableRow> Rows
         {
             get
             {
@@ -114,35 +248,8 @@ namespace DASPM.Table
 
                 return result;
             }
-            //probably don't need this.
-            protected set
-            {
-                throw new NotImplementedException("this got called!!");
-#pragma warning disable CS0162 // Unreachable code detected
-                _rows = new List<object>();
-                foreach (var row in value)
-                {
-                    _rows.Add(row);
-                }
-#pragma warning restore CS0162 // Unreachable code detected
-            }
         }
 
-        public void Refresh()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ITableRow Row(int id)
-        {
-            return Rows.ElementAt(id);
-        }
-
-        #endregion ImplementITable
-
-        #region ClassMembers
-
-        //short form access
         public virtual IRowModel this[int index]
         {
             get
@@ -184,8 +291,21 @@ namespace DASPM.Table
             //{
             //    return CSVTableRowBuilder.CreateGeneric<IRowModel>(this, model, this.RowType);
             //}
-            return CSVTableRowBuilder.Create(this, model, RowType);
+            return CSVTableRowBuilder.Create(this, model, TableRowType);
         }
+
+        public ITableRow Row(int id)
+        {
+            return (ITableRow)_rows.ElementAt(id);
+        }
+
+        #endregion ITable
+
+        #endregion ICSVHelperTable
+
+        #region ClassMembers
+
+        //short form access
 
         //verify that model is of ModelType, since different branches of IRowModel could still be assigned.
         public bool TryValidateModelType(IRowModel model, out ArgumentException exception)
@@ -200,57 +320,6 @@ namespace DASPM.Table
         }
 
         #endregion ClassMembers
-
-        #region CSVHelper
-
-        protected virtual void ConfigureCsvReader(CsvReader csv)
-        {
-            //stub. Override to add a classmap, etc...
-        }
-
-        protected virtual void ConfigureCsvWriter(CsvWriter csv)
-        {
-            //stub. Override to add a classmap, etc...
-        }
-
-        public void LoadFromFile()
-        {
-            using (var reader = new StreamReader(FullPath))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                ConfigureCsvReader(csv);
-                ClassMap = csv.Configuration.Maps[ModelType];
-                var records = csv.GetRecords(ModelType);
-                //use internal list or else it will only clear the copy.
-                _rows.Clear();
-                foreach (var r in records)
-                {
-                    //for generics, this is calling the non-generic AddRow... need to fix.
-                    this.AddRow((IRowModel)r);
-                }
-            }
-        }
-
-        public void WriteToFile(string newFileFullPath)
-        {
-            using (var writer = new StreamWriter(newFileFullPath))
-            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-            {
-                //register the map to ignore some properties in IRowModel, etc...
-
-                ConfigureCsvWriter(csv);
-                ClassMap = csv.Configuration.Maps[ModelType];
-                var rowModels = new List<object>();
-                foreach (var r in Rows)
-                {
-                    rowModels.Add(r.Fields);
-                }
-
-                csv.WriteRecords(rowModels);
-            }
-        }
-
-        #endregion CSVHelper
     }
 
     //    public class CSVTable<TModel> : CSVTable, ITable<TModel> where TModel : IRowModel

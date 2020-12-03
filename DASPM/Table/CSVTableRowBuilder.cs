@@ -27,7 +27,7 @@ namespace DASPM.Table
             //}
 
             var tableRow = (CSVTableRow)Activator.CreateInstance(tableRowType);
-            tableRow.Initialize(table, model);
+            tableRow.InitCreatableRow(table, model);
             return tableRow;
         }
 

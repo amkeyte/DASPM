@@ -70,10 +70,11 @@ namespace DASPM.Table.Tests
         {
             string name = "Test1";
             string fullPath = Path.Combine(UserFolder, TestFiles, @"Test1.csv");
-            var table = (CSVTable)CSVTableBuilder.Create(name, fullPath,
+            var table = CSVTableBuilder.CreateCSVTable(name, fullPath,
                 typeof(MockTable1),
                 typeof(MockTableRow1),
-                typeof(MockRowModel1));
+                typeof(MockRowModel1),
+                typeof(MockRowModel1Map));
             var model = new MockRowModel1();
 
             var row = (CSVTableRow)CSVTableRowBuilder.Create(table, model, typeof(MockTableRow1));

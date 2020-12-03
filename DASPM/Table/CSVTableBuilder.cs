@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CsvHelper.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace DASPM.Table
             e = null;
 
             //this is a CSVTable
-            if (!typeof(CSVTable).IsAssignableFrom(tableType))
+            if (!typeof(ICSVHelperTable).IsAssignableFrom(tableType))
             {
                 e = new InvalidOperationException("Invalid tableType: " + tableType);
                 return false;
@@ -34,8 +35,26 @@ namespace DASPM.Table
             return true;
         }
 
+        ///// <summary>
+        ///// Instanciates an empty model and then uses its ClassMapType to create an empty classmap of the correct type.
+        ///// </summary>
+        ///// <param name="modelType"></param>
+        ///// <returns></returns>
+        //public static ClassMap CreateClassMap(Type modelType)
+        //{
+        //    var model = (CSVRowModel)Activator.CreateInstance(modelType);
+        //    var classMap = (ClassMap)Activator.CreateInstance(model.ClassMap);
+        //    return classMap;
+        //}
+
         //factory pattern ensures initialize is called.
-        public static ITable Create(string name, string fullPath, Type tableType, Type rowType, Type modelType)
+        public static CSVTable CreateCSVTable(
+            string name,
+            string fullPath,
+            Type tableType,
+            Type rowType,
+            Type modelType,
+            Type classMapType)
         {
             if (!TryValidateAssignable(tableType, rowType, modelType, out var e)) throw e;
 
@@ -46,7 +65,11 @@ namespace DASPM.Table
             //}
 
             var table = (CSVTable)Activator.CreateInstance(tableType);
-            table.Initialize(name, fullPath, rowType, modelType);
+            var classMap = (ClassMap)Activator.CreateInstance(classMapType);
+            table.InitCreatableTable(rowType, modelType);
+            table.InitClassMap(classMap);
+            table.InitFileReadWrite(fullPath);
+            table.Name = name;
             return table;
         }
 
