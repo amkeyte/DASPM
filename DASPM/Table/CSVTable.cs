@@ -16,7 +16,7 @@ namespace DASPM.Table
     /// Descendant tables may hide accessor methods as required to provide the correct
     /// return types.
     /// </summary>
-    public abstract class CSVTable : ICSVHelperTable, ICreatableTable
+    public abstract class CSVTable : ICSVHelperTable, ICreatableCSVTable
     {
         #region ctor
 
@@ -267,6 +267,12 @@ namespace DASPM.Table
             }
         }
 
+        public virtual ITableRow AddRow()
+        {
+            var model = (IRowModel)Activator.CreateInstance(ModelType);
+            return AddRow(model);
+        }
+
         /// <summary>
         /// Uses the model to create a new TableRow using CreateRow. Then adds it to the table
         /// and returns it.
@@ -287,11 +293,19 @@ namespace DASPM.Table
         public virtual ITableRow CreateRow(IRowModel model)
         {
             if (!TryValidateModelType(model, out ArgumentException e)) throw e;
-            //if (RowType.ContainsGenericParameters)
-            //{
-            //    return CSVTableRowBuilder.CreateGeneric<IRowModel>(this, model, this.RowType);
-            //}
-            return CSVTableRowBuilder.Create(this, model, TableRowType);
+            return (ITableRow)CSVTableRowBuilder.Create(this, model, TableRowType);
+        }
+
+        public virtual IList<TTableRow> GetRows<TTableRow>()
+            where TTableRow : ITableRow
+        {
+            var result = new List<TTableRow>();
+            foreach (var row in _rows)
+            {
+                result.Add((TTableRow)row);
+            }
+
+            return result;
         }
 
         public ITableRow Row(int id)
@@ -306,6 +320,11 @@ namespace DASPM.Table
         #region ClassMembers
 
         //short form access
+
+        public ITableRow RemoveRow(int id)
+        {
+            throw new NotImplementedException();
+        }
 
         //verify that model is of ModelType, since different branches of IRowModel could still be assigned.
         public bool TryValidateModelType(IRowModel model, out ArgumentException exception)

@@ -40,6 +40,14 @@ namespace DASPMTests.Table.Mocks
 
     public class MockTable1 : CSVTable
     {
+        public new IList<MockTableRow1> Rows
+        {
+            get
+            {
+                return base.GetRows<MockTableRow1>();
+            }
+        }
+
         public static MockTable1 Create(string name, string fullPath)
         {
             return (MockTable1)CSVTableBuilder.CreateCSVTable(name, fullPath,

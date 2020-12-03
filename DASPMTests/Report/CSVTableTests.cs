@@ -1,7 +1,9 @@
-﻿using DASPMTests.Table.Mocks;
+﻿using DASPM.Table;
+using DASPMTests.Table.Mocks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -62,7 +64,7 @@ namespace DASPM.Table.Tests
             public static IList<string> Headers2 { get => new List<string>() { "Col1", "Col2", "Col3" }; }
             public static string Name2 { get => "Test1"; }
 
-            public static IList<ITableRow> Rows2
+            public static IList<MockTableRow1> Rows2
             {
                 get => Table2.Rows;
             }
@@ -103,12 +105,12 @@ namespace DASPM.Table.Tests
             public static IList<string> Headers3 { get => new List<string>() { "Col1", "Col2", "Col3" }; }
             public static string Name3 { get => "Test1"; }
 
-            public static IList<ITableRow> Rows3A
+            public static IList<MockTableRow1> Rows3A
             {
                 get => Table3A.Rows;
             }
 
-            public static IList<ITableRow> Rows3B
+            public static IList<MockTableRow1> Rows3B
             {
                 get => Table3B.Rows;
             }
@@ -146,7 +148,19 @@ namespace DASPM.Table.Tests
         [TestMethod()]
         public void AddRowTest()
         {
-            var table = MockTable1.Create(TestSetup.Name1, TestSetup.FullPath1);
+            var table = TestSetup.Table1;
+
+            table.AddRow();
+
+            Assert.AreEqual(typeof(MockTableRow1), table.Rows[0].GetType());
+            Assert.AreEqual(typeof(MockRowModel1), table.Rows[0].Fields.GetType());
+            Assert.AreEqual(0, table.Rows[0].Fields.Col1);
+        }
+
+        [TestMethod()]
+        public void AddRowTest_model()
+        {
+            var table = TestSetup.Table1;
             var model = new MockRowModel1();
 
             model.Col1 = 1;
@@ -209,11 +223,22 @@ namespace DASPM.Table.Tests
         //    Assert.AreEqual(typeof(MockTable1<MockRowModel1>), tableTypeTest);
         //    Assert.AreEqual(typeof(MockRowModel1), rowTypeTest);
         //}
+        [TestMethod()]
+        public void ConfigureCsvReaderTest()
+        {
+            //            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void ConfigureCsvWriterTest()
+        {
+            //Assert.Fail();
+        }
 
         [TestMethod()]
         public void CreateMockTableTest()
         {
-            var table = MockTable1.Create(TestSetup.Name1, TestSetup.FullPath1);
+            var table = TestSetup.Table1;
 
             var tableTypeTest = table.GetType();
             var rowTypeTest = table.ModelType;
@@ -228,7 +253,7 @@ namespace DASPM.Table.Tests
         [TestMethod()]
         public void CreateRowTest()
         {
-            var table = MockTable1.Create(TestSetup.Name1, TestSetup.FullPath1);
+            var table = TestSetup.Table1;
 
             var model = new MockRowModel1();
             model.Col1 = 1;
@@ -237,31 +262,6 @@ namespace DASPM.Table.Tests
             Assert.AreEqual(typeof(MockTableRow1), row.GetType());
             Assert.AreEqual(typeof(MockRowModel1), row.Fields.GetType());
             Assert.AreEqual(1, model.Col1);
-        }
-
-        [TestMethod()]
-        public void CreateTest()
-        {
-            var table = CSVTableBuilder.CreateCSVTable(
-                TestSetup.Name1,
-                TestSetup.FullPath1,
-                typeof(MockTable1),
-                typeof(MockTableRow1),
-                typeof(MockRowModel1),
-                typeof(MockRowModel1Map));
-
-            var nameTest = table.Name;
-
-            Assert.AreEqual("Test1", nameTest);
-            //Assert.ThrowsException<InvalidOperationException>(() => table.ClassMap);
-            //properties
-            Assert.AreEqual(TestSetup.Count1, table.Count);
-            Assert.AreEqual(TestSetup.Filename1, table.Filename);
-            //Assert.ThrowsException<InvalidOperationException>(() => table.Headers);
-            Assert.AreEqual(TestSetup.RowsCount1, table.Rows.Count);
-            //methods
-            Assert.AreEqual(typeof(MockTable1), table.GetType());
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => table.Row(0));
         }
 
         //[TestMethod()]
@@ -279,6 +279,24 @@ namespace DASPM.Table.Tests
         //    Assert.AreEqual(1, row0Test.Col1);
         //    Assert.AreEqual("E", row1Test.Col3);
         //}
+
+        [TestMethod()]
+        public void InitClassMapTest()
+        {
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod()]
+        public void InitCreatableTableTest()
+        {
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod()]
+        public void InitFileReadWriteTest()
+        {
+            Assert.IsTrue(true);
+        }
 
         [TestMethod()]
         public void LoadFromFileTest()
@@ -311,16 +329,19 @@ namespace DASPM.Table.Tests
         //}
 
         [TestMethod()]
-        public void RowsGetTest()
+        public void OverwriteFileTest()
         {
-            var table = TestSetup.Table1;
-            var model = new MockRowModel1();
-            var row = MockTableRow1.Create(table, model);
+            //TODO
+            //Assert.Fail();
+        }
 
-            //requires _rows public hack
-            table._rows.Add(row);
+        [TestMethod()]
+        public void Rows_GetTest()
+        {
+            var table = TestSetup.Table2;
+            table.LoadFromFile();
 
-            Assert.AreEqual(typeof(List<ITableRow>), table.Rows.GetType());
+            Assert.AreEqual(typeof(List<MockTableRow1>), table.Rows.GetType());
             Assert.AreEqual(typeof(MockTableRow1), table.Rows[0].GetType());
             Assert.AreEqual(typeof(MockRowModel1), table.Rows[0].Fields.GetType());
         }
@@ -369,7 +390,34 @@ namespace DASPM.Table.Tests
         //}
 
         [TestMethod()]
-        public void WriteToFileTest()
+        public void RowTest()
+        {
+            TestSetup.Reset();
+            var table = TestSetup.Table2;
+
+            table.LoadFromFile();
+
+            Assert.AreEqual(typeof(MockTableRow1), table.Row(0).GetType());
+            Assert.AreEqual(typeof(MockRowModel1), table.Row(0).ModelType);
+            Assert.AreEqual(0, table.Row(0).ID);
+        }
+
+        [TestMethod()]
+        public void TryValidateModelTypeTest()
+        {
+            var table = TestSetup.Table1;
+            ArgumentException e;
+            var model1 = new MockRowModel1();
+            var model2 = new MockRowModel2();
+
+            Assert.IsTrue(table.TryValidateModelType(model1, out e));
+            Debug.Print("Validation passed.");
+            Assert.IsFalse(table.TryValidateModelType(model2, out e));
+            Debug.Print(e.Message);
+        }
+
+        [TestMethod()]
+        public void WriteNewFileTest()
         {
             //***read file
             TestSetup.Reset();

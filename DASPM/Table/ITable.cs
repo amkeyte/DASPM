@@ -26,7 +26,7 @@ namespace DASPM.Table
         /// <summary>
         /// The user friendly name of the table (is needed?)
         /// </summary>
-        string Name { get; }
+        string Name { get; set; }
 
         /// <summary>
         /// Return a List of TableRows for accessing data
@@ -42,6 +42,12 @@ namespace DASPM.Table
         /// <param name="index">The row number</param>
         /// <returns></returns>
         IRowModel this[int index] { get; }
+
+        ITableRow AddRow();
+
+        ITableRow AddRow(IRowModel model);
+
+        ITableRow RemoveRow(int id);
 
         /// <summary>
         /// Access an individual TableRow by number.

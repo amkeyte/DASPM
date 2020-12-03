@@ -34,11 +34,13 @@ namespace DASPM.Table
     /// <summary>
     /// Provides members for reflective creation of ITable descendants
     /// </summary>
-    public interface ICreatableTable
+    public interface ICreatableCSVTable : IHasClassMap, IFileReadWritable
     {
         Type ModelType { get; }
         string Name { set; }
         Type TableRowType { get; }
+
+        void InitClassMap(ClassMap classMap);
 
         void InitCreatableTable(Type tableRowType, Type modelType);
     }
@@ -72,8 +74,6 @@ namespace DASPM.Table
     public interface IHasClassMap
     {
         ClassMap ClassMap { get; }
-
-        void InitClassMap(ClassMap classMap);
     }
 
     public interface IHasCSVConfig

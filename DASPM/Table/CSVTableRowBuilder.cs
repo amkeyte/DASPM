@@ -16,17 +16,11 @@ namespace DASPM.Table
         /// <param name="tableRowType">The CSVTableRow descendant that is compatible with modelType</param>
         /// <param name="modelType">The type of model to be used.</param>
         /// <returns></returns>
-        public static ITableRow Create(CSVTable table, IRowModel model, Type tableRowType)
+        public static ICreatableTableRow Create(ITable table, IRowModel model, Type tableRowType)
         {
             //probably do some verification on types used
 
-            //if (tableRowType.ContainsGenericParameters)
-            //{
-            //    //probably need a better specific exception type.
-            //    throw new InvalidOperationException("Do not use this factory for tables using the TModel parameter");
-            //}
-
-            var tableRow = (CSVTableRow)Activator.CreateInstance(tableRowType);
+            var tableRow = (ICreatableTableRow)Activator.CreateInstance(tableRowType);
             tableRow.InitCreatableRow(table, model);
             return tableRow;
         }

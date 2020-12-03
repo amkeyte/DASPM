@@ -38,11 +38,6 @@ namespace DASPM.Table
 
         public ClassMap ClassMap => ((IHasClassMap)Table).ClassMap;
 
-        public virtual void InitClassMap(ClassMap classMap)
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion IHasClassMap
 
         #region ITableRow
