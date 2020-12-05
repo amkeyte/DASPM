@@ -12,6 +12,15 @@ namespace DASPM_PCTEL.Table
 {
     public class PCTEL_Location : IComparable
     {
+        public static void ApplyLocation(PCTEL_TableRowModel model, PCTEL_Location location)
+        {
+            model.LocType = location.LocType;
+            model.Floor = location.Floor;
+            model.GridID = location.GridID;
+            model.Label = location.Label;
+            model.LocID = location.LocID;
+        }
+
         #region ClassMembers
 
         public string Floor { get; protected set; }
@@ -38,11 +47,21 @@ namespace DASPM_PCTEL.Table
 
         public PCTEL_Location(PCTEL_TableRowModel model)
         {
+            //change this so it will call below instead... and probably move it to somewhere else.
             LocType = model.LocType;
             Floor = model.Floor;
             GridID = model.GridID;
             Label = model.Label;
             LocID = model.LocID;
+        }
+
+        public PCTEL_Location(string locType, string floor, string gridID, string label, string locID)
+        {
+            LocType = locType;
+            Floor = floor;
+            GridID = gridID;
+            Label = label;
+            LocID = locID;
         }
 
 #if BUILD_DATASET

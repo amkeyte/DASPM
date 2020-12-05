@@ -2,58 +2,17 @@
 
 namespace DASPM_PCTEL.Table
 {
-    internal class PCTEL_TableRowCore
-    {
-        protected PCTEL_TableRow TableRow { get; set; }
-
-        public PCTEL_TableRowCore(PCTEL_TableRow tableRow)
-        {
-            TableRow = tableRow;
-        }
-
-        #region ClassMembers
-
-        protected PCTEL_Location _location;
-
-        public PCTEL_Location Location
-        {
-            get
-            {
-                if (_location is null)
-                {
-                    _location = new PCTEL_Location(TableRow.Fields);
-                }
-                return _location;
-            }
-        }
-
-        public virtual void Calculate()
-        {
-            //no default calculation
-        }
-
-        #endregion ClassMembers
-    }
-
-    public class PCTEL_TableRow : CSVTableRow
+    public abstract class PCTEL_TableRow : CSVTableRow, IHasLocation, IDoesCalculation
     {
         #region ctor
 
-        private PCTEL_TableRowCore Core { get; set; }
-
-        //public static implicit operator PCTEL_TableRow(PCTEL_TableRow<PCTEL_TableRowModel> other)
-        //{
-        //    //double cast allows cross-generic conversion??
-        //    return (PCTEL_TableRow)(ITableRow)other;
-        //}
         public PCTEL_TableRow()
         {
-            Core = new PCTEL_TableRowCore(this);
         }
 
         public static PCTEL_TableRow Create(PCTEL_Table table, PCTEL_TableRowModel model)
         {
-            return (PCTEL_TableRow)Create(table, model, typeof(PCTEL_TableRow));
+            return (PCTEL_TableRow)CSVTableRowBuilder.Create(table, model, typeof(PCTEL_TableRow));
         }
 
         #endregion ctor
@@ -61,23 +20,23 @@ namespace DASPM_PCTEL.Table
         #region CSVTableRow
 
         //Convenience casting
-        public new PCTEL_TableRowModel Fields
-        {
-            get
-            {
-                return (PCTEL_TableRowModel)base.Fields;
-            }
-        }
+        public new PCTEL_TableRowModel Fields => (PCTEL_TableRowModel)base.Fields;
 
         #endregion CSVTableRow
 
         #region ClassMembers
 
+        private PCTEL_Location _location;
+
         public PCTEL_Location Location
         {
             get
             {
-                return Core.Location;
+                if (_location is null)
+                {
+                    _location = new PCTEL_Location(Fields);
+                }
+                return _location;
             }
         }
 

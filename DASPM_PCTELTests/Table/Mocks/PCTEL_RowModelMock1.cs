@@ -1,10 +1,15 @@
 ﻿using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
-using DASPM.Table;
+using DASPM_PCTEL.Table;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DASPMTests.Table.Mocks
+namespace DASPM_PCTELTests.Table.Mocks
 {
-    public class MockRowModel1 : CSVRowModel
+    public class PCTEL_RowModelMock1 : PCTEL_TableRowModel
     {
         public int Col1 { get; set; }
         public string Col2 { get; set; }
@@ -14,9 +19,9 @@ namespace DASPMTests.Table.Mocks
         public string ModelName => "Mock1";
     }
 
-    public sealed class MockRowModel1Map : ClassMap<MockRowModel1>
+    public class PCTEL_RowModelMock1Map : PCTEL_TableRowMap
     {
-        public MockRowModel1Map()
+        public PCTEL_RowModelMock1Map()
         {
             Map(m => m.Col1).Index(0).Name("Col1");
             Map(m => m.Col2).Index(1).Name("Col2");
