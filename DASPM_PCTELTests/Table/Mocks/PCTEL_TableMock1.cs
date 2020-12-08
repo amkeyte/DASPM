@@ -18,7 +18,7 @@ namespace DASPM_PCTELTests.Table.Mocks
             }
         }
 
-        public static new PCTEL_TableMock1 Create(string name, string fullPath)
+        public static PCTEL_TableMock1 Create(string name, string fullPath)
         {
             return (PCTEL_TableMock1)CSVTableBuilder.CreateCSVTable(name, fullPath,
                 typeof(PCTEL_TableMock1),

@@ -19,13 +19,13 @@ namespace DASPM_PCTELTests.Table.Mocks
         public string ModelName => "Mock1";
     }
 
-    public class PCTEL_RowModelMock1Map : PCTEL_TableRowMap
+    public class PCTEL_RowModelMock1Map : PCTEL_TableRowMap<PCTEL_RowModelMock1>
     {
         public PCTEL_RowModelMock1Map()
         {
-            Map(m => m.Col1).Index(0).Name("Col1");
-            Map(m => m.Col2).Index(1).Name("Col2");
-            Map(m => m.Col3).Index(2).Name("Col3");
+            Map(m => m.Col1).Index(0).Name("Col1").Default(0);
+            Map(m => m.Col2).Index(1).Name("Col2").Default("");
+            Map(m => m.Col3).Index(2).Name("Col3").Default("");
         }
     }
 }

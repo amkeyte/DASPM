@@ -14,39 +14,26 @@ namespace DASPM_PCTEL.Table
         {
         }
 
-        public static PCTEL_Table Create(string name, string fullPath)
-        {
-            var table = (PCTEL_Table)CSVTableBuilder.CreateCSVTable(
-                name,
-                fullPath,
-                typeof(PCTEL_Table),
-                typeof(PCTEL_TableRow),
-                typeof(PCTEL_TableRowModel),
-                typeof(PCTEL_TableRowMap));
-            table.RefreshLocations();
-            return table;
-        }
-
         #endregion ctor
 
         #region CSVTable
 
         public new IList<PCTEL_TableRow> Rows => GetRows<PCTEL_TableRow>();
 
-        public new PCTEL_TableRow AddRow(IRowModel model) => AddRow(model);
+        public new PCTEL_TableRow AddRow(IRowModel model) => (PCTEL_TableRow)base.AddRow(model);
 
-        public new PCTEL_TableRow AddRow() => AddRow();
+        public new PCTEL_TableRow AddRow() => (PCTEL_TableRow)base.AddRow();
 
         public override void ConfigureCsvReader(CsvReader csv)
         {
-            var map = new PCTEL_TableRowMap();
-            csv.Configuration.RegisterClassMap(map);
+            //var map = new PCTEL_TableRowMap();
+            csv.Configuration.RegisterClassMap(ClassMap);
         }
 
         public override void ConfigureCsvWriter(CsvWriter csv)
         {
-            var map = new PCTEL_TableRowMap();
-            csv.Configuration.RegisterClassMap(map);//this could probably just be moved to table builder and deleted
+            //var map = new PCTEL_TableRowMap();
+            csv.Configuration.RegisterClassMap(ClassMap);//this could probably just be moved to table builder and deleted
         }
 
         public new void LoadFromFile()

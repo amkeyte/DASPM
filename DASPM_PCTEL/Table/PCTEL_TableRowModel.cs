@@ -21,7 +21,7 @@ namespace DASPM_PCTEL.Table
         }
     }
 
-    public class PCTEL_TableRowMap : ClassMap<PCTEL_TableRowModel>
+    public abstract class PCTEL_TableRowMap : ClassMap<PCTEL_TableRowModel>
     {
         public PCTEL_TableRowMap()
         {
@@ -33,7 +33,7 @@ namespace DASPM_PCTEL.Table
         }
     }
 
-    public class PCTEL_TableRowModel : IRowModel
+    public abstract class PCTEL_TableRowModel : IRowModel
     {
         public string Floor { get; set; }
         public string GridID { get; set; }
