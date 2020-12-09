@@ -42,6 +42,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControlPanel\PCTEL_ControlPanel.cs" />
+    <Compile Include="DataSet\PCTEL_DataSet.cs" />
+    <Compile Include="DataSet\PCTEL_DataSetRow.cs" />
+    <Compile Include="DataSet\PCTEL_DataSetRowModel.cs" />
+    <Compile Include="DataSet\PCTEL_FloatConverter.cs" />
+    <Compile Include="DataSet\PCTEL_IntConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Table\PCTEL_Location.cs" />
     <Compile Include="Table\PCTEL_Table.cs" />

@@ -69,6 +69,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="DataSet\PCTEL_DataSetTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Table\Mocks\PCTEL_RowModelMock1.cs" />
     <Compile Include="Table\Mocks\PCTEL_TableRowMock1.cs" />

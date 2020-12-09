@@ -78,11 +78,13 @@ namespace DASPM.Table.Tests
                 typeof(MockRowModel1Map));
             var model = new MockRowModel1();
 
-            var row = (CSVTableRow)CSVTableRowBuilder.Create(table, model, typeof(MockTableRow1));
+            var row = (MockTableRow1)CSVTableRowBuilder.Create(table, model, typeof(MockTableRow1));
 
             Assert.AreEqual(typeof(MockTableRow1), row.GetType());
             Assert.AreEqual(typeof(MockRowModel1), row.ModelType);
             Assert.AreEqual(typeof(MockRowModel1), row.Fields.GetType());
+            //class members
+            Assert.AreEqual("TestProperty", row.TestProperty1);
         }
 
         [TestMethod()]

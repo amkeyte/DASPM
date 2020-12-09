@@ -1,12 +1,9 @@
-﻿using System.Globalization;
-using CsvHelper.Configuration;
-using CsvHelper.Configuration.Attributes;
-using DASPM.Table;
+﻿using CsvHelper.Configuration.Attributes;
 using DASPM_PCTEL.Table;
 
 namespace DASPM_PCTEL.DataSet
 {
-    public sealed class PCTEL_DataSetRowMap : ClassMap<PCTEL_DataSetRowModel>
+    public class PCTEL_DataSetRowMap : PCTEL_TableRowMap<PCTEL_DataSetRowModel>
     {
         #region ClassMembers
 

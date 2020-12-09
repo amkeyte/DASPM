@@ -32,6 +32,12 @@ namespace DASPMTests.Table.Mocks
         {
             return (MockTableRow1)CSVTableRowBuilder.Create(table, model, typeof(MockTableRow1));
         }
+
+        #region ClassMembers
+
+        public string TestProperty1 { get => "TestProperty1"; }
+
+        #endregion ClassMembers
     }
 
     //public class MockTableRow1<TModel> : MockTableRow1, ITableRow<TModel>

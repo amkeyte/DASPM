@@ -61,6 +61,7 @@ namespace DASPM.Table.Tests
             //methods
             Assert.AreEqual(typeof(MockTable1), table.GetType());
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => table.Row(0));
+            Assert.AreEqual("TestProperty", table.TestProperty1);
         }
 
         [TestMethod()]

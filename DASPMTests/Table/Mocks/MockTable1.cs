@@ -61,6 +61,12 @@ namespace DASPMTests.Table.Mocks
         {
             return (MockTableRow1)base.Row(id);
         }
+
+        #region ClassMembers
+
+        public string TestProperty1 { get => "TestProperty"; }
+
+        #endregion ClassMembers
     }
 
     //public class MockTable1<TModel> : MockTable1, ITable<TModel>

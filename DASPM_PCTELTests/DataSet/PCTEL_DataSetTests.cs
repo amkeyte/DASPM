@@ -13,58 +13,99 @@ namespace DASPM_PCTEL.DataSet.Tests
     [TestClass()]
     public class PCTEL_DataSetTests
     {
-        private string TestFiles { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
-        private string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
+        private class MySetup
+        {
+            #region general
+
+            public static string FullPath = Path.Combine(UserFolder, TestFilesFolder);
+            public static string Name = "DataSetTest1";
+            public static string TestFilesFolder { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
+            public static string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
+
+            #endregion general
+
+            #region AreaTest
+
+            public static string AreaFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
+            public static PCTEL_DataSet AreaTable = PCTEL_DataSet.Create(Name, Path.Combine(FullPath, AreaFilename));
+
+            #endregion AreaTest
+
+            #region CPTest
+
+            public static string CPFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
+            public static PCTEL_DataSet CPTable = PCTEL_DataSet.Create(Name, Path.Combine(FullPath, CPFilename));
+
+            #endregion CPTest
+        }
+
+        [TestMethod()]
+        public void CreateTest()
+        {
+            var table = MySetup.AreaTable;
+
+            //types
+            Assert.AreEqual(typeof(PCTEL_DataSet), table);
+            Assert.AreEqual(typeof(List<PCTEL_DataSetRow>), table.Rows.GetType());
+            Assert.AreEqual(typeof(PCTEL_DataSetRow), table.TableRowType);
+            Assert.AreEqual(typeof(PCTEL_DataSetRowModel), table.ModelType);
+            //class vars
+            Assert.AreEqual(PCTEL_DataSet.PCTEL_DATASET_TYPE_NAME_AREA, table.DataSetType);
+        }
 
         [TestMethod()]
         public void LoadFromFileTest_Area()
         {
-            string name = "DataSetTest1";
-            string path = Path.Combine(UserFolder, TestFiles);
-            string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
-            var tObj = PCTEL_DataSet.Create(name, Path.Combine(path, filename));
-
-            tObj.LoadFromFile();
+            var table = MySetup.AreaTable;
+            table.LoadFromFile();
 
             //all rows
-            Assert.AreEqual(20, tObj.Count);
+            Assert.AreEqual(20, table.Count);
             //location
-            Assert.AreEqual("Fine Arts - Admin 1", tObj.Row(0).Fields.Floor);
-            Assert.AreEqual("1", tObj.Row(0).Fields.GridID);
-            Assert.AreEqual("1", tObj.Row(0).Fields.LocID);
-            Assert.IsNull(tObj.Row(0).Fields.Label);
+            Assert.AreEqual("Fine Arts - Admin 1", table.Row(0).Fields.Floor);
+            Assert.AreEqual("1", table.Row(0).Fields.GridID);
+            Assert.AreEqual("1", table.Row(0).Fields.LocID);
+            Assert.IsNull(table.Row(0).Fields.Label);
 
             //info and last row
-            Assert.AreEqual("460137", tObj.Row(19).Fields.ChannelID);
+            Assert.AreEqual("460137", table.Row(19).Fields.ChannelID);
             //nullable float
-            Assert.IsNull(tObj.Row(0).Fields.DLDAQ);
-            Assert.AreEqual(0f, tObj.Row(4).Fields.DLBER);
-            Assert.AreEqual(22.5f, tObj.Row(5).Fields.DLBER);
+            Assert.IsNull(table.Row(0).Fields.DLDAQ);
+            Assert.AreEqual(0f, table.Row(4).Fields.DLBER);
+            Assert.AreEqual(22.5f, table.Row(5).Fields.DLBER);
             //nullable float "NT"
-            Assert.AreEqual(float.MinValue, tObj.Row(0).Fields.DLPower);
+            Assert.AreEqual(float.MinValue, table.Row(0).Fields.DLPower);
         }
 
         [TestMethod()]
         public void LoadFromFileTest_CP()
         {
-            string name = "DataSetTest1";
-            string path = Path.Combine(UserFolder, TestFiles);
-            string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
-            var tObj = PCTEL_DataSet.Create(name, Path.Combine(path, filename));
-
-            tObj.LoadFromFile();
+            var table = MySetup.CPTable;
+            table.LoadFromFile();
 
             //all rows
-            Assert.AreEqual(6, tObj.Count);
+            Assert.AreEqual(6, table.Count);
             //location
-            Assert.AreEqual("Fine Arts - Admin 1", tObj.Row(0).Fields.Floor);
-            Assert.IsNull(tObj.Row(0).Fields.GridID);
-            Assert.AreEqual("1", tObj.Row(0).Fields.LocID);
-            Assert.AreEqual("", tObj.Row(0).Fields.Label);
+            Assert.AreEqual("Fine Arts - Admin 1", table.Row(0).Fields.Floor);
+            Assert.IsNull(table.Row(0).Fields.GridID);
+            Assert.AreEqual("1", table.Row(0).Fields.LocID);
+            Assert.AreEqual("", table.Row(0).Fields.Label);
 
             //info and last row
-            Assert.AreEqual("460137", tObj.Row(5).Fields.ChannelID);
-            Assert.AreEqual("460137", tObj[5].ChannelID);
+            Assert.AreEqual("460137", table.Row(5).Fields.ChannelID);
+            Assert.AreEqual("460137", table[5].ChannelID);
+        }
+
+        [TestMethod()]
+        public void PCTEL_DataSetTest()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void RowTest()
+        {
+            Assert.Fail();
         }
 
         [TestMethod()]
@@ -73,7 +114,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             //***read file
             string name = "DataSetTest1";
             string path = Path.Combine(UserFolder, TestFiles);
-            string testFileFullPath = Path.Combine(path,@"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv");
+            string testFileFullPath = Path.Combine(path, @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv");
             var tObj = PCTEL_DataSet.Create(name, Path.Combine(path, testFileFullPath));
 
             tObj.LoadFromFile();

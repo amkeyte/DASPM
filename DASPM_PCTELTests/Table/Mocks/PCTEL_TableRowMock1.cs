@@ -14,7 +14,9 @@ namespace DASPM_PCTELTests.Table.Mocks
 
         public static PCTEL_TableRowMock1 Create(PCTEL_TableMock1 table, PCTEL_RowModelMock1 model)
         {
-            return (PCTEL_TableRowMock1)CSVTableRowBuilder.Create(table, model, typeof(PCTEL_TableRowMock1));
+            return (PCTEL_TableRowMock1)CSVTableRowBuilder.Create(
+                table, model,
+                typeof(PCTEL_TableRowMock1));
         }
     }
 }
