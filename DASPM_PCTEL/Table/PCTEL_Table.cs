@@ -36,7 +36,7 @@ namespace DASPM_PCTEL.Table
             csv.Configuration.RegisterClassMap(ClassMap);//this could probably just be moved to table builder and deleted
         }
 
-        public new void LoadFromFile()
+        public new virtual void LoadFromFile()
         {
             base.LoadFromFile();
             RefreshLocations();
