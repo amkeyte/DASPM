@@ -23,6 +23,12 @@ namespace DASPM_PCTELTests.Table.Mocks
     {
         public PCTEL_RowModelMock1Map()
         {
+            Map(m => m.LocType).Index(0);
+            Map(m => m.Floor).Index(1);
+            Map(m => m.GridID).Index(2);
+            Map(m => m.LocID).Index(3);
+            Map(m => m.Label).Index(4);
+
             Map(m => m.Col1).Index(0).Name("Col1").Default(0);
             Map(m => m.Col2).Index(1).Name("Col2").Default("");
             Map(m => m.Col3).Index(2).Name("Col3").Default("");

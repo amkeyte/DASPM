@@ -3,10 +3,68 @@ using DASPM_PCTEL.Table;
 
 namespace DASPM_PCTEL.DataSet
 {
+    public class PCTEL_DataSetModelAreaMap : PCTEL_DataSetRowMap
+    {
+        public PCTEL_DataSetModelAreaMap()
+        {
+            DataSetType = PCTEL_DataSetTypes.PCTEL_DST_AREA;
+            //location
+            Map(m => m.GridID).Index(1).Name("Grid Id");
+            Map(m => m.LocID).Index(2).Name("Area #");
+            Map(m => m.Label).Ignore();
+
+            //type specific
+            Map(m => m.SelReference).Ignore();
+            Map(m => m.Comment).Index(20).Name("Comment");
+            Map(m => m.Latitude).Index(21).Name("Latitude");
+            Map(m => m.Longitude).Index(22).Name("Longitude");
+        }
+    }
+
+    public class PCTEL_DataSetModelCPMap : PCTEL_DataSetRowMap
+    {
+        public PCTEL_DataSetModelCPMap()
+        {
+            DataSetType = PCTEL_DataSetTypes.PCTEL_DST_CP;
+
+            //location
+            Map(m => m.GridID).Ignore();
+            Map(m => m.LocID).Index(1).Name("Point Id");
+            Map(m => m.Label).Index(2).Name("Label");
+
+            //type specific
+            Map(m => m.SelReference).Ignore();
+            Map(m => m.Comment).Index(20).Name("Comment");
+            Map(m => m.Latitude).Index(21).Name("Latitude");
+            Map(m => m.Longitude).Index(22).Name("Longitude");
+        }
+    }
+
+    public class PCTEL_DataSetModelRefMap : PCTEL_DataSetRowMap
+    {
+        public PCTEL_DataSetModelRefMap()
+        {
+            DataSetType = PCTEL_DataSetTypes.PCTEL_DST_REF;
+
+            //location
+
+            Map(m => m.GridID).Ignore();
+            Map(m => m.LocID).Index(1).Name("Point Id");
+            Map(m => m.Label).Index(2).Name("Label");
+
+            //type specific
+            Map(m => m.SelReference).Index(20).Name("Selected Reference");
+            Map(m => m.Comment).Index(21).Name("Comment");
+            Map(m => m.Latitude).Index(22).Name("Latitude");
+            Map(m => m.Longitude).Index(23).Name("Longitude");
+        }
+    }
+
     public class PCTEL_DataSetRowMap : PCTEL_TableRowMap<PCTEL_DataSetRowModel>
     {
         #region ClassMembers
 
+        //still needed?
         public PCTEL_DataSetTypes DataSetType { get; protected set; }
 
         #endregion ClassMembers
@@ -15,30 +73,26 @@ namespace DASPM_PCTEL.DataSet
 
         public PCTEL_DataSetRowMap()
         {
-        }
-
-        public void InitClassMap(PCTEL_DataSetTypes dataSetType)
-        {
-            DataSetType = dataSetType;
+            //DataSetType = dataSetType;
 
             Map(m => m.Floor).Index(0).Name("Floor Plan");
 
-            switch (DataSetType)
-            {
-                case PCTEL_DataSetTypes.PCTEL_DST_AREA:
-                    Map(m => m.GridID).Index(1).Name("Grid Id");
-                    Map(m => m.LocID).Index(2).Name("Area #");
-                    Map(m => m.Label).Ignore();
+            //switch (DataSetType)
+            //{
+            //    case PCTEL_DataSetTypes.PCTEL_DST_AREA:
+            //        //Map(m => m.GridID).Index(1).Name("Grid Id");
+            //        //Map(m => m.LocID).Index(2).Name("Area #");
+            //        //Map(m => m.Label).Ignore();
 
-                    break;
+            //        break;
 
-                case PCTEL_DataSetTypes.PCTEL_DST_CP:
-                case PCTEL_DataSetTypes.PCTEL_DST_REF:
-                    Map(m => m.GridID).Ignore();
-                    Map(m => m.LocID).Index(1).Name("Point Id");
-                    Map(m => m.Label).Index(2).Name("Label");
-                    break;
-            }
+            //    case PCTEL_DataSetTypes.PCTEL_DST_CP:
+            //    case PCTEL_DataSetTypes.PCTEL_DST_REF:
+            //        //Map(m => m.GridID).Ignore();
+            //        //Map(m => m.LocID).Index(1).Name("Point Id");
+            //        //Map(m => m.Label).Index(2).Name("Label");
+            //        break;
+            //}
 
             Map(m => m.Protocol).Index(3).Name("Protocol");
             Map(m => m.Band).Index(4).Name("Band");
@@ -71,20 +125,20 @@ namespace DASPM_PCTEL.DataSet
             Map(m => m.ULSignalPower).Index(19).Name("UL Signal Power(dBm)")
                 .TypeConverter<PCTEL_FloatConverter<float?>>();
 
-            if (DataSetType == PCTEL_DataSetTypes.PCTEL_DST_REF)
-            {
-                Map(m => m.SelReference).Index(20).Name("Selected Reference");
-                Map(m => m.Comment).Index(21).Name("Comment");
-                Map(m => m.Latitude).Index(22).Name("Latitude");
-                Map(m => m.Longitude).Index(23).Name("Longitude");
-            }
-            else
-            {
-                Map(m => m.SelReference).Ignore();
-                Map(m => m.Comment).Index(20).Name("Comment");
-                Map(m => m.Latitude).Index(21).Name("Latitude");
-                Map(m => m.Longitude).Index(22).Name("Longitude");
-            }
+            //if (DataSetType == PCTEL_DataSetTypes.PCTEL_DST_REF)
+            //{
+            //    //Map(m => m.SelReference).Index(20).Name("Selected Reference");
+            //    //Map(m => m.Comment).Index(21).Name("Comment");
+            //    //Map(m => m.Latitude).Index(22).Name("Latitude");
+            //    //Map(m => m.Longitude).Index(23).Name("Longitude");
+            //}
+            //else
+            //{
+            //    //Map(m => m.SelReference).Ignore();
+            //    //Map(m => m.Comment).Index(20).Name("Comment");
+            //    //Map(m => m.Latitude).Index(21).Name("Latitude");
+            //    //Map(m => m.Longitude).Index(22).Name("Longitude");
+            //}
         }
 
         #endregion ctor

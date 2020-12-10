@@ -56,7 +56,7 @@ namespace DASPM_PCTEL.Table
             {
                 if (row.Location == loc)
                 {
-                    result.Add((TTableRow)row);
+                    result.Add((TTableRow)row);//row shows gridID=1 for dataset CP type. should be null? something mixed up in classmap?
                 }
             }
 

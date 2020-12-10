@@ -8,30 +8,30 @@ using DASPM_PCTEL.DataSet;
 
 namespace DASPM_PCTEL.Table
 {
-    public class PCTEL_TableRowMap<TModel> : ClassMap<TModel>
+    public abstract class PCTEL_TableRowMap<TModel> : ClassMap<TModel>
         where TModel : PCTEL_TableRowModel
     {
         public PCTEL_TableRowMap()
         {
-            Map(m => m.LocType).Index(0);
-            Map(m => m.Floor).Index(1);
-            Map(m => m.GridID).Index(2);
-            Map(m => m.LocID).Index(3);
-            Map(m => m.Label).Index(4);
+            //Map(m => m.LocType).Index(0);
+            //Map(m => m.Floor).Index(1);
+            //Map(m => m.GridID).Index(2);
+            //Map(m => m.LocID).Index(3);
+            //Map(m => m.Label).Index(4);
         }
     }
 
-    public abstract class PCTEL_TableRowMap : ClassMap<PCTEL_TableRowModel>
-    {
-        public PCTEL_TableRowMap()
-        {
-            Map(m => m.LocType).Index(0);
-            Map(m => m.Floor).Index(1);
-            Map(m => m.GridID).Index(2);
-            Map(m => m.LocID).Index(3);
-            Map(m => m.Label).Index(4);
-        }
-    }
+    //public abstract class PCTEL_TableRowMap : ClassMap<PCTEL_TableRowModel>
+    //{
+    //    public PCTEL_TableRowMap()
+    //    {
+    //        Map(m => m.LocType).Index(0);
+    //        Map(m => m.Floor).Index(1);
+    //        Map(m => m.GridID).Index(2);
+    //        Map(m => m.LocID).Index(3);
+    //        Map(m => m.Label).Index(4);
+    //    }
+    //}
 
     public abstract class PCTEL_TableRowModel : IRowModel
     {

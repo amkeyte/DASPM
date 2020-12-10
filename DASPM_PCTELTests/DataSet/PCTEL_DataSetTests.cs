@@ -14,48 +14,20 @@ namespace DASPM_PCTEL.DataSet.Tests
     [TestClass()]
     public class PCTEL_DataSetTests
     {
-        private class MySetup
-        {
-            #region general
-
-            public static string Name = "DataSetTest1";
-            public static string TestFilePath = Path.Combine(UserFolder, TestFilesFolder);
-            public static string TestFilesFolder { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
-            public static string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
-
-            #endregion general
-
-            #region AreaTest
-
-            public static string AreaFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
-            public static PCTEL_DataSet AreaTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, AreaFilename));
-
-            #endregion AreaTest
-
-            #region CPTest
-
-            public static string CPFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
-            public static PCTEL_DataSet CPTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, CPFilename));
-            public static PCTEL_Location Location2 => new PCTEL_Location("AREA", "Fine Arts - Admin 1", "1", "", "2");
-
-            #endregion CPTest
-        }
-
         [TestMethod()]
         public void CreateTest()
         {
-            //automated ClassMap creation fails because classmap requires initialization based on
-            //DataSetType. Propbably use an interface scheme instead.
-            //some tables might be mixed, so DataSetType classmaps may be different per row??
             var table = MySetup.AreaTable;
 
             //types
-            Assert.AreEqual(typeof(PCTEL_DataSet), table);
+            Assert.AreEqual(typeof(PCTEL_DataSet), table.GetType());
             Assert.AreEqual(typeof(List<PCTEL_DataSetRow>), table.Rows.GetType());
             Assert.AreEqual(typeof(PCTEL_DataSetRow), table.TableRowType);
             Assert.AreEqual(typeof(PCTEL_DataSetRowModel), table.ModelType);
+            Assert.AreEqual(typeof(PCTEL_DataSetModelAreaMap), table.ClassMap.GetType());
+
             //class vars
-            Assert.AreEqual(PCTEL_DataSet.PCTEL_DATASET_TYPE_NAME_AREA, table.DataSetType);
+            Assert.AreEqual(PCTEL_DataSetTypes.PCTEL_DST_AREA, table.DataSetType);
         }
 
         [TestMethod()]
@@ -101,6 +73,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             Assert.AreEqual("460137", table[5].ChannelID);
         }
 
+        [TestMethod()]
         public void PCTEL_DataSetAccessorsTest()
         {
             var table = MySetup.AreaTable;
@@ -111,21 +84,22 @@ namespace DASPM_PCTEL.DataSet.Tests
             //Assert.AreEqual(1, table.GetRowByID(0).Fields.ChannelID);
 
             //get rows
-            Assert.AreEqual(1, table.GetRows<PCTEL_DataSetRow>()[0].Fields.ChannelID);
-            Assert.AreEqual(1, table.Rows[0].Fields.ChannelID);
+            Assert.AreEqual("460137", table.GetRows<PCTEL_DataSetRow>()[0].Fields.ChannelID);
+            Assert.AreEqual("460137", table.Rows[0].Fields.ChannelID);
             //Assert.AreEqual(2, table.GetRowsByLocation(MySetup.Location2)[0].Fields.ChannelID);
 
             //indexor
-            Assert.AreEqual(1, table[0].LocID);
-            Assert.AreEqual("460137", table[MySetup.Location2][0].Fields.ChannelID);
+            Assert.AreEqual("1", table[0].LocID);
+            Assert.AreEqual("460137", table[MySetup.CPLoc2][0].Fields.ChannelID);
         }
 
         [TestMethod()]
         public void PCTEL_DataSetTest()
         {
-            Assert.Fail();
+            //see CreateTest
         }
 
+        [TestMethod()]
         public void PCTEL_TableAccessorsTest()
         {
             var tobj = MySetup.AreaTable;
@@ -139,17 +113,17 @@ namespace DASPM_PCTEL.DataSet.Tests
             //get rows
             Assert.AreEqual(1, table.GetRows<PCTEL_TableRow>()[0].Location.LocID);
             Assert.AreEqual(1, table.Rows[0].Location.LocID);
-            Assert.AreEqual(2, table.GetRowsByLocation(MySetup.Location2)[0].Location.LocID);
+            Assert.AreEqual(2, table.GetRowsByLocation(MySetup.AreaLoc2)[0].Location.LocID);
 
             //indexor
             Assert.AreEqual(1, table[0].LocID);
-            Assert.AreEqual(2, table[MySetup.Location2][0].Location.LocID);
+            Assert.AreEqual(2, table[MySetup.AreaLoc2][0].Location.LocID);
         }
 
         [TestMethod()]
         public void RowTest()
         {
-            Assert.Fail();
+            //see  PCTEL_DataSetAccessorsTest
         }
 
         [TestMethod()]
@@ -245,6 +219,34 @@ namespace DASPM_PCTEL.DataSet.Tests
             //info
             Assert.AreEqual("Changed", table2.Row(0).Fields.Comment);
             Assert.AreEqual(777f, table2.Row(5).Fields.DLPower);
+        }
+
+        private class MySetup
+        {
+            #region general
+
+            public static string Name = "DataSetTest1";
+            public static string TestFilePath = Path.Combine(UserFolder, TestFilesFolder);
+            public static string TestFilesFolder { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
+            public static string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
+
+            #endregion general
+
+            #region AreaTest
+
+            public static string AreaFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
+            public static PCTEL_DataSet AreaTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, AreaFilename));
+            public static PCTEL_Location AreaLoc2 => new PCTEL_Location("AREA", "Fine Arts - Admin 1", "1", "", "2");
+
+            #endregion AreaTest
+
+            #region CPTest
+
+            public static string CPFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
+            public static PCTEL_DataSet CPTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, CPFilename));
+            public static PCTEL_Location CPLoc2 => new PCTEL_Location("CP", "Fine Arts - Admin 1", "", "", "2");
+
+            #endregion CPTest
         }
     }
 }

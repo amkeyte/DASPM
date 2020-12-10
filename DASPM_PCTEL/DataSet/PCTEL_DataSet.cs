@@ -14,19 +14,20 @@ namespace DASPM_PCTEL.DataSet
 
     public class PCTEL_DataSet : PCTEL_Table
     {
-        public const string PCTEL_DATASET_TYPE_NAME_AREA = "AreaTestPoints";
-        public const string PCTEL_DATASET_TYPE_NAME_CP = "CriticalTestPoints";
-        public const string PCTEL_DATASET_TYPE_NAME_REF = "*****";
+        //public const string PCTEL_DATASET_TYPE_NAME_AREA = "AreaTestPoints";
+        //public const string PCTEL_DATASET_TYPE_NAME_CP = "CriticalTestPoints";
+        //public const string PCTEL_DATASET_TYPE_NAME_REF = "*****";
 
         public static PCTEL_DataSet Create(string name, string fullPath)
         {
+            var dataSetClassMapType = PCTEL_DataSetTypeHelper.GetClassMapType(fullPath);
+
             var result = (PCTEL_DataSet)CSVTableBuilder.CreateCSVTable(
                 name, fullPath,
                 typeof(PCTEL_DataSet),
                 typeof(PCTEL_DataSetRow),
                 typeof(PCTEL_DataSetRowModel),
-                typeof(PCTEL_DataSetRowMap));
-            result.InitDataSet();
+                dataSetClassMapType);
             return result;
         }
 
@@ -36,13 +37,22 @@ namespace DASPM_PCTEL.DataSet
         {
         }
 
-        public void InitDataSet()
-        {
-            if (DataSetType == 0)
-            {
-                throw new ArgumentException("Invalid DatasetType: is 'fullPath' a valid Area, CP, or Ref csv file?");
-            }
-        }
+        //public void InitDataSet()
+        //{
+        //    if (DataSetType == 0)
+        //    {
+        //        throw new ArgumentException("Invalid DatasetType: is 'fullPath' a valid Area, CP, or Ref csv file?");
+        //    }
+        //    //else
+        //    //{
+        //    //    switch (DataSetType)
+        //    //    {
+        //    //        case PCTEL_DataSetTypes.PCTEL_DST_AREA:
+        //    //            ClassMap
+        //    //            break;
+        //    //    }
+        //    //}
+        //}
 
         #endregion ctor
 
@@ -61,14 +71,16 @@ namespace DASPM_PCTEL.DataSet
         //    var map = new PCTEL_DataSetRowMap(DataSetType);
         //    csv.Configuration.RegisterClassMap(map);
         //}
+        public new PCTEL_DataSetRowMap ClassMap { get => (PCTEL_DataSetRowMap)base.ClassMap; }
 
         #region Accessors
 
         public new IList<PCTEL_DataSetRow> Rows => base.GetRows<PCTEL_DataSetRow>();
-        public new PCTEL_DataSetRowModel this[int index] => Rows[index].Fields;
-        public new IList<PCTEL_DataSetRow> this[PCTEL_Location loc] => GetRowsByLocation<PCTEL_DataSetRow>(loc);
 
         public new PCTEL_DataSetRow Row(int id) => (PCTEL_DataSetRow)base.Row(id);
+
+        public new PCTEL_DataSetRowModel this[int index] => Rows[index].Fields;
+        public new IList<PCTEL_DataSetRow> this[PCTEL_Location loc] => GetRowsByLocation<PCTEL_DataSetRow>(loc);
 
         #endregion Accessors
 
@@ -80,18 +92,7 @@ namespace DASPM_PCTEL.DataSet
         {
             get
             {
-                if (FullPath.Contains(PCTEL_DATASET_TYPE_NAME_AREA))
-                {
-                    return PCTEL_DataSetTypes.PCTEL_DST_AREA;
-                }
-                else if (FullPath.Contains(PCTEL_DATASET_TYPE_NAME_CP))
-                {
-                    return PCTEL_DataSetTypes.PCTEL_DST_CP;
-                }
-                else
-                {
-                    return 0;
-                }
+                return ClassMap.DataSetType;
             }
         }
 
