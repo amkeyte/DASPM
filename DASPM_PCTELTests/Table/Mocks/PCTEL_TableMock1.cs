@@ -10,13 +10,15 @@ namespace DASPM_PCTELTests.Table.Mocks
 {
     public class PCTEL_TableMock1 : PCTEL_Table
     {
-        public new IList<PCTEL_TableRowMock1> Rows
-        {
-            get
-            {
-                return base.GetRows<PCTEL_TableRowMock1>();
-            }
-        }
+        #region Accessors
+
+        public new IList<PCTEL_TableRowMock1> Rows => base.GetRows<PCTEL_TableRowMock1>();
+        public new PCTEL_RowModelMock1 this[int index] => Rows[index].Fields;
+        public new IList<PCTEL_TableRowMock1> this[PCTEL_Location loc] => GetRowsByLocation<PCTEL_TableRowMock1>(loc);
+
+        public new PCTEL_TableRowMock1 Row(int id) => (PCTEL_TableRowMock1)base.Row(id);
+
+        #endregion Accessors
 
         public static PCTEL_TableMock1 Create(string name, string fullPath)
         {
@@ -25,11 +27,6 @@ namespace DASPM_PCTELTests.Table.Mocks
                 typeof(PCTEL_TableRowMock1),
                 typeof(PCTEL_RowModelMock1),
                 typeof(PCTEL_RowModelMock1Map));
-        }
-
-        public new PCTEL_TableRowMock1 Row(int id)
-        {
-            return (PCTEL_TableRowMock1)base.Row(id);
         }
     }
 }

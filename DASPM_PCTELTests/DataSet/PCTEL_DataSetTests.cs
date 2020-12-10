@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DASPM.Table;
 using System.IO;
+using DASPM_PCTEL.Table;
 
 namespace DASPM_PCTEL.DataSet.Tests
 {
@@ -17,8 +18,8 @@ namespace DASPM_PCTEL.DataSet.Tests
         {
             #region general
 
-            public static string FullPath = Path.Combine(UserFolder, TestFilesFolder);
             public static string Name = "DataSetTest1";
+            public static string TestFilePath = Path.Combine(UserFolder, TestFilesFolder);
             public static string TestFilesFolder { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
             public static string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
 
@@ -27,14 +28,15 @@ namespace DASPM_PCTEL.DataSet.Tests
             #region AreaTest
 
             public static string AreaFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
-            public static PCTEL_DataSet AreaTable = PCTEL_DataSet.Create(Name, Path.Combine(FullPath, AreaFilename));
+            public static PCTEL_DataSet AreaTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, AreaFilename));
 
             #endregion AreaTest
 
             #region CPTest
 
             public static string CPFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
-            public static PCTEL_DataSet CPTable = PCTEL_DataSet.Create(Name, Path.Combine(FullPath, CPFilename));
+            public static PCTEL_DataSet CPTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, CPFilename));
+            public static PCTEL_Location Location2 => new PCTEL_Location("AREA", "Fine Arts - Admin 1", "1", "", "2");
 
             #endregion CPTest
         }
@@ -42,6 +44,9 @@ namespace DASPM_PCTEL.DataSet.Tests
         [TestMethod()]
         public void CreateTest()
         {
+            //automated ClassMap creation fails because classmap requires initialization based on
+            //DataSetType. Propbably use an interface scheme instead.
+            //some tables might be mixed, so DataSetType classmaps may be different per row??
             var table = MySetup.AreaTable;
 
             //types
@@ -96,10 +101,49 @@ namespace DASPM_PCTEL.DataSet.Tests
             Assert.AreEqual("460137", table[5].ChannelID);
         }
 
+        public void PCTEL_DataSetAccessorsTest()
+        {
+            var table = MySetup.AreaTable;
+            table.LoadFromFile();
+
+            //Get Row
+            Assert.AreEqual("460137", table.Row(0).Fields.ChannelID);
+            //Assert.AreEqual(1, table.GetRowByID(0).Fields.ChannelID);
+
+            //get rows
+            Assert.AreEqual(1, table.GetRows<PCTEL_DataSetRow>()[0].Fields.ChannelID);
+            Assert.AreEqual(1, table.Rows[0].Fields.ChannelID);
+            //Assert.AreEqual(2, table.GetRowsByLocation(MySetup.Location2)[0].Fields.ChannelID);
+
+            //indexor
+            Assert.AreEqual(1, table[0].LocID);
+            Assert.AreEqual("460137", table[MySetup.Location2][0].Fields.ChannelID);
+        }
+
         [TestMethod()]
         public void PCTEL_DataSetTest()
         {
             Assert.Fail();
+        }
+
+        public void PCTEL_TableAccessorsTest()
+        {
+            var tobj = MySetup.AreaTable;
+            var table = tobj as PCTEL_Table;
+            table.LoadFromFile();
+
+            //Get Row
+            Assert.AreEqual(1, table.Row(0).Location.LocID);
+            Assert.AreEqual(1, table.GetRowByID(0).Location.LocID);
+
+            //get rows
+            Assert.AreEqual(1, table.GetRows<PCTEL_TableRow>()[0].Location.LocID);
+            Assert.AreEqual(1, table.Rows[0].Location.LocID);
+            Assert.AreEqual(2, table.GetRowsByLocation(MySetup.Location2)[0].Location.LocID);
+
+            //indexor
+            Assert.AreEqual(1, table[0].LocID);
+            Assert.AreEqual(2, table[MySetup.Location2][0].Location.LocID);
         }
 
         [TestMethod()]
@@ -112,42 +156,38 @@ namespace DASPM_PCTEL.DataSet.Tests
         public void WriteToFileTest_Area()
         {
             //***read file
-            string name = "DataSetTest1";
-            string path = Path.Combine(UserFolder, TestFiles);
-            string testFileFullPath = Path.Combine(path, @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv");
-            var tObj = PCTEL_DataSet.Create(name, Path.Combine(path, testFileFullPath));
-
-            tObj.LoadFromFile();
+            var table = MySetup.AreaTable;
+            table.LoadFromFile();
 
             //***edit table
             //location
-            tObj.Row(1).Fields.Floor = "New Floor";
-            tObj.Row(1).Fields.GridID = "2";
-            tObj.Row(1).Fields.LocID = "999";
-            tObj.Row(1).Fields.Label = "oops!";
+            table.Row(1).Fields.Floor = "New Floor";
+            table.Row(1).Fields.GridID = "2";
+            table.Row(1).Fields.LocID = "999";
+            table.Row(1).Fields.Label = "oops!";
 
             //info
-            tObj.Row(2).Fields.Comment = "Changed";
+            table.Row(2).Fields.Comment = "Changed";
 
             //nullable float
-            tObj.Row(3).Fields.DLPower = null;
-            tObj.Row(3).Fields.ULBER = 25.3f;
-            tObj.Row(3).Fields.ULDAQ = 0f;
+            table.Row(3).Fields.DLPower = null;
+            table.Row(3).Fields.ULBER = 25.3f;
+            table.Row(3).Fields.ULDAQ = 0f;
 
             //nullable float "NT"
-            tObj.Row(16).Fields.DLPower = float.MinValue;
+            table.Row(16).Fields.DLPower = float.MinValue;
 
             //***write file
             string wfilename = @"WriteToFileTest1 - AreaTestPoints.csv";
-            var files = Directory.GetFiles(path, wfilename);
+            var files = Directory.GetFiles(MySetup.TestFilePath, wfilename);
             foreach (string file in files)
             {
                 File.Delete(file);
             }
-            tObj.WriteToFile(Path.Combine(path, wfilename));
+            table.WriteNewFile(Path.Combine(MySetup.TestFilePath, wfilename));
 
             //*** Unit Test
-            var tObj2 = PCTEL_DataSet.Create(name, Path.Combine(path, wfilename));
+            var tObj2 = PCTEL_DataSet.Create("writetestfile", Path.Combine(MySetup.TestFilePath, wfilename));
             tObj2.LoadFromFile();
             Assert.AreEqual(20, tObj2.Count);
             //location
@@ -169,46 +209,42 @@ namespace DASPM_PCTEL.DataSet.Tests
         public void WriteToFileTest_CP()
         {
             //***read file
-            string name = "DataSetTest1";
-            string path = Path.Combine(UserFolder, TestFiles);
-            string filename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
-            var tObj = PCTEL_DataSet.Create(name, Path.Combine(path, filename));
-
-            tObj.LoadFromFile();
+            var table = MySetup.CPTable;
+            table.LoadFromFile();
 
             //***edit table
             //location
-            tObj.Row(1).Fields.Floor = "New Floor";
-            tObj.Row(1).Fields.GridID = "oops!";
-            tObj.Row(1).Fields.Label = "test label";
-            tObj.Row(1).Fields.LocID = "777";
+            table.Row(1).Fields.Floor = "New Floor";
+            table.Row(1).Fields.GridID = "oops!";
+            table.Row(1).Fields.Label = "test label";
+            table.Row(1).Fields.LocID = "777";
 
             //info
-            tObj.Row(0).Fields.Comment = "Changed";
-            tObj.Row(5).Fields.DLPower = 777f;
+            table.Row(0).Fields.Comment = "Changed";
+            table.Row(5).Fields.DLPower = 777f;
 
             //***write file
             string wfilename = @"WriteToFileTest1 - CriticalTestPoints.csv";
-            var files = Directory.GetFiles(path, wfilename);
+            var files = Directory.GetFiles(MySetup.TestFilePath, wfilename);
             foreach (string file in files)
             {
                 File.Delete(file);
             }
-            tObj.WriteToFile(Path.Combine(path, wfilename));
+            table.WriteNewFile(Path.Combine(MySetup.TestFilePath, wfilename));
 
             //*** Unit Test
-            var tObj2 = PCTEL_DataSet.Create(name, Path.Combine(path, wfilename));
-            tObj2.LoadFromFile();
+            var table2 = PCTEL_DataSet.Create("testCPFile", Path.Combine(MySetup.TestFilePath, wfilename));
+            table2.LoadFromFile();
 
-            Assert.AreEqual(6, tObj2.Count);
+            Assert.AreEqual(6, table2.Count);
             //location
-            Assert.AreEqual("New Floor", tObj2.Row(1).Fields.Floor);
-            Assert.IsNull(tObj2.Row(1).Fields.GridID);
-            Assert.AreEqual("777", tObj2.Row(1).Fields.LocID);
-            Assert.AreEqual("test label", tObj2.Row(1).Fields.Label);
+            Assert.AreEqual("New Floor", table2.Row(1).Fields.Floor);
+            Assert.IsNull(table2.Row(1).Fields.GridID);
+            Assert.AreEqual("777", table2.Row(1).Fields.LocID);
+            Assert.AreEqual("test label", table2.Row(1).Fields.Label);
             //info
-            Assert.AreEqual("Changed", tObj2.Row(0).Fields.Comment);
-            Assert.AreEqual(777f, tObj2.Row(5).Fields.DLPower);
+            Assert.AreEqual("Changed", table2.Row(0).Fields.Comment);
+            Assert.AreEqual(777f, table2.Row(5).Fields.DLPower);
         }
     }
 }

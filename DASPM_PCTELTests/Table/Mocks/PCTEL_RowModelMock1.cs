@@ -16,7 +16,7 @@ namespace DASPM_PCTELTests.Table.Mocks
         public string Col3 { get; set; }
 
         [Ignore]
-        public string ModelName => "Mock1";
+        public int TestProperty1 => 999;
     }
 
     public class PCTEL_RowModelMock1Map : PCTEL_TableRowMap<PCTEL_RowModelMock1>

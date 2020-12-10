@@ -7,13 +7,17 @@ namespace DASPM_PCTEL.DataSet
     {
         #region ClassMembers
 
-        public PCTEL_DataSetTypes DataSetType { get; }
+        public PCTEL_DataSetTypes DataSetType { get; protected set; }
 
         #endregion ClassMembers
 
         #region ctor
 
-        public PCTEL_DataSetRowMap(PCTEL_DataSetTypes dataSetType)
+        public PCTEL_DataSetRowMap()
+        {
+        }
+
+        public void InitClassMap(PCTEL_DataSetTypes dataSetType)
         {
             DataSetType = dataSetType;
 

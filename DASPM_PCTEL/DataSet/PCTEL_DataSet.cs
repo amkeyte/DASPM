@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DASPM.Table;
 using DASPM_PCTEL.Table;
 
@@ -61,11 +62,15 @@ namespace DASPM_PCTEL.DataSet
         //    csv.Configuration.RegisterClassMap(map);
         //}
 
-        //hiding return Row class type
-        public new PCTEL_DataSetRow Row(int id)
-        {
-            return (PCTEL_DataSetRow)base.Row(id);
-        }
+        #region Accessors
+
+        public new IList<PCTEL_DataSetRow> Rows => base.GetRows<PCTEL_DataSetRow>();
+        public new PCTEL_DataSetRowModel this[int index] => Rows[index].Fields;
+        public new IList<PCTEL_DataSetRow> this[PCTEL_Location loc] => GetRowsByLocation<PCTEL_DataSetRow>(loc);
+
+        public new PCTEL_DataSetRow Row(int id) => (PCTEL_DataSetRow)base.Row(id);
+
+        #endregion Accessors
 
         #endregion CSVTable
 

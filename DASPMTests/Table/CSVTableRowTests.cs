@@ -84,7 +84,7 @@ namespace DASPM.Table.Tests
             Assert.AreEqual(typeof(MockRowModel1), row.ModelType);
             Assert.AreEqual(typeof(MockRowModel1), row.Fields.GetType());
             //class members
-            Assert.AreEqual("TestProperty", row.TestProperty1);
+            Assert.AreEqual("TestProperty1", row.TestProperty1);
         }
 
         [TestMethod()]

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using DASPM_PCTELTests.Table.Mocks;
+using DASPM.Table;
 
 namespace DASPM_PCTEL.Table.Tests
 {
@@ -52,19 +53,6 @@ namespace DASPM_PCTEL.Table.Tests
             public static string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
         }
 
-        //[TestMethod()]
-        //public void AddRowGenericTest()
-        //{
-        //    var tObj = PCTEL_Table<PCTEL_TableRowModel>.CreateGeneric(TestSetup.Name1, TestSetup.FullPath1);
-
-        //    var tModel = new PCTEL_TableRowModel();
-        //    tModel.Label = "TestLabel";
-
-        //    var tRow = tObj.AddRow(tModel);
-
-        //    Assert.AreEqual("TestLabel", tRow.Fields.Label);
-        //}
-
         [TestMethod()]
         public void AddLocationTest()
         {
@@ -77,6 +65,8 @@ namespace DASPM_PCTEL.Table.Tests
             Assert.AreEqual("TestLocation", locs[0].Fields.Label);
         }
 
+        //    Assert.AreEqual("TestLabel", tRow.Fields.Label);
+        //}
         [TestMethod()]
         public void AddRowTest()
         {
@@ -87,15 +77,6 @@ namespace DASPM_PCTEL.Table.Tests
             Assert.AreEqual(typeof(PCTEL_TableRowMock1), tRow.GetType());
             Assert.AreEqual(null, tRow.Fields.Label);
         }
-
-        //[TestMethod()]
-        //public void CreateGenericTest()
-        //{
-        //    var tObj = PCTEL_Table<PCTEL_TableRowModel>.CreateGeneric(TestSetup.Name1, TestSetup.FullPath1);
-
-        //    Assert.AreEqual(TestSetup.Name1, tObj.Name);
-        //    Assert.AreEqual(TestSetup.FullPath1, tObj.FullPath);
-        //}
 
         [TestMethod()]
         public void AddRowTest_Model()
@@ -110,24 +91,38 @@ namespace DASPM_PCTEL.Table.Tests
             Assert.AreEqual("TestLabel", tRow.Fields.Label);
         }
 
+        //    Assert.AreEqual(TestSetup.Name1, tObj.Name);
+        //    Assert.AreEqual(TestSetup.FullPath1, tObj.FullPath);
+        //}
         [TestMethod()]
         public void CalculateTest()
         {
             Assert.IsTrue(true);
         }
 
+        //    var tRow = tObj.AddRow(tModel);
+        //[TestMethod()]
+        //public void CreateGenericTest()
+        //{
+        //    var tObj = PCTEL_Table<PCTEL_TableRowModel>.CreateGeneric(TestSetup.Name1, TestSetup.FullPath1);
         [TestMethod()]
         public void ConfigureCsvReaderTest()
         {
             Assert.IsTrue(true);
         }
 
+        //    var tModel = new PCTEL_TableRowModel();
+        //    tModel.Label = "TestLabel";
         [TestMethod()]
         public void ConfigureCsvWriterTest()
         {
             Assert.IsTrue(true);
         }
 
+        //[TestMethod()]
+        //public void AddRowGenericTest()
+        //{
+        //    var tObj = PCTEL_Table<PCTEL_TableRowModel>.CreateGeneric(TestSetup.Name1, TestSetup.FullPath1);
         [TestMethod()]
         public void CreateTest()
         {
@@ -142,16 +137,24 @@ namespace DASPM_PCTEL.Table.Tests
             Assert.AreEqual(typeof(PCTEL_RowModelMock1Map), table.ClassMap.GetType());
         }
 
-        //[TestMethod()]
-        //public void PCTEL_Table_CastFromGenericTest()
-        //{
-        //    var tObjGeneric = PCTEL_Table<PCTEL_TableRowModel>.CreateGeneric(TestSetup.Name1, TestSetup.FullPath1);
+        [TestMethod()]
+        public void CSVTableAccessorsTest()
+        {
+            var tobj = PCTEL_TableMock1.Create(TestSetup.Name1, TestSetup.FullPath1);
+            var table = tobj as CSVTable;
+            table.LoadFromFile();
 
-        //    PCTEL_Table tObj = tObjGeneric;
+            //Get Row
 
-        //    Assert.AreEqual(TestSetup.Name1, tObj.Name);
-        //    Assert.AreEqual(TestSetup.FullPath1, tObj.FullPath);
-        //}
+            Assert.AreEqual(0, table.Row(0).ID);
+
+            //get rows
+            Assert.AreEqual(0, table.GetRows<CSVTableRow>()[0].ID);
+            Assert.AreEqual(0, table.Rows[0].ID);
+
+            //indexor
+            //Assert.IsTrue(table[0].GetType().GetInterfaces().Contains(typeof(ITableRow)));
+        }
 
         [TestMethod()]
         public void GetModelByIDTest()
@@ -162,6 +165,9 @@ namespace DASPM_PCTEL.Table.Tests
             Assert.AreEqual("TestLabel", table.GetModelByID(0).Label);
         }
 
+        //    Assert.AreEqual(TestSetup.Name1, tObj.Name);
+        //    Assert.AreEqual(TestSetup.FullPath1, tObj.FullPath);
+        //}
         [TestMethod()]
         public void GetRowByIDTest()
         {
@@ -171,6 +177,7 @@ namespace DASPM_PCTEL.Table.Tests
             Assert.AreEqual("TestLabel", table.GetRowByID(0).Fields.Label);
         }
 
+        //    PCTEL_Table tObj = tObjGeneric;
         [TestMethod()]
         public void GetRowsByLocationTest()
         {
@@ -183,6 +190,10 @@ namespace DASPM_PCTEL.Table.Tests
             Assert.AreEqual("2", rows[0].Fields.LocID);
         }
 
+        //[TestMethod()]
+        //public void PCTEL_Table_CastFromGenericTest()
+        //{
+        //    var tObjGeneric = PCTEL_Table<PCTEL_TableRowModel>.CreateGeneric(TestSetup.Name1, TestSetup.FullPath1);
         [TestMethod()]
         public void GetRowsByLocationTest_generic()
         {
@@ -204,6 +215,45 @@ namespace DASPM_PCTEL.Table.Tests
             tObj.LoadFromFile();
 
             Assert.AreEqual(26, tObj.Count);
+        }
+
+        public void MockTableAccessorsTest()
+        {
+            var table = PCTEL_TableMock1.Create(TestSetup.Name1, TestSetup.FullPath1);
+            table.LoadFromFile();
+
+            //Get Row
+            Assert.AreEqual(999, table.Row(0).TestProperty1);
+            //Assert.AreEqual(999, table.GetRowByID(0).TestProperty1);
+
+            //get rows
+            //Assert.AreEqual(1, table.GetRows<PCTEL_TableRow>()[0].TestProperty1);
+            Assert.AreEqual(999, table.Rows[0].TestProperty1);
+            //Assert.AreEqual(2, table.GetRowsByLocation(TestSetup.Location2)[0].TestProperty1);
+
+            //indexor
+            Assert.AreEqual(999, table[0].TestProperty1);
+            Assert.AreEqual(999, table[TestSetup.Location2][0].TestProperty1);
+        }
+
+        public void PCTEL_TableAccessorsTest()
+        {
+            var tobj = PCTEL_TableMock1.Create(TestSetup.Name1, TestSetup.FullPath1);
+            var table = tobj as PCTEL_Table;
+            table.LoadFromFile();
+
+            //Get Row
+            Assert.AreEqual(1, table.Row(0).Location.LocID);
+            Assert.AreEqual(1, table.GetRowByID(0).Location.LocID);
+
+            //get rows
+            Assert.AreEqual(1, table.GetRows<PCTEL_TableRow>()[0].Location.LocID);
+            Assert.AreEqual(1, table.Rows[0].Location.LocID);
+            Assert.AreEqual(2, table.GetRowsByLocation(TestSetup.Location2)[0].Location.LocID);
+
+            //indexor
+            Assert.AreEqual(1, table[0].LocID);
+            Assert.AreEqual(2, table[TestSetup.Location2][0].Location.LocID);
         }
 
         [TestMethod()]

@@ -11,6 +11,7 @@ namespace DASPM_PCTELTests.Table.Mocks
     public class PCTEL_TableRowMock1 : PCTEL_TableRow
     {
         public new PCTEL_RowModelMock1 Fields { get => (PCTEL_RowModelMock1)base.Fields; }
+        public int TestProperty1 { get => 999; }
 
         public static PCTEL_TableRowMock1 Create(PCTEL_TableMock1 table, PCTEL_RowModelMock1 model)
         {
