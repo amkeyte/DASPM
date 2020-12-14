@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DASPM_PCTEL.DataSet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,14 +13,14 @@ namespace DASPM_PCTEL.Table
 {
     public class PCTEL_Location : IComparable
     {
-        public static void ApplyLocation(PCTEL_TableRowModel model, PCTEL_Location location)
-        {
-            model.LocType = location.LocType;
-            model.Floor = location.Floor;
-            model.GridID = location.GridID;
-            model.Label = location.Label;
-            model.LocID = location.LocID;
-        }
+        //public static void ApplyLocation(PCTEL_TableRowModel model, PCTEL_Location location)
+        //{
+        //    model.LocType = location.LocType;
+        //    model.Floor = location.Floor;
+        //    model.GridID = location.GridID;
+        //    model.Label = location.Label;
+        //    model.LocID = location.LocID;
+        //}
 
         #region ClassMembers
 
@@ -47,51 +48,23 @@ namespace DASPM_PCTEL.Table
 
         public PCTEL_Location(PCTEL_TableRowModel model)
         {
-            //change this so it will call below instead... and probably move it to somewhere else.
-            LocType = model.LocType;
+            //Every location must have a datasettype or LocType...
+            DataSetType = PCTEL_DataSetTypeHelper.GetDataSetTypeFromLocType(model.LocType);
+
             Floor = model.Floor;
             GridID = model.GridID;
             Label = model.Label;
             LocID = model.LocID;
         }
 
-        public PCTEL_Location(string locType, string floor, string gridID, string label, string locID)
+        public PCTEL_Location(PCTEL_DataSetTypes dataSetType, string floor, string gridID, string label, string locID)
         {
-            LocType = locType;
+            DataSetType = dataSetType;
             Floor = floor;
             GridID = gridID;
             Label = label;
             LocID = locID;
         }
-
-#if BUILD_DATASET
-        //TODO Move this shit out of here to to DataSet namespace.
-        public PCTEL_Location(PCTEL_DataSetRowModel model)
-        {
-            switch (model.DataSetType)
-            {
-                case PCTEL_DataSetTypes.PCTEL_DST_AREA:
-                    LocType = "AREA";
-                    break;
-
-                case PCTEL_DataSetTypes.PCTEL_DST_CP:
-                    LocType = "CP";
-                    break;
-
-                case PCTEL_DataSetTypes.PCTEL_DST_REF:
-                    LocType = "REF";
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException("Bad DataSetType");
-            }
-
-            Floor = model.Floor;
-            GridID = model.GridID;
-            Label = model.Label;
-            LocID = model.LocID;
-        }
-#endif
 
         #endregion ctor
 

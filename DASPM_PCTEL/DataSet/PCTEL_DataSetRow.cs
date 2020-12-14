@@ -8,17 +8,7 @@ using DASPM_PCTEL.Table;
 
 namespace DASPM_PCTEL.DataSet
 {
-    //internal class PCTEL_DataSetRowCore
-    //{
-    //    protected PCTEL_DataSetRow TableRow { get; set; }
-
-    //    public PCTEL_DataSetRowCore(PCTEL_DataSetRow tableRow)
-    //    {
-    //        TableRow = tableRow;
-    //    }
-    //}
-
-    public class PCTEL_DataSetRow : PCTEL_TableRow
+    public class PCTEL_DataSetRow : PCTEL_TableRow, IHasDataSetType
     {
         #region ctor
 
@@ -37,8 +27,8 @@ namespace DASPM_PCTEL.DataSet
 
         #region ClassMembers
 
-        //neeed this?
-        //public new PCTEL_DataSet<T> Table { get; protected set; }
+        public PCTEL_DataSetTypes DataSetType { get => ((IHasDataSetType)ClassMap).DataSetType; }
+
         //Convenience casting
         public new PCTEL_DataSetRowModel Fields { get => (PCTEL_DataSetRowModel)base.Fields; }
 

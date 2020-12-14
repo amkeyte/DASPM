@@ -12,7 +12,7 @@ namespace DASPM_PCTEL.DataSet
         PCTEL_DST_AREA
     }
 
-    public class PCTEL_DataSet : PCTEL_Table
+    public class PCTEL_DataSet : PCTEL_Table, IHasDataSetType
     {
         //public const string PCTEL_DATASET_TYPE_NAME_AREA = "AreaTestPoints";
         //public const string PCTEL_DATASET_TYPE_NAME_CP = "CriticalTestPoints";
@@ -58,7 +58,7 @@ namespace DASPM_PCTEL.DataSet
 
         #region CSVTable
 
-        ////Callback to define RowMap type
+        //////Callback to define RowMap type
         //public override void ConfigureCsvReader(CsvReader csv)
         //{
         //    var map = new PCTEL_DataSetRowMap(DataSetType);
@@ -77,12 +77,43 @@ namespace DASPM_PCTEL.DataSet
 
         public new IList<PCTEL_DataSetRow> Rows => base.GetRows<PCTEL_DataSetRow>();
 
-        public new PCTEL_DataSetRow Row(int id) => (PCTEL_DataSetRow)base.Row(id);
-
         public new PCTEL_DataSetRowModel this[int index] => Rows[index].Fields;
+
         public new IList<PCTEL_DataSetRow> this[PCTEL_Location loc] => GetRowsByLocation<PCTEL_DataSetRow>(loc);
 
+        public new PCTEL_DataSetRow Row(int id) => (PCTEL_DataSetRow)base.Row(id);
+
         #endregion Accessors
+
+        public new PCTEL_DataSetRow AddRow(IRowModel model)
+        {
+            var dstModel = model as PCTEL_DataSetRowModel;
+            if (dstModel is null)
+            {
+                throw new InvalidOperationException("model must support IHasDataSetType interface");
+            }
+            else if (dstModel.DataSetType != 0 && dstModel.DataSetType != DataSetType)
+            {
+                throw new ArgumentException("model DataSetType mismatch");
+            }
+            else
+            {
+                dstModel.DataSetType = DataSetType;
+            }
+
+            return (PCTEL_DataSetRow)base.AddRow(model);
+        }
+
+        public new PCTEL_DataSetRow AddRow() => (PCTEL_DataSetRow)base.AddRow();
+
+        public override void LoadFromFile()
+        {
+            base.LoadFromFile();
+            foreach (var row in Rows)
+            {
+                row.Fields.DataSetType = ClassMap.DataSetType;
+            }
+        }
 
         #endregion CSVTable
 

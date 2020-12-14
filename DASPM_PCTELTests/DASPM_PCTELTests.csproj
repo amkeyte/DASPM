@@ -74,6 +74,7 @@
     <Compile Include="Table\Mocks\PCTEL_RowModelMock1.cs" />
     <Compile Include="Table\Mocks\PCTEL_TableRowMock1.cs" />
     <Compile Include="Table\Mocks\PCTEL_TableMock1.cs" />
+    <Compile Include="Table\PCTEL_LocationTests.cs" />
     <Compile Include="Table\PCTEL_TableTests.cs" />
   </ItemGroup>
   <ItemGroup>

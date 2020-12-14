@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DASPM_PCTEL.DataSet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,14 @@ namespace DASPM_PCTEL.Table
     public interface IDoesCalculation
     {
         void Calculate();
+    }
+
+    /// <summary>
+    /// Any class that has the DataSetType property
+    /// </summary>
+    public interface IHasDataSetType
+    {
+        PCTEL_DataSetTypes DataSetType { get; } //TODO somehow make readonly
     }
 
     /// <summary>

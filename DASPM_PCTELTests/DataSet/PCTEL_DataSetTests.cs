@@ -14,6 +14,34 @@ namespace DASPM_PCTEL.DataSet.Tests
     [TestClass()]
     public class PCTEL_DataSetTests
     {
+        private class MySetup
+        {
+            #region general
+
+            public static string Name = "DataSetTest1";
+            public static string TestFilePath = Path.Combine(UserFolder, TestFilesFolder);
+            public static string TestFilesFolder { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
+            public static string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
+
+            #endregion general
+
+            #region AreaTest
+
+            public static string AreaFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
+            public static PCTEL_DataSet AreaTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, AreaFilename));
+            public static PCTEL_Location AreaLoc2 => new PCTEL_Location("AREA", "Fine Arts - Admin 1", "1", null, "2");
+
+            #endregion AreaTest
+
+            #region CPTest
+
+            public static string CPFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
+            public static PCTEL_DataSet CPTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, CPFilename));
+            public static PCTEL_Location CPLoc2 => new PCTEL_Location("CP", "Fine Arts - Admin 1", null, null, "2");
+
+            #endregion CPTest
+        }
+
         [TestMethod()]
         public void CreateTest()
         {
@@ -90,7 +118,8 @@ namespace DASPM_PCTEL.DataSet.Tests
 
             //indexor
             Assert.AreEqual("1", table[0].LocID);
-            Assert.AreEqual("460137", table[MySetup.CPLoc2][0].Fields.ChannelID);
+            var row = table[MySetup.AreaLoc2];
+            Assert.AreEqual("460137", table[MySetup.AreaLoc2][0].Fields.ChannelID);
         }
 
         [TestMethod()]
@@ -219,34 +248,6 @@ namespace DASPM_PCTEL.DataSet.Tests
             //info
             Assert.AreEqual("Changed", table2.Row(0).Fields.Comment);
             Assert.AreEqual(777f, table2.Row(5).Fields.DLPower);
-        }
-
-        private class MySetup
-        {
-            #region general
-
-            public static string Name = "DataSetTest1";
-            public static string TestFilePath = Path.Combine(UserFolder, TestFilesFolder);
-            public static string TestFilesFolder { get => @"source\repos\DASPM\DASPM_PCTELTests\TestFiles"; }
-            public static string UserFolder { get => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile); }
-
-            #endregion general
-
-            #region AreaTest
-
-            public static string AreaFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
-            public static PCTEL_DataSet AreaTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, AreaFilename));
-            public static PCTEL_Location AreaLoc2 => new PCTEL_Location("AREA", "Fine Arts - Admin 1", "1", "", "2");
-
-            #endregion AreaTest
-
-            #region CPTest
-
-            public static string CPFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
-            public static PCTEL_DataSet CPTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, CPFilename));
-            public static PCTEL_Location CPLoc2 => new PCTEL_Location("CP", "Fine Arts - Admin 1", "", "", "2");
-
-            #endregion CPTest
         }
     }
 }

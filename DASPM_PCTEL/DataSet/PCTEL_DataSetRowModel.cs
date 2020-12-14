@@ -1,5 +1,6 @@
 ﻿using CsvHelper.Configuration.Attributes;
 using DASPM_PCTEL.Table;
+using System;
 
 namespace DASPM_PCTEL.DataSet
 {
@@ -60,12 +61,11 @@ namespace DASPM_PCTEL.DataSet
         }
     }
 
-    public class PCTEL_DataSetRowMap : PCTEL_TableRowMap<PCTEL_DataSetRowModel>
+    public class PCTEL_DataSetRowMap : PCTEL_TableRowMap<PCTEL_DataSetRowModel>, IHasDataSetType
     {
         #region ClassMembers
 
-        //still needed?
-        public PCTEL_DataSetTypes DataSetType { get; protected set; }
+        public PCTEL_DataSetTypes DataSetType { get; set; }
 
         #endregion ClassMembers
 
@@ -144,10 +144,25 @@ namespace DASPM_PCTEL.DataSet
         #endregion ctor
     }
 
-    public class PCTEL_DataSetRowModel : PCTEL_TableRowModel
+    public class PCTEL_DataSetRowModel : PCTEL_TableRowModel, IHasDataSetType
     {
-        [Ignore]
-        public PCTEL_DataSetTypes DataSetType { get; set; }
+        private PCTEL_DataSetTypes _dataSetType;
+
+        public PCTEL_DataSetTypes DataSetType
+        {
+            get => _dataSetType;
+            set
+            {
+                if (_dataSetType is 0)
+                {
+                    _dataSetType = value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Cannot alter model DataSetType");
+                }
+            }
+        }
 
         #region Model
 

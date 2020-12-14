@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DASPM_PCTEL.Table.PCTEL_Table">
+    <Position X="0.75" Y="0.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAQAEAACAIgQEACACAAAgIAkAAAAAAEkAg=</HashCode>
+      <FileName>Table\PCTEL_Table.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DASPM_PCTEL.DataSet.PCTEL_DataSetRow">
+    <Position X="6.25" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAQAAAgAA=</HashCode>
+      <FileName>DataSet\PCTEL_DataSetRow.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DASPM_PCTEL.DataSet.PCTEL_DataSetRowMap" Collapsed="true">
+    <Position X="8.5" Y="2" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>DataSet\PCTEL_DataSetRowModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DASPM_PCTEL.DataSet.PCTEL_DataSetRowModel" Collapsed="true">
+    <Position X="8.5" Y="0.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAMIAAMAEAAACQAAAIIAABIAJAAAAAEGgQAQAAAgAE=</HashCode>
+      <FileName>DataSet\PCTEL_DataSetRowModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DASPM_PCTEL.Table.PCTEL_Location" Collapsed="true">
+    <Position X="4.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAIAAAAAEAAAAAwAgAAAABAAAAAAAIAAAAAAAAAAAiA=</HashCode>
+      <FileName>Table\PCTEL_Location.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DASPM_PCTEL.DataSet.PCTEL_DataSet">
+    <Position X="4.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAEAACAAAAAAAAAAAAkAAEAAAQAAAEAA=</HashCode>
+      <FileName>DataSet\PCTEL_DataSet.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Enum Name="DASPM_PCTEL.DataSet.PCTEL_DataSetTypes" Collapsed="true">
+    <Position X="4.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAIAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataSet\PCTEL_DataSet.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

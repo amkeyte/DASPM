@@ -12,7 +12,10 @@ namespace DASPM_PCTEL.DataSet
         public const string PCTEL_DATASET_TYPE_NAME_CP = "CriticalTestPoints";
         public const string PCTEL_DATASET_TYPE_NAME_REF = "*****";
 
-        public static Type GetClassMapType(string fullPath)
+        public static void AssignDataSetType(IHas)
+
+
+public static Type GetClassMapType(string fullPath)
         {
             var dataSetType = GetDataSetType(fullPath);
             return GetClassMapType(dataSetType);
@@ -52,6 +55,26 @@ namespace DASPM_PCTEL.DataSet
             }
         }
 
+        public static PCTEL_DataSetTypes GetDataSetTypeFromLocType(string locType)
+        {
+            if (locType == "AREA")
+            {
+                return PCTEL_DataSetTypes.PCTEL_DST_AREA;
+            }
+            else if (locType == "CP")
+            {
+                return PCTEL_DataSetTypes.PCTEL_DST_CP;
+            }
+            else if (locType == "REF")
+            {
+                return PCTEL_DataSetTypes.PCTEL_DST_REF;
+            }
+            else
+            {
+                throw new ArgumentException("locType is not a valid DataSetType text identifier");
+            }
+        }
+
         public static string GetDataSetTypeName(PCTEL_DataSetTypes dataSetType)
         {
             switch (dataSetType)
@@ -64,6 +87,24 @@ namespace DASPM_PCTEL.DataSet
 
                 case PCTEL_DataSetTypes.PCTEL_DST_REF:
                     return PCTEL_DATASET_TYPE_NAME_REF;
+
+                default:
+                    throw new ArgumentException("Bad dataSetType");
+            }
+        }
+
+        public static string GetDataSetTypeText(PCTEL_DataSetTypes dataSetType)
+        {
+            switch (dataSetType)
+            {
+                case PCTEL_DataSetTypes.PCTEL_DST_AREA:
+                    return "AREA";
+
+                case PCTEL_DataSetTypes.PCTEL_DST_CP:
+                    return "CP";
+
+                case PCTEL_DataSetTypes.PCTEL_DST_REF:
+                    return "REF";
 
                 default:
                     throw new ArgumentException("Bad dataSetType");
