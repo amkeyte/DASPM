@@ -18,9 +18,9 @@ namespace DASPM_PCTEL.Table
     /// <summary>
     /// Any class that has the DataSetType property
     /// </summary>
-    public interface IHasDataSetType
+    public interface IHasDataSetVariant
     {
-        PCTEL_DataSetTypes DataSetType { get; } //TODO somehow make readonly
+        PCTEL_DataSetVariant DataSetVariant { get; }
     }
 
     /// <summary>

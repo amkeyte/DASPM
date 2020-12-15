@@ -13,14 +13,14 @@ namespace DASPM_PCTEL.Table
 {
     public class PCTEL_Location : IComparable
     {
-        //public static void ApplyLocation(PCTEL_TableRowModel model, PCTEL_Location location)
-        //{
-        //    model.LocType = location.LocType;
-        //    model.Floor = location.Floor;
-        //    model.GridID = location.GridID;
-        //    model.Label = location.Label;
-        //    model.LocID = location.LocID;
-        //}
+        public static void ApplyLocation(PCTEL_TableRowModel model, PCTEL_Location location)
+        {
+            model.LocType = location.LocType;
+            model.Floor = location.Floor;
+            model.GridID = location.GridID;
+            model.Label = location.Label;
+            model.LocID = location.LocID;
+        }
 
         #region ClassMembers
 
@@ -48,22 +48,20 @@ namespace DASPM_PCTEL.Table
 
         public PCTEL_Location(PCTEL_TableRowModel model)
         {
-            //Every location must have a datasettype or LocType...
-            DataSetType = PCTEL_DataSetTypeHelper.GetDataSetTypeFromLocType(model.LocType);
-
             Floor = model.Floor;
             GridID = model.GridID;
             Label = model.Label;
             LocID = model.LocID;
+            LocType = model.LocType;
         }
 
-        public PCTEL_Location(PCTEL_DataSetTypes dataSetType, string floor, string gridID, string label, string locID)
+        public PCTEL_Location(string locType, string floor, string gridID, string label, string locID)
         {
-            DataSetType = dataSetType;
             Floor = floor;
             GridID = gridID;
             Label = label;
             LocID = locID;
+            LocType = locType;
         }
 
         #endregion ctor

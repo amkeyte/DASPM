@@ -55,7 +55,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             Assert.AreEqual(typeof(PCTEL_DataSetModelAreaMap), table.ClassMap.GetType());
 
             //class vars
-            Assert.AreEqual(PCTEL_DataSetTypes.PCTEL_DST_AREA, table.DataSetType);
+            Assert.AreEqual("AREA", table.DataSetVariant.LocType);
         }
 
         [TestMethod()]

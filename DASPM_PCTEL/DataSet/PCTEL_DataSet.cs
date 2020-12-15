@@ -5,22 +5,11 @@ using DASPM_PCTEL.Table;
 
 namespace DASPM_PCTEL.DataSet
 {
-    public enum PCTEL_DataSetTypes
+    public class PCTEL_DataSet : PCTEL_Table, IHasDataSetVariant
     {
-        PCTEL_DST_REF = 100,
-        PCTEL_DST_CP,
-        PCTEL_DST_AREA
-    }
-
-    public class PCTEL_DataSet : PCTEL_Table, IHasDataSetType
-    {
-        //public const string PCTEL_DATASET_TYPE_NAME_AREA = "AreaTestPoints";
-        //public const string PCTEL_DATASET_TYPE_NAME_CP = "CriticalTestPoints";
-        //public const string PCTEL_DATASET_TYPE_NAME_REF = "*****";
-
         public static PCTEL_DataSet Create(string name, string fullPath)
         {
-            var dataSetClassMapType = PCTEL_DataSetTypeHelper.GetClassMapType(fullPath);
+            var dataSetClassMapType = PCTEL_DataSetRowMap.GetClassMapType(new PCTEL_DataSetVariant(fullPath));
 
             var result = (PCTEL_DataSet)CSVTableBuilder.CreateCSVTable(
                 name, fullPath,
@@ -87,18 +76,18 @@ namespace DASPM_PCTEL.DataSet
 
         public new PCTEL_DataSetRow AddRow(IRowModel model)
         {
-            var dstModel = model as PCTEL_DataSetRowModel;
-            if (dstModel is null)
+            var dsRowModel = model as PCTEL_DataSetRowModel;
+            if (dsRowModel is null)
             {
-                throw new InvalidOperationException("model must support IHasDataSetType interface");
+                throw new InvalidOperationException("model must be a DataSetRowModel type");
             }
-            else if (dstModel.DataSetType != 0 && dstModel.DataSetType != DataSetType)
+            else if (dsRowModel.DataSetVariant != DataSetVariant)
             {
-                throw new ArgumentException("model DataSetType mismatch");
+                throw new ArgumentException("model DataSetVariant mismatch");
             }
             else
             {
-                dstModel.DataSetType = DataSetType;
+                dsRowModel.DataSetVariant = DataSetVariant.Copy();
             }
 
             return (PCTEL_DataSetRow)base.AddRow(model);
@@ -111,7 +100,7 @@ namespace DASPM_PCTEL.DataSet
             base.LoadFromFile();
             foreach (var row in Rows)
             {
-                row.Fields.DataSetType = ClassMap.DataSetType;
+                row.Fields.DataSetVariant = DataSetVariant.Copy();
             }
         }
 
@@ -119,11 +108,11 @@ namespace DASPM_PCTEL.DataSet
 
         #region ClassMembers
 
-        public PCTEL_DataSetTypes DataSetType
+        public PCTEL_DataSetVariant DataSetVariant
         {
             get
             {
-                return ClassMap.DataSetType;
+                return ClassMap.DataSetVariant;
             }
         }
 

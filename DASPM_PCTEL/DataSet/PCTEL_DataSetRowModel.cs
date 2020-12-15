@@ -8,7 +8,7 @@ namespace DASPM_PCTEL.DataSet
     {
         public PCTEL_DataSetModelAreaMap()
         {
-            DataSetType = PCTEL_DataSetTypes.PCTEL_DST_AREA;
+            DataSetVariant = new PCTEL_DataSetVariant(PCTEL_DataSetVariantIDs.PCTEL_DST_AREA);
             //location
             Map(m => m.GridID).Index(1).Name("Grid Id");
             Map(m => m.LocID).Index(2).Name("Area #");
@@ -26,14 +26,14 @@ namespace DASPM_PCTEL.DataSet
     {
         public PCTEL_DataSetModelCPMap()
         {
-            DataSetType = PCTEL_DataSetTypes.PCTEL_DST_CP;
+            DataSetVariant = new PCTEL_DataSetVariant(PCTEL_DataSetVariantIDs.PCTEL_DST_CP);
 
             //location
             Map(m => m.GridID).Ignore();
             Map(m => m.LocID).Index(1).Name("Point Id");
             Map(m => m.Label).Index(2).Name("Label");
 
-            //type specific
+            //variant specific
             Map(m => m.SelReference).Ignore();
             Map(m => m.Comment).Index(20).Name("Comment");
             Map(m => m.Latitude).Index(21).Name("Latitude");
@@ -45,7 +45,7 @@ namespace DASPM_PCTEL.DataSet
     {
         public PCTEL_DataSetModelRefMap()
         {
-            DataSetType = PCTEL_DataSetTypes.PCTEL_DST_REF;
+            DataSetVariant = new PCTEL_DataSetVariant(PCTEL_DataSetVariantIDs.PCTEL_DST_REF);
 
             //location
 
@@ -53,7 +53,7 @@ namespace DASPM_PCTEL.DataSet
             Map(m => m.LocID).Index(1).Name("Point Id");
             Map(m => m.Label).Index(2).Name("Label");
 
-            //type specific
+            //variant specific
             Map(m => m.SelReference).Index(20).Name("Selected Reference");
             Map(m => m.Comment).Index(21).Name("Comment");
             Map(m => m.Latitude).Index(22).Name("Latitude");
@@ -61,11 +61,29 @@ namespace DASPM_PCTEL.DataSet
         }
     }
 
-    public class PCTEL_DataSetRowMap : PCTEL_TableRowMap<PCTEL_DataSetRowModel>, IHasDataSetType
+    public class PCTEL_DataSetRowMap : PCTEL_TableRowMap<PCTEL_DataSetRowModel>, IHasDataSetVariant
     {
         #region ClassMembers
 
-        public PCTEL_DataSetTypes DataSetType { get; set; }
+        public PCTEL_DataSetVariant DataSetVariant { get; set; }
+
+        public static Type GetClassMapType(PCTEL_DataSetVariant dataSetVariant)
+        {
+            switch (dataSetVariant.ID)
+            {
+                case PCTEL_DataSetVariantIDs.PCTEL_DST_AREA:
+                    return typeof(PCTEL_DataSetModelAreaMap);
+
+                case PCTEL_DataSetVariantIDs.PCTEL_DST_CP:
+                    return typeof(PCTEL_DataSetModelCPMap);
+
+                case PCTEL_DataSetVariantIDs.PCTEL_DST_REF:
+                    return typeof(PCTEL_DataSetModelRefMap);
+
+                default:
+                    throw new ArgumentException("Bad dataSetVariant");
+            }
+        }
 
         #endregion ClassMembers
 
@@ -73,27 +91,7 @@ namespace DASPM_PCTEL.DataSet
 
         public PCTEL_DataSetRowMap()
         {
-            //DataSetType = dataSetType;
-
             Map(m => m.Floor).Index(0).Name("Floor Plan");
-
-            //switch (DataSetType)
-            //{
-            //    case PCTEL_DataSetTypes.PCTEL_DST_AREA:
-            //        //Map(m => m.GridID).Index(1).Name("Grid Id");
-            //        //Map(m => m.LocID).Index(2).Name("Area #");
-            //        //Map(m => m.Label).Ignore();
-
-            //        break;
-
-            //    case PCTEL_DataSetTypes.PCTEL_DST_CP:
-            //    case PCTEL_DataSetTypes.PCTEL_DST_REF:
-            //        //Map(m => m.GridID).Ignore();
-            //        //Map(m => m.LocID).Index(1).Name("Point Id");
-            //        //Map(m => m.Label).Index(2).Name("Label");
-            //        break;
-            //}
-
             Map(m => m.Protocol).Index(3).Name("Protocol");
             Map(m => m.Band).Index(4).Name("Band");
             Map(m => m.MeasurementType).Index(5).Name("MeasurementType");
@@ -124,42 +122,29 @@ namespace DASPM_PCTEL.DataSet
                 .TypeConverter<PCTEL_FloatConverter<float?>>();
             Map(m => m.ULSignalPower).Index(19).Name("UL Signal Power(dBm)")
                 .TypeConverter<PCTEL_FloatConverter<float?>>();
-
-            //if (DataSetType == PCTEL_DataSetTypes.PCTEL_DST_REF)
-            //{
-            //    //Map(m => m.SelReference).Index(20).Name("Selected Reference");
-            //    //Map(m => m.Comment).Index(21).Name("Comment");
-            //    //Map(m => m.Latitude).Index(22).Name("Latitude");
-            //    //Map(m => m.Longitude).Index(23).Name("Longitude");
-            //}
-            //else
-            //{
-            //    //Map(m => m.SelReference).Ignore();
-            //    //Map(m => m.Comment).Index(20).Name("Comment");
-            //    //Map(m => m.Latitude).Index(21).Name("Latitude");
-            //    //Map(m => m.Longitude).Index(22).Name("Longitude");
-            //}
         }
 
         #endregion ctor
     }
 
-    public class PCTEL_DataSetRowModel : PCTEL_TableRowModel, IHasDataSetType
+    public class PCTEL_DataSetRowModel : PCTEL_TableRowModel, IHasDataSetVariant
     {
-        private PCTEL_DataSetTypes _dataSetType;
+        [Ignore]
+        private PCTEL_DataSetVariant _dataSetVariant;
 
-        public PCTEL_DataSetTypes DataSetType
+        [Ignore]
+        public PCTEL_DataSetVariant DataSetVariant
         {
-            get => _dataSetType;
+            get => _dataSetVariant;
             set
             {
-                if (_dataSetType is 0)
+                if (_dataSetVariant is null)
                 {
-                    _dataSetType = value;
+                    _dataSetVariant = value;
                 }
                 else
                 {
-                    throw new InvalidOperationException("Cannot alter model DataSetType");
+                    throw new InvalidOperationException("Cannot alter model DataSetVariant");
                 }
             }
         }
@@ -175,17 +160,9 @@ namespace DASPM_PCTEL.DataSet
         public float? DLPower { get; set; }
         public float? DLSignalPower { get; set; }
         public float? DLSN { get; set; }
-
-        //public string Floor { get; set; }
         public float? Frequency { get; set; }
-
-        //public string GridID { get; set; }
-        //public string Label { get; set; }
         public string Latitude { get; set; }
-
-        //public string LocID { get; set; }
         public string Longitude { get; set; }
-
         public string MeasurementType { get; set; }
         public string Protocol { get; set; }
         public string SelReference { get; set; }
