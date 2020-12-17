@@ -29,7 +29,7 @@ namespace DASPM_PCTEL.DataSet.Tests
 
             public static string AreaFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_AreaTestPoints.csv";
             public static PCTEL_DataSet AreaTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, AreaFilename));
-            public static PCTEL_Location AreaLoc2 => new PCTEL_Location("AREA", "Fine Arts - Admin 1", "1", null, "2");
+            public static PCTEL_Location AreaLoc2 => new PCTEL_Location("AREA", "Fine Arts - Admin 1", 1, null, 2);
 
             #endregion AreaTest
 
@@ -37,7 +37,7 @@ namespace DASPM_PCTEL.DataSet.Tests
 
             public static string CPFilename = @"MVHS_FAA_PRE_UHF_Fine Arts - Admin 1_CriticalTestPoints.csv";
             public static PCTEL_DataSet CPTable = PCTEL_DataSet.Create(Name, Path.Combine(TestFilePath, CPFilename));
-            public static PCTEL_Location CPLoc2 => new PCTEL_Location("CP", "Fine Arts - Admin 1", null, null, "2");
+            public static PCTEL_Location CPLoc2 => new PCTEL_Location("CP", "Fine Arts - Admin 1", null, null, 2);
 
             #endregion CPTest
         }
@@ -68,9 +68,10 @@ namespace DASPM_PCTEL.DataSet.Tests
             Assert.AreEqual(20, table.Count);
             //location
             Assert.AreEqual("Fine Arts - Admin 1", table.Row(0).Fields.Floor);
-            Assert.AreEqual("1", table.Row(0).Fields.GridID);
-            Assert.AreEqual("1", table.Row(0).Fields.LocID);
+            Assert.AreEqual(1, table.Row(0).Fields.GridID);
+            Assert.AreEqual(1, table.Row(0).Fields.LocID);
             Assert.IsNull(table.Row(0).Fields.Label);
+            Assert.AreEqual("AREA", table.Row(0).Fields.LocType);
 
             //info and last row
             Assert.AreEqual("460137", table.Row(19).Fields.ChannelID);
@@ -93,7 +94,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             //location
             Assert.AreEqual("Fine Arts - Admin 1", table.Row(0).Fields.Floor);
             Assert.IsNull(table.Row(0).Fields.GridID);
-            Assert.AreEqual("1", table.Row(0).Fields.LocID);
+            Assert.AreEqual(1, table.Row(0).Fields.LocID);
             Assert.AreEqual("", table.Row(0).Fields.Label);
 
             //info and last row
@@ -165,8 +166,8 @@ namespace DASPM_PCTEL.DataSet.Tests
             //***edit table
             //location
             table.Row(1).Fields.Floor = "New Floor";
-            table.Row(1).Fields.GridID = "2";
-            table.Row(1).Fields.LocID = "999";
+            table.Row(1).Fields.GridID = 2;
+            table.Row(1).Fields.LocID = 999;
             table.Row(1).Fields.Label = "oops!";
 
             //info
@@ -218,9 +219,9 @@ namespace DASPM_PCTEL.DataSet.Tests
             //***edit table
             //location
             table.Row(1).Fields.Floor = "New Floor";
-            table.Row(1).Fields.GridID = "oops!";
+            table.Row(1).Fields.GridID = null;
             table.Row(1).Fields.Label = "test label";
-            table.Row(1).Fields.LocID = "777";
+            table.Row(1).Fields.LocID = 777;
 
             //info
             table.Row(0).Fields.Comment = "Changed";
@@ -243,7 +244,7 @@ namespace DASPM_PCTEL.DataSet.Tests
             //location
             Assert.AreEqual("New Floor", table2.Row(1).Fields.Floor);
             Assert.IsNull(table2.Row(1).Fields.GridID);
-            Assert.AreEqual("777", table2.Row(1).Fields.LocID);
+            Assert.AreEqual(777, table2.Row(1).Fields.LocID);
             Assert.AreEqual("test label", table2.Row(1).Fields.Label);
             //info
             Assert.AreEqual("Changed", table2.Row(0).Fields.Comment);

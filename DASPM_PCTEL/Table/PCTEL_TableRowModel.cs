@@ -36,9 +36,9 @@ namespace DASPM_PCTEL.Table
     public abstract class PCTEL_TableRowModel : IRowModel
     {
         public string Floor { get; set; }
-        public string GridID { get; set; }
+        public int? GridID { get; set; }
         public string Label { get; set; }
-        public string LocID { get; set; }
+        public int LocID { get; set; }
         public string LocType { get; set; }
     }
 }

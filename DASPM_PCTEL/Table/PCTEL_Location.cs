@@ -25,21 +25,21 @@ namespace DASPM_PCTEL.Table
         #region ClassMembers
 
         public string Floor { get; protected set; }
-        public string GridID { get; protected set; }
+        public int? GridID { get; protected set; }
 
         public string Key
         {
             get
             {
-                return (LocType ?? "")
-                    + (Floor ?? "")
-                    + (GridID ?? "")
-                    + (LocID ?? "");
+                return (LocType + "|")
+                    + (Floor + "|")
+                    + (GridID + "|" ?? "")
+                    + (LocID.ToString());
             }
         }
 
         public string Label { get; protected set; }
-        public string LocID { get; protected set; }
+        public int LocID { get; protected set; }
         public string LocType { get; protected set; }
 
         #endregion ClassMembers
@@ -55,7 +55,7 @@ namespace DASPM_PCTEL.Table
             LocType = model.LocType;
         }
 
-        public PCTEL_Location(string locType, string floor, string gridID, string label, string locID)
+        public PCTEL_Location(string locType, string floor, int? gridID, string label, int locID)
         {
             Floor = floor;
             GridID = gridID;
@@ -68,9 +68,19 @@ namespace DASPM_PCTEL.Table
 
         #region object
 
+        public static bool operator !=(PCTEL_Location lhs, object rhs)
+        {
+            return (lhs != rhs as PCTEL_Location);
+        }
+
         public static bool operator !=(PCTEL_Location lhs, PCTEL_Location rhs)
         {
             return !(lhs == rhs);
+        }
+
+        public static bool operator ==(PCTEL_Location lhs, object rhs)
+        {
+            return (lhs == rhs as PCTEL_Location);
         }
 
         public static bool operator ==(PCTEL_Location lhs, PCTEL_Location rhs)
@@ -103,9 +113,9 @@ namespace DASPM_PCTEL.Table
         {
             var hashCode = 374599110;
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Floor);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(GridID);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(GridID.ToString());
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Label);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(LocID);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(LocID.ToString());
             return hashCode;
         }
 

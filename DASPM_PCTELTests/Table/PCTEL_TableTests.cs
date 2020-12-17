@@ -44,8 +44,8 @@ namespace DASPM_PCTEL.Table.Tests
         {
             public static string Filename1 => @"TableTest1.csv";
             public static string FullPath1 => Path.Combine(Path1, Filename1);
-            public static PCTEL_Location Location2 => new PCTEL_Location("AREA", "Fine Arts - Admin 1", "1", "", "2");
-            public static PCTEL_Location LocationNew => new PCTEL_Location("AREA", "Fine Arts - Admin 1", "1", "TestLocation", "999");
+            public static PCTEL_Location Location2 => new PCTEL_Location("AREA", "Fine Arts - Admin 1", 1, "", 2);
+            public static PCTEL_Location LocationNew => new PCTEL_Location("AREA", "Fine Arts - Admin 1", 1, "TestLocation", 999);
 
             public static string Name1 => "TableTest1";
             public static string Path1 => Path.Combine(UserFolder, TestFiles, "PCTEL_Table");
@@ -187,7 +187,7 @@ namespace DASPM_PCTEL.Table.Tests
 
             var rows = table.GetRowsByLocation(loc);
 
-            Assert.AreEqual("2", rows[0].Fields.LocID);
+            Assert.AreEqual(2, rows[0].Fields.LocID);
         }
 
         //[TestMethod()]
@@ -203,7 +203,7 @@ namespace DASPM_PCTEL.Table.Tests
 
             var rows = table.GetRowsByLocation<PCTEL_TableRowMock1>(loc);
 
-            Assert.AreEqual("2", rows[0].Fields.LocID);
+            Assert.AreEqual(2, rows[0].Fields.LocID);
             Assert.AreEqual("TestValue2", rows[0].Fields.Col3);
         }
 
@@ -271,8 +271,8 @@ namespace DASPM_PCTEL.Table.Tests
             Assert.AreEqual(26, tObj.Count);
             //location
             Assert.AreEqual("Fine Arts - Admin 1", testFields0.Floor);
-            Assert.AreEqual("1", testFields0.GridID);
-            Assert.AreEqual("1", testFields0.LocID);
+            Assert.AreEqual(1, testFields0.GridID);
+            Assert.AreEqual(1, testFields0.LocID);
             Assert.AreEqual("TestLabel", testFields0.Label);
             //mock rows
             Assert.AreEqual(1, tObj.Row(0).Fields.Col1);

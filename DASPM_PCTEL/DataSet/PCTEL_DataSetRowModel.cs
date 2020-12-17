@@ -149,6 +149,8 @@ namespace DASPM_PCTEL.DataSet
             }
         }
 
+        public new string LocType { get; set; }
+
         #region Model
 
         public string Band { get; set; }
